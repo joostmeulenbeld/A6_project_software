@@ -1,9 +1,9 @@
 import filereader
-import fft
-import maxfrequency
+import highfrequency
 import rangerate
 import filewriter
 
 import wave
 
-w=wave.open("Delfi-n3Xt.wav")
+print("blaat")
+
