@@ -6,7 +6,9 @@ Input: Max Frequency over time matrix
 Output: Range rate over time matrix
 @author: Maarten Schild, Project A6
 """
-timefreq = []
+import maxfrequency
+
+timefreq = maxfrequency.#Add variable name of maxfrequency file here#
 
 debugfreq = 146*10**6
 
