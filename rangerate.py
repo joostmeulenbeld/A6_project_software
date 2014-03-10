@@ -4,22 +4,14 @@ Created on Mon Mar 10 12:40:36 2014
 Range-rate calculation
 Input: Max Frequency over time matrix
 Output: Range rate over time matrix
-@author: Maarten Schild
+@author: Maarten Schild, Project A6
 """
-import numpy
-import random
+timefreq = []
+
 debugfreq = 146*10**6
 
 carrierfreq = debugfreq #Hz
 speedoflight = 299792458 #m/s
-
-m = []
-l = numpy.linspace(0,1200,80000)
-for a in l:
-    m.append([a,carrierfreq-random.randint(0,1000)*1000])
-
-timefreq = m
-
 
 #Function to calculate the difference in velocity between receiver and transmitter
 #Inputs are received frequency(Hz), transmitted frequency(Hz) and speed of light(m/s)
@@ -40,4 +32,4 @@ def rangerateconvert(timefreq,carrierfreq,speedoflight):
     return timerangerate
 
     
-#print rangerateconvert(timefreq,carrierfreq,speedoflight)
+rangerateconvert(timefreq,carrierfreq,speedoflight)
