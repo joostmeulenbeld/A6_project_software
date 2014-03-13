@@ -11,8 +11,9 @@ ewi_nap = -0.001                #sealevel at groundstation (km)
 earth_a = 6378.135              #radius of the earth at the equatorial plane (km)
 earth_b = 6356.750              #radius of the earth at the polaire plane (km)
 earth_omega = 7.292115*10**-5   #angular velocity of the earth (rad/s)
-meas_t0 = [2013,11,21,10,16,46] #start datetime of measurement
 
+meas_t0 = [2013,11,21,10,16,46] #start datetime of measurement
+meas_dur = [0,0,0,0,21,33] #duration of measurement
 
 ewi_sealevel = math.sqrt(((((earth_a**2)*math.cos(ewi_latt*math.pi/180))**2)+(((earth_b**2)*math.sin(ewi_latt*math.pi/180))**2))/((((earth_a)*math.cos(ewi_latt*math.pi/180))**2)+(((earth_b)*math.sin(ewi_latt*math.pi/180))**2)))
 gs_radius = ewi_sealevel + ewi_nap + ewi_heigth
@@ -26,6 +27,9 @@ t0 = dt.datetime(meas_t0[0],meas_t0[1],meas_t0[2],meas_t0[3],meas_t0[4],meas_t0[
 
 trange = (t0-t2000).total_seconds()
 
+meas_tend = dt.datetime(meas_dur[0]+1,meas_dur[1]+1,meas_dur[2]+1,meas_dur[3],meas_dur[4],meas_dur[5])
+meas_0 = dt.datetime(1,1,1,0,0,0)
+t_dur = (meas_tend-meas_0).total_seconds()
 
 def gs_position(t):
     gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*(trange+t))
@@ -72,5 +76,5 @@ def tle_dataimport():
     
     return tlextab,tleytab,tleztab
 
-gs_plot(48000)
+gs_plot(int(t_dur))
 #tle_dataimport()
