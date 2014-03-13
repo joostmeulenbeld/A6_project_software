@@ -10,7 +10,6 @@ earth_a = 6378.135              #radius of the earth at the equatorial plane (km
 earth_b = 6356.750              #radius of the earth at the polaire plane (km)
 earth_omega = 7.292115*10**-5   #angular velocity of the earth (rad/s)
 
-
 ewi_sealevel = math.sqrt(((((earth_a**2)*math.cos(ewi_latt*math.pi/180))**2)+(((earth_b**2)*math.sin(ewi_latt*math.pi/180))**2))/((((earth_a)*math.cos(ewi_latt*math.pi/180))**2)+(((earth_b)*math.sin(ewi_latt*math.pi/180))**2)))
 gs_radius = ewi_sealevel + ewi_nap + ewi_heigth
 

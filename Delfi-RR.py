@@ -11,6 +11,5 @@ fourierwidth = 100
 
 
 #w = wave.open(wav_filename,"r")
-#for t in range (0,60):
-    #print tlerangerate.gs_position(t)
-print tlerangerate.gs_radius
+t = 20
+print tlerangerate.gs_plot(t)
