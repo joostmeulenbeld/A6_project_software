@@ -14,9 +14,10 @@ nchannels=params[0]
 sampwidth=params[1]
 sampfreq=params[2]
 totalsamp=params[3]
+print params
 
 ## Divide sample file into intervals, one for every Fast Fourier Transform
-for i in range(nsample,nsample+fourierwidth,2):
+for i in range(nsample,nsample+fourierwidth):
     amp=w.readframes(i)
     amptab.append(amp)
     itab.append(i)
