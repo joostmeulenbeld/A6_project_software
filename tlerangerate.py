@@ -31,12 +31,12 @@ def gs_position(t):
 
     return gs_x, gs_y, gs_z
      
-def gs_plot(t):
+def gs_plot(dt):
 
     xtab = []
     ytab = []
     
-    for i in xrange(int(trange),int(trange)+t):
+    for i in xrange(int(trange),int(trange)+dt):
         gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*i)
         gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180+earth_omega*i)
         gs_z = gs_z0
@@ -50,5 +50,7 @@ def gs_plot(t):
     plt.plot(gs_x0,gs_y0, marker='*', ms=10.0)
     plt.plot(gs_x,gs_y,marker='*', ms=10.0)
     plt.show()
+
+    return
 
 
