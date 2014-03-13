@@ -30,6 +30,9 @@ t_end = t_start+t_dif
 
 trange = (t_start-t_ref).total_seconds()
 
+
+
+
 def gs_position(t):
     gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*(trange+t))
     gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180+earth_omega*(trange+t))
@@ -39,6 +42,21 @@ def gs_position(t):
 
      
 def gs_plot(dt):
+
+    earth_xtab = []
+    earth_ytab = []
+    earth_ztab = []
+
+    for latt in range(-180,181):
+        for longi in range(-90,91):
+            earth_radius = math.sqrt(((((earth_a**2)*math.cos(latt*math.pi/180))**2)+(((earth_b**2)*math.sin(latt*math.pi/180))**2))/((((earth_a)*math.cos(latt*math.pi/180))**2)+(((earth_b)*math.sin(latt*math.pi/180))**2)))
+            earth_x = earth_radius*math.cos(latt*math.pi/180)*math.cos(longi*math.pi/180)
+            earth_y = earth_radius*math.cos(latt*math.pi/180)*math.sin(longi*math.pi/180)
+            earth_z = earth_radius*math.sin(latt*math.pi/180)
+
+            earth_xtab.append(earth_x)
+            earth_ytab.append(earth_y)
+            earth_ztab.append(earth_z)
 
     xtab = []
     ytab = []
@@ -55,10 +73,10 @@ def gs_plot(dt):
     
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.plot(xtab,ytab,ztab)
+    ax.plot(xtab,ytab,ztab,color='r', linewidth=10.)
     tlextab,tleytab,tleztab = tle_dataimport()
-    ax.plot(tlextab,tleytab,tleztab)
-    ax.plot_surface(x,y,z,color='b')
+    ax.plot(tlextab,tleytab,tleztab,color='g', linewidth=10.)
+    ax.plot(earth_xtab,earth_ytab,earth_ztab,color='b')
     plt.show()
 
     
