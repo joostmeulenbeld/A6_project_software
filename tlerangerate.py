@@ -18,15 +18,18 @@ gs_x0 = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180)
 gs_y0 = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180)
 gs_z0 = gs_radius*math.sin(ewi_latt*math.pi/180)
 
-t=0
-xtab = []
-ytab = []
-
 t0 = dt.datetime(2000,01,01,11,58,55)
 t1 = dt.datetime(2013,11,21,10,16,46)
 
 trange = (t1-t0).total_seconds()
 
+def gs_position(t):
+    gs_x = gs_radius*math.cos(ewi_latt*maht.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*(trange+t))
+    gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180+earth_omega*(trange+t))
+    gs_z = gs_radius*math.sin(ewi_latt+math.pi/180)
+
+    return gs_x, gs_y, gs_z
+     
 for t in xrange(int(trange),int(trange)+24*3600):
     gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*t)
     gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180+earth_omega*t)
