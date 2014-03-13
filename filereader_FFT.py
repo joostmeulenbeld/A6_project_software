@@ -1,5 +1,5 @@
 import scipy.io.wavfile as wav
-import scipy.fftpack
+from scipy import fftpack
 import scipy
 import wave
 import matplotlib.pyplot as plt
@@ -26,4 +26,4 @@ def readout(w,nsample,fourierwidth):
 
 ## Return the fast fourier transform of the given interval
 def getFFT(timeamplitude):
-    return fftpack.fft(timeamplitude[1])
+    return fftpack.fft(timeamplitude)
