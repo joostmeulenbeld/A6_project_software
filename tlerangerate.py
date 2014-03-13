@@ -23,8 +23,6 @@ t1 = dt.datetime(2013,11,21,10,16,46)
 
 trange = (t1-t0).total_seconds()
 
-xtab = []
-ytab = []
 
 def gs_position(t):
     gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*(trange+t))
@@ -33,22 +31,24 @@ def gs_position(t):
 
     return gs_x, gs_y, gs_z
      
-for t in xrange(int(trange),int(trange)+24*3600):
-    gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*t)
-    gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180+earth_omega*t)
-    gs_z = gs_z0
+def gs_plot(t):
 
-    xtab.append(gs_x)
-    ytab.append(gs_y)
+    xtab = []
+    ytab = []
+    
+    for i in xrange(int(trange),int(trange)+t):
+        gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*i)
+        gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180+earth_omega*i)
+        gs_z = gs_z0
 
-    t = t + 1
+        xtab.append(gs_x)
+        ytab.append(gs_y)
 
-print xtab[0],ytab[0]
-print trange
+        t = t + 1
 
-plt.plot(xtab,ytab)
-plt.plot(gs_x0,gs_y0, marker='*', ms=10.0)
-plt.plot(gs_x,gs_y,marker='*', ms=10.0)
-plt.show()
+    plt.plot(xtab,ytab)
+    plt.plot(gs_x0,gs_y0, marker='*', ms=10.0)
+    plt.plot(gs_x,gs_y,marker='*', ms=10.0)
+    plt.show()
 
 
