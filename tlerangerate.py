@@ -12,8 +12,8 @@ earth_a = 6378.135              #radius of the earth at the equatorial plane (km
 earth_b = 6356.750              #radius of the earth at the polaire plane (km)
 earth_omega = 7.292115*10**-5   #angular velocity of the earth (rad/s)
 
-meas_t0 = [2013,11,21,10,16,46] #start datetime of measurement (YYYY-MM-DD-HH-MM-SS)
-meas_dur = [0,0,0,21,33]      #duration of measurement (WW-DD-HH-MM-SS)
+date_meas = [2013,11,21,10,16,46]   #start datetime of measurement (YYYY-MM-DD-HH-MM-SS)
+meas_dur = [0,0,0,21,33]            #duration of measurement (WW-DD-HH-MM-SS)
 
 ewi_sealevel = math.sqrt(((((earth_a**2)*math.cos(ewi_latt*math.pi/180))**2)+(((earth_b**2)*math.sin(ewi_latt*math.pi/180))**2))/((((earth_a)*math.cos(ewi_latt*math.pi/180))**2)+(((earth_b)*math.sin(ewi_latt*math.pi/180))**2)))
 gs_radius = ewi_sealevel + ewi_nap + ewi_heigth
@@ -22,13 +22,13 @@ gs_x0 = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180)
 gs_y0 = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180)
 gs_z0 = gs_radius*math.sin(ewi_latt*math.pi/180)
 
-t2000 = dt.datetime(2000,01,01,11,58,55)
-t0 = dt.datetime(meas_t0[0],meas_t0[1],meas_t0[2],meas_t0[3],meas_t0[4],meas_t0[5])
-tdelta = dt.timedelta(meas_dur[1],meas_dur[4],0,0,meas_dur[3],meas_dur[2],meas_dur[0])
-tdelta_sec = (tdelta).total_seconds()
-tend = t0+tdelta
+t_ref = dt.datetime(2000,01,01,11,58,55)
+t_start = dt.datetime(date_meas[0],date_meas[1],date_meas[2],date_meas[3],date_meas[4],date_meas[5])
+t_dif = dt.timedelta(meas_dur[1],meas_dur[4],0,0,meas_dur[3],meas_dur[2],meas_dur[0])
+t_dif_sec = (t_dif).total_seconds()
+t_end = t_start+t_dif
 
-trange = (t0-t2000).total_seconds()
+trange = (t_start-t_ref).total_seconds()
 
 def gs_position(t):
     gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*(trange+t))
@@ -58,6 +58,7 @@ def gs_plot(dt):
     ax.plot(xtab,ytab,ztab)
     tlextab,tleytab,tleztab = tle_dataimport()
     ax.plot(tlextab,tleytab,tleztab)
+    ax.plot_surface(x,y,z,color='b')
     plt.show()
 
     
@@ -67,13 +68,12 @@ def tle_dataimport():
     tleytab=[]
     tleztab=[]
     for i in range(len(f)):
-        if dt.datetime(int(f[i][7]),int(f[i][8]),int(f[i][9]),int(f[i][10]),int(f[i][11]),int(f[i][12])) >= t0:
-            if dt.datetime(int(f[i][7]),int(f[i][8]),int(f[i][9]),int(f[i][10]),int(f[i][11]),int(f[i][12])) <= tend:
+        if dt.datetime(int(f[i][7]),int(f[i][8]),int(f[i][9]),int(f[i][10]),int(f[i][11]),int(f[i][12])) >= t_start:
+            if dt.datetime(int(f[i][7]),int(f[i][8]),int(f[i][9]),int(f[i][10]),int(f[i][11]),int(f[i][12])) <= t_end:
                 tlextab.append(f[i][1])
                 tleytab.append(f[i][2])
                 tleztab.append(f[i][3])
-                print 'added'
     return tlextab,tleytab,tleztab
 
-gs_plot(int(tdelta_sec))
-#tle_dataimport()
+gs_plot(int(t_dif_sec))
+
