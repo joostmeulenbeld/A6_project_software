@@ -23,6 +23,9 @@ t1 = dt.datetime(2013,11,21,10,16,46)
 
 trange = (t1-t0).total_seconds()
 
+xtab = []
+ytab = []
+
 def gs_position(t):
     gs_x = gs_radius*math.cos(ewi_latt*maht.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*(trange+t))
     gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180+earth_omega*(trange+t))
