@@ -7,11 +7,10 @@ from matplotlib import pyplot as plt
 # timeamplitude = np.array([t, x])
 # print(timeamplitude)
 
-
 fs = 100
-T = 1.0/1000
-N = T*fs
-x = np.linspace(0.0, N*T, N)
+N = 100000
+T = 1.0/fs
+x = np.linspace(0.0, 1, N)
 y = np.sin(50.0 * 2.0*np.pi*x) + 0.5*np.sin(80.0 * 2.0*np.pi*x) + np.sin(40.0* 2.0*np.pi*x)*1j
 
 yf = frfft.getFFT(y)

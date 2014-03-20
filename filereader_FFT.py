@@ -36,3 +36,7 @@ def readout(w,nsample,fourierwidth):
     print ampleft, " Left channel"
     print ampright, " Right channel"
     print itab
+
+## Return the fast fourier transform of the given interval
+def getFFT(timeamplitude):
+    return fftpack.fft(timeamplitude)
