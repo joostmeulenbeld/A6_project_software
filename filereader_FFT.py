@@ -1,6 +1,7 @@
 import scipy.io.wavfile as wav
 import scipy, wave, struct
 import matplotlib.pyplot as plt
+from scipy import fftpack
 
 def mainfft(w,fourierwidth):
     ttab=scipy.linspace(0,fourierwidth)
@@ -10,6 +11,9 @@ def mainfft(w,fourierwidth):
     sampfreq=params[2]
     totalsamp=params[3]
     print params ## Channels, sample width [bytes], sample frequency
+
+def getFFT(amplitudes):
+    return fftpack.fft(amplitudes)
 
 ## Divide sample file into intervals, one for every Fast Fourier Transform
 def readout(w,nsample,fourierwidth):
