@@ -30,9 +30,6 @@ t_end = t_start+t_dif
 
 trange = (t_start-t_ref).total_seconds()
 
-
-
-
 def gs_position(t):
     gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*(trange+t))
     gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180+earth_omega*(trange+t))
@@ -41,7 +38,7 @@ def gs_position(t):
     return gs_x, gs_y, gs_z
 
      
-def gs_plot(dt):
+def gs_plot(dt,filename):
 
     earth_xtab = []
     earth_ytab = []
@@ -75,15 +72,13 @@ def gs_plot(dt):
     ax = fig.add_subplot(111, projection='3d')
     #ax.plot(earth_xtab,earth_ytab,earth_ztab,color='b')
     ax.plot(xtab,ytab,ztab,color='r',linewidth=5.)
-    tlextab,tleytab,tleztab = tle_dataimport()
+    tlextab,tleytab,tleztab = tle_dataimport(filename)
     ax.plot(tlextab,tleytab,tleztab,color='g', linewidth=5.)
     ax.plot(tlextab[0:10],tleytab[0:10],tleztab[0:10],color='b', linewidth=5.)
     ax.plot(xtab[0:10],ytab[0:10],ztab[0:10],color='y',linewidth=5.)
-    plt.show()
-
     
-def tle_dataimport():
-    f = np.genfromtxt("tle23.xyz",delimiter="")
+def tle_dataimport(filename):
+    f = np.genfromtxt(filename,delimiter="")
     tlextab=[]
     tleytab=[]
     tleztab=[]
@@ -95,6 +90,9 @@ def tle_dataimport():
                 tleztab.append(f[i][3])
     return tlextab,tleytab,tleztab
 if __name__=="__main__":
+    tle23x, tle23y, tle23z = tle_dataimport('tle23.xyz')
+    tle24x, tle24y, tle24z = tle_dataimport('tle24.xyz')
+    tle25x, tle25y, tle25z = tle_dataimport('tle25.xyz')
     
-    gs_plot(int(t_dif_sec))
-
+    
+    
