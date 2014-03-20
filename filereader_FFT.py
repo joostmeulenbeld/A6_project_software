@@ -1,5 +1,5 @@
 import scipy.io.wavfile as wav
-import scipy, wave, struct
+import scipy, wave, struct, binascii
 import matplotlib.pyplot as plt
 
 def mainfft(w,fourierwidth):
@@ -13,9 +13,12 @@ def mainfft(w,fourierwidth):
 
 ## Divide sample file into intervals, one for every Fast Fourier Transform
 def readout(w,nsample,fourierwidth):
+    bytenum=0
     p=nsample - 1
     ampleft=[]
     ampright=[]
+    ampleftfull=[0] * fourierwidth
+    amprightfull=[0] * fourierwidth
     amptab=[]
     itab=[]
     for i in range(nsample,nsample+fourierwidth):
@@ -23,14 +26,18 @@ def readout(w,nsample,fourierwidth):
         p=p+1
         w.setpos(p)
         ## Delimiting hexadecimal characters between bytes: \x
+        ## This presents us with the problem that '\x' is a command in Python syntax...
         amprep=amp.replace("\\","0")
         amptab.append(amp)
         for k in range(0,len(amprep)):
             amplitude=amprep[k]
             if k%2==0: ## Left channel
-                ampleft.append(amplitude)
+                l=amplitude.encode("hex")
+                ampleft.append(l)
             if k%2!=0: ## Right channel
-                ampright.append(amplitude)
+                r=amplitude.encode("hex")
+                ampright.append(r)
+        
         itab.append(i)
     print amptab
     print ampleft, " Left channel"
