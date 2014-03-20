@@ -73,11 +73,12 @@ def gs_plot(dt):
     
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.plot(earth_xtab,earth_ytab,earth_ztab,color='b')
+    #ax.plot(earth_xtab,earth_ytab,earth_ztab,color='b')
     ax.plot(xtab,ytab,ztab,color='r',linewidth=5.)
     tlextab,tleytab,tleztab = tle_dataimport()
     ax.plot(tlextab,tleytab,tleztab,color='g', linewidth=5.)
-    
+    ax.plot(tlextab[0:10],tleytab[0:10],tleztab[0:10],color='b', linewidth=5.)
+    ax.plot(xtab[0:10],ytab[0:10],ztab[0:10],color='y',linewidth=5.)
     plt.show()
 
     
@@ -93,6 +94,7 @@ def tle_dataimport():
                 tleytab.append(f[i][2])
                 tleztab.append(f[i][3])
     return tlextab,tleytab,tleztab
-
-gs_plot(int(t_dif_sec))
+if __name__=="__main__":
+    
+    gs_plot(int(t_dif_sec))
 
