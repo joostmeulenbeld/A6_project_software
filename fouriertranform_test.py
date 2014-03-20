@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 # timeamplitude = np.array([t, x])
 # print(timeamplitude)
 
-fs = 100
+fs = 1000
 N = 100000
 T = 1.0/fs
 x = np.linspace(0.0, 1, N)
