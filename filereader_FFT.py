@@ -15,6 +15,7 @@ def mainfft(w,fourierwidth):
 def readout(w,nsample,fourierwidth):
     bytenum=0
     p=nsample - 1
+    numbappend=[]
     ampleft=[]
     ampright=[]
     ampleftfull=[0] * fourierwidth
@@ -23,7 +24,7 @@ def readout(w,nsample,fourierwidth):
     itab=[]
     for i in range(nsample,nsample+fourierwidth):
         amp=str(w.readframes(1))
-        p=p+1
+        p+1
         w.setpos(p)
         ## Delimiting hexadecimal characters between bytes: \x
         ## This presents us with the problem that '\x' is a command in Python syntax...
@@ -38,9 +39,12 @@ def readout(w,nsample,fourierwidth):
                 r=amplitude.encode("hex")
                 ampright.append(str(r))
         itab.append(i)
-    for j in range(0,sampwidth*fourierwidth):
-        
+    for j in range(0,3*fourierwidth):
+        numbappend.append(ampleft[j])
+        bytenum+1
+        if bytenum==2:
+            bytenum=0
     print amptab
     print ampleft, " Left channel"
     print ampright, " Right channel"
-    print itab
+    print itab, "Sample number"
