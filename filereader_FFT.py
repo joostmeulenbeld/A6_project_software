@@ -1,5 +1,5 @@
 import scipy.io.wavfile as wav
-import scipy, wave, struct, binascii
+import scipy, wave, struct
 import matplotlib.pyplot as plt
 
 def mainfft(w,fourierwidth):
@@ -33,18 +33,14 @@ def readout(w,nsample,fourierwidth):
             amplitude=amprep[k]
             if k%2==0: ## Left channel
                 l=amplitude.encode("hex")
-                ampleft.append(l)
+                ampleft.append(str(l))
             if k%2!=0: ## Right channel
                 r=amplitude.encode("hex")
-                ampright.append(r)
-        
+                ampright.append(str(r))
         itab.append(i)
+    for j in range(0,sampwidth*fourierwidth):
+        
     print amptab
     print ampleft, " Left channel"
     print ampright, " Right channel"
     print itab
-
-## Return the fast fourier transform of the given interval
-def getFFT(timeamplitude):
-    return fftpack.fft(timeamplitude)
-    
