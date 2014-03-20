@@ -2,6 +2,7 @@ import math
 import matplotlib.pyplot as plt
 import datetime as dt
 import numpy as np
+import scipy
 from mpl_toolkits.mplot3d import Axes3D
 
 ewi_latt = 51.999218            #lattitude position ground station (degree)
@@ -88,11 +89,34 @@ def tle_dataimport(filename):
                 tlextab.append(f[i][1])
                 tleytab.append(f[i][2])
                 tleztab.append(f[i][3])
-    return tlextab,tleytab,tleztab
+    return tlextab,tleytab,tleztab    
+def tle_temp(filename):
+    f = np.genfromtxt(filename,delimiter="")
+    tlextab=[]
+    tleytab=[]
+    tleztab=[]
+    for i in range(len(f)):
+        tlextab.append(f[i][1])
+        tleytab.append(f[i][2])
+        tleztab.append(f[i][3])  
+    return tlextab,tleytab,tleztab   
 if __name__=="__main__":
-    tle23x, tle23y, tle23z = tle_dataimport('tle23.xyz')
-    tle24x, tle24y, tle24z = tle_dataimport('tle24.xyz')
-    tle25x, tle25y, tle25z = tle_dataimport('tle25.xyz')
-    
-    
+           
+    tle23x, tle23y, tle23z = tle_temp('tle23.xyz')
+    tle24x, tle24y, tle24z = tle_temp('tle24.xyz')
+    tle25x, tle25y, tle25z = tle_temp('tle25.xyz')
+
+    tle23r =[]
+    tle23an = []
+    delta = []
+    labda = []
+    for i in range(len(tle23x)):
+        r = np.sqrt(tle23x[i]**2+tle23y[i]**2+tle23z[i]**2)
+        tle23r.append(r)
+        delta.append(np.arcsin(tle23z[i]/tle23r[i]))
+        tle23rxy = np.sqrt(tle23x[i]**2+tle23y[i]**2)
+        labda.append(np.arctan2(tle23y[i]/tle23rxy,tle23x[i]/tle23rxy))
+        #tle23an.append()
+    plt.plot(labda)
+    plt.show()
     
