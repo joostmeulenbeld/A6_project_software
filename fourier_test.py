@@ -1,5 +1,5 @@
 import numpy as np
-import filereader_FFT as frfft
+import fourier
 from matplotlib import pyplot as plt
 
 # t = np.arange(0, 2*np.pi, 0.1)
@@ -13,7 +13,7 @@ T = 1.0/fs
 x = np.linspace(0.0, N*T, N)
 y = 1.0+np.sin(50.0 * 2.0*np.pi*x) + 0.5*np.sin(80.0 * 2.0*np.pi*x) + np.sin(40.0* 2.0*np.pi*x)*1j
 
-yf = frfft.getFFT(T, [x, y])
+yf = fourier.getFFT(T, [x, y])
 
 plt.plot(yf[0], yf[1])
 plt.show()
