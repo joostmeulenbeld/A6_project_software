@@ -181,7 +181,7 @@ def groundmap(gsx,gsy,gsz,trange):
 #plt.plot(position_diff()[1],position_diff()[3])
 #plt.plot(position_diff()[1],position_diff()[4])
 
-
+#aanpassing
 gsx,gsy,gsz = gs_plot(int(t_dif_sec))
 debuglist = groundmap(gsx,gsy,gsz,trange)
 
