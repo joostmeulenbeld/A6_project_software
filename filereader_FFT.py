@@ -1,5 +1,5 @@
 import scipy.io.wavfile as wav
-import scipy, wave, struct
+import scipy, wave, binascii
 import matplotlib.pyplot as plt
 
 def mainfft(w,fourierwidth):
@@ -13,13 +13,14 @@ def mainfft(w,fourierwidth):
 
 ## Divide sample file into intervals, one for every Fast Fourier Transform
 def readout(w,nsample,fourierwidth):
+    flag=1
     bytenum=0
     p=nsample - 1
     numbappend=[]
     ampleft=[]
-    ampleftcurframe=[]
     ampright=[]
-    ampleftfull=[]
+    l=''
+    r=''
     amptab=[]
     itab=[]
     for i in range(nsample,nsample+fourierwidth):
@@ -35,12 +36,9 @@ def readout(w,nsample,fourierwidth):
             if k%2==0: ## Left channel
                 l=amplitude.encode("hex")
                 ampleft.append(str(l))
-                ampleftcurframe.append(str(l))
             if k%2!=0: ## Right channel
                 r=amplitude.encode("hex")
                 ampright.append(str(r))
-            ampleftfull= join(ampleftcurframe)
-            print ampleftfull
         itab.append(i)
         
         
