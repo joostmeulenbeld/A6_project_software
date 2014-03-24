@@ -1,8 +1,6 @@
 import scipy.io.wavfile as wav
-import scipy, wave, struct
+import scipy, wave, binascii
 import matplotlib.pyplot as plt
-from scipy import fftpack
-import numpy as np
 
 def mainfft(w,fourierwidth):
     ttab=scipy.linspace(0,fourierwidth)
@@ -13,28 +11,16 @@ def mainfft(w,fourierwidth):
     totalsamp=params[3]
     print params ## Channels, sample width [bytes], sample frequency
 
-def getFFT(T, timeamplitude):
-    N = len(timeamplitudes[0])
-    fourieramplitudes = fftpack.fft(timeamplitudes[1])
-    realamplitudes = 2.0/N * np.abs(fourieramplitudes[0:N/2])
-    frequencies = np.linspace(0.0, 1.0/(2.0*T), N/2)
-    return [frequencies, realamplitudes]
-
-def getFFTs(T, timeamplitudes):
-    frequencyamplitudes = []
-    for ta in timeamplitudes:
-        frequencyamplitudes.append(getFFT(T, ta))
-
-
 ## Divide sample file into intervals, one for every Fast Fourier Transform
 def readout(w,nsample,fourierwidth):
+    flag=1
     bytenum=0
     p=nsample - 1
     numbappend=[]
     ampleft=[]
     ampright=[]
-    ampleftfull=[0] * fourierwidth
-    amprightfull=[0] * fourierwidth
+    l=''
+    r=''
     amptab=[]
     itab=[]
     for i in range(nsample,nsample+fourierwidth):
@@ -54,11 +40,8 @@ def readout(w,nsample,fourierwidth):
                 r=amplitude.encode("hex")
                 ampright.append(str(r))
         itab.append(i)
-    for j in range(0,3*fourierwidth):
-        numbappend.append(ampleft[j])
-        bytenum+1
-        if bytenum==2:
-            bytenum=0
+        
+        
     print amptab
     print ampleft, " Left channel"
     print ampright, " Right channel"
