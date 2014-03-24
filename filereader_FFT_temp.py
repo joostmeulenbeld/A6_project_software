@@ -29,17 +29,7 @@ def readout(w,nsample,fourierwidth):
         w.setpos(p)
         ## Delimiting hexadecimal characters between bytes: \x
         ## This presents us with the problem that '\x' is a command in Python syntax...
-        amprep=amp.replace("\\","0")
-        amptab.append(amp)
-        for k in range(0,len(amprep)):
-            amplitude=amprep[k]
-            if k%2==0: ## Left channel
-                l=amplitude.encode("hex")
-                ampleft.append(str(l))
-            if k%2!=0: ## Right channel
-                r=amplitude.encode("hex")
-                ampright.append(str(r))
-        itab.append(i)
+        c=len(w.readframes(1))
         
         
     print amptab
