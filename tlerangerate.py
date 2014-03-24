@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import datetime as dt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.basemap import Basemap
 
 ewi_latt = 51.999218            #lattitude position ground station (degree)
 ewi_long = 4.373389             #longitude position ground station (degree)
@@ -15,7 +16,7 @@ earth_omega = 7.29211509*10**-5   #angular velocity of the earth (rad/s)
 date_meas = [2013,11,21,10,16,46]   #start datetime of measurement (YYYY-MM-DD-HH-MM-SS)
 meas_dur = [0,0,0,21,33]            #duration of measurement (WW-DD-HH-MM-SS)
 
-
+filelist = ['tle23.xyz','tle24.xyz','tle25.xyz']
 #1 Calculation position groundstation in J2000
 ewi_sealevel = math.sqrt(((((earth_a**2)*math.cos(ewi_latt*math.pi/180))**2)+(((earth_b**2)*math.sin(ewi_latt*math.pi/180))**2))/((((earth_a)*math.cos(ewi_latt*math.pi/180))**2)+(((earth_b)*math.sin(ewi_latt*math.pi/180))**2)))
 gs_radius = ewi_sealevel + ewi_nap + ewi_heigth
@@ -65,7 +66,7 @@ def gs_plot(dt):
     xtab = []
     ytab = []
     ztab = []
-    for i in xrange(int(trange),int(trange)+dt):
+    for i in xrange(int(trange),int(trange)+dt+1):
         gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*i)
         gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180+earth_omega*i)
         gs_z = gs_z0
@@ -83,22 +84,28 @@ def gs_plot(dt):
     #ax.plot(tlextab,tleytab,tleztab,color='g', linewidth=1.)    #plot satalite track
     #plt.show()
 
-    return xtab,ytab,ztab
+    return np.array(xtab),np.array(ytab),np.array(ztab)
 
 
 #TLE data importeren en het gedeelte selecteren dat de juiste tijd heeft.   
-def tle_dataimport():
-    f = np.genfromtxt('tle23.xyz',delimiter="")
+def tle_dataimport(fname):
+    f = np.genfromtxt(fname,delimiter="")
     tlextab=[]
     tleytab=[]
     tleztab=[]
     for i in range(len(f)):
         if dt.datetime(int(f[i][7]),int(f[i][8]),int(f[i][9]),int(f[i][10]),int(f[i][11]),int(f[i][12])) >= t_start:
-            if dt.datetime(int(f[i][7]),int(f[i][8]),int(f[i][9]),int(f[i][10]),int(f[i][11]),int(f[i][12])) <= t_end:
-                tlextab.append(f[i][1])
-                tleytab.append(f[i][2])
-                tleztab.append(f[i][3])
-    return tlextab,tleytab,tleztab
+            sfix =  int(round(f[i][12]))
+            if sfix == 60:
+                sfix = 0
+                mfix = 1
+            else:
+                mfix=0
+            if dt.datetime(int(f[i][7]),int(f[i][8]),int(f[i][9]),int(f[i][10]),int(f[i][11])+mfix,sfix) <= t_end:
+                    tlextab.append(f[i][1])
+                    tleytab.append(f[i][2])
+                    tleztab.append(f[i][3])
+    return np.array(tlextab),np.array(tleytab),np.array(tleztab)
 
 
 #De verschillen in x, y, z positie bepalen tussen gs en sataliet. Die vervolgens kwadrateren, bij elkaar optellen en de wortel daarvan geeft de afstand.
@@ -128,12 +135,55 @@ def position_diff():
 
     return distance, ttab, barx, bary,barz
 
-
+def groundmap(gsx,gsy,gsz,trange):
+    
+    gmap = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
+            llcrnrlon=-180,urcrnrlon=180,resolution='c')
+    gmap.drawcoastlines(linewidth=.25)
+    gmap.drawcountries(linewidth=.25)
+    gmap.fillcontinents(color='g',lake_color='b')
+    gmap.drawmapboundary(fill_color='b')
+    gmap.drawmeridians(np.arange(0,360,30))
+    gmap.drawparallels(np.arange(-90,90,30))
+    
+    tlong = np.arange(trange,trange+t_dif_sec+1,1)
+    
+    longref = (((tlong*earth_omega)%(2*np.pi))*(180./np.pi))
+    longref = 360-longref
+    longgs = (180./np.pi)*np.arctan2(gsy,gsx)
+    latgs = (180./np.pi)*np.arctan2(gsz,np.sqrt(gsx*gsx+gsy*gsy))
+    for i in range(len(tlong)):
+        longgs[i] += longref[i]   
+    debuglist = []    
+    for i in range(len(filelist)):
+        fname = filelist[i]
+        lcolor = ['r','y','black'] 
+        print i,lcolor[i]
+        x,y,z = tle_dataimport(fname)
+        longsat = ((180./np.pi)*np.arctan2(y,x))   
+        latsat = (180./np.pi)*np.arctan2(z,np.sqrt(x*x+y*y))        
+        for j in range(len(tlong)):
+            longsat[j] += longref[j]
+        
+        x,y = gmap(longsat,latsat)
+        gmap.plot(x,y,color=lcolor[i],linewidth=1)
+        debuglist.append(x)
+    gsx,gsy = gmap(longgs,latgs)
+    gmap.plot(gsx,gsy,color='y',linewidth=2)
+    
+    plt.show()
+    
+    
+    return debuglist
 #Plot tijd vs. afstand gs/sataliet
-plt.plot(position_diff()[1],position_diff()[0])
+#plt.plot(position_diff()[1],position_diff()[0])
 #plt.plot(position_diff()[1],position_diff()[2])
 #plt.plot(position_diff()[1],position_diff()[3])
 #plt.plot(position_diff()[1],position_diff()[4])
+
+
+gsx,gsy,gsz = gs_plot(int(t_dif_sec))
+debuglist = groundmap(gsx,gsy,gsz,trange)
+
+
 plt.show()
-
-
