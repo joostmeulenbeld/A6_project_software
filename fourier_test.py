@@ -2,18 +2,33 @@ import numpy as np
 import fourier
 from matplotlib import pyplot as plt
 
-# t = np.arange(0, 2*np.pi, 0.1)
-# x = np.sin(t) + np.sin(3*t)
-# timeamplitude = np.array([t, x])
-# print(timeamplitude)
-
-fs = 1000
-N = 1000
+fs = 250e3
+measurementTime = 5
+N = fs*measurementTime
 T = 1.0/fs
-x = np.linspace(0.0, N*T, N)
-y = 1.0+np.sin(50.0 * 2.0*np.pi*x) + 0.5*np.sin(80.0 * 2.0*np.pi*x) + np.sin(40.0* 2.0*np.pi*x)*1j
+t = np.linspace(0.0, N*T, N)
 
-yf = fourier.getFFT(T, [x, y])
 
-plt.plot(yf[0], yf[1])
+print("max frequency (fs/2): " + str(fs/2))
+print("delta frequency (fs/N): " + str(fs/N))
+if N%2==0:
+	print("N is even")
+else:
+	print("N is odd")
+
+realFrequencies = np.arange(1, 1000, 87)
+imagFrequencies = [1001]
+
+y = np.zeros(len(t), 'complex')
+
+for f in realFrequencies:
+	y += 2*np.sin(f*2.0*np.pi*t)
+
+for f in imagFrequencies:
+	y += np.sin(f*2.0*np.pi*t)*1j
+
+
+frequencies, power = fourier.getFFT(T, [t, y])
+
+plt.plot(frequencies, power)
 plt.show()
