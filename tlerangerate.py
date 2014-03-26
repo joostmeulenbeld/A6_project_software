@@ -4,32 +4,34 @@ import datetime as dt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.basemap import Basemap
-
+#===============================================================================
+#                           Definition of variables
+#===============================================================================
 ewi_latt = 51.999218            #lattitude position ground station (degree)
 ewi_long = 4.373389             #longitude position ground station (degree)
-ewi_heigth = 0.095              #heigth groundstation with respect to the ground (km)
+ewi_heigth = 0.095              #heigth groundstation (km)
 ewi_nap = -0.001                #sealevel at groundstation (km)
 earth_a = 6378.135              #radius of the earth at the equatorial plane (km)
 earth_b = 6356.750              #radius of the earth at the polaire plane (km)
-earth_omega = 7.29211509*10**-5   #angular velocity of the earth (rad/s)
+earth_omega = 7.29211509*10**-5 #angular velocity of the earth (rad/s)
 
-#===================================================================================================
+#===============================================================================
 #                  User Input of Measurement time and files
-#===================================================================================================
-date_meas = [2013,11,21,10,16,46]   #Start datetime of measurement (YYYY-MM-DD-HH-MM-SS)
-meas_dur = [0,0,0,21,33]            #Duration of measurement (WW-DD-HH-MM-SS)
-filelist = ['tle23.xyz','tle24.xyz','tle25.xyz'] #Have to be in the same folder as this script
+#===============================================================================
+date_meas = [2013,11,21,10,16,46]                   #Start datetime of measurement (YYYY-MM-DD-HH-MM-SS)
+meas_dur = [0,0,0,21,33]                            #Duration of measurement (WW-DD-HH-MM-SS)
+filelist = ['tle23.xyz','tle24.xyz','tle25.xyz']    #Have to be in the same folder as this script
 
-#===================================================================================================
-#                                  Code
-#Written by projectgroup A6 for the second year project AE2223-I
-#This file consists of four functions
+#===============================================================================
+#                                          Main Code
+#               Written by projectgroup A6 for the second year project AE2223-I
+#                           This file consists of four functions
 #   gs_pos()        -Determines the position of the groundstation for the given datetime
 #   tle_import()    -Returns (x,y,z) arrays in J2000 of the satellite for a given TLE data file
 #   position_diff() -Returns an [filename,time,distance] array for all TLE data files
 #   groundmap()     -Draws the position of the groundstation and groundtracks for all TLE data files
-#====================================================================================================
-#Calculation of the start position of the groundstation in J2000 reference system
+#===============================================================================
+#Calculation of the start position of the groundstation in J2000
 ewi_sealevel = math.sqrt(((((earth_a**2)*math.cos(ewi_latt*math.pi/180))**2)+(((earth_b**2)*math.sin(ewi_latt*math.pi/180))**2))/((((earth_a)*math.cos(ewi_latt*math.pi/180))**2)+(((earth_b)*math.sin(ewi_latt*math.pi/180))**2)))
 gs_radius = ewi_sealevel + ewi_nap + ewi_heigth
 
@@ -146,6 +148,7 @@ def groundmap():
     longref = 360-longref
     longgs = (180./np.pi)*np.arctan2(gsy,gsx)
     latgs = (180./np.pi)*np.arctan2(gsz,np.sqrt(gsx*gsx+gsy*gsy))
+    
     #Compensates for the rotation of the earth for groundstation
     for i in range(len(tlong)):
         longgs[i] += longref[i]   
@@ -158,15 +161,13 @@ def groundmap():
         latsat = (180./np.pi)*np.arctan2(z,np.sqrt(x*x+y*y))        
         for j in range(len(tlong)):
             longsat[j] += longref[j]
+            
         #Rescales satellite coordinates for map draw and draws the track
         x,y = gmap(longsat,latsat)
         gmap.plot(x,y,color=lcolor[k],linewidth=1)
+        
     #Rescales groundstation coordinates for map draw and draws the position  
     gsx,gsy = gmap(longgs,latgs)
     gmap.plot(gsx,gsy,color='y',linewidth=2)
     
     return plt.show()
-    
-groundmap()
-
-
