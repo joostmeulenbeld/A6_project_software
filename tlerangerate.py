@@ -13,11 +13,14 @@ earth_a = 6378.135              #radius of the earth at the equatorial plane (km
 earth_b = 6356.750              #radius of the earth at the polaire plane (km)
 earth_omega = 7.29211509*10**-5   #angular velocity of the earth (rad/s)
 
-date_meas = [2013,11,21,10,16,46]   #start datetime of measurement (YYYY-MM-DD-HH-MM-SS)
-meas_dur = [0,0,0,21,33]            #duration of measurement (WW-DD-HH-MM-SS)
+#===============================================================================
+#                  User Input of Measurement time and files
+#===============================================================================
+date_meas = [2013,11,21,10,16,46]   #Start datetime of measurement (YYYY-MM-DD-HH-MM-SS)
+meas_dur = [0,0,0,21,33]            #Duration of measurement (WW-DD-HH-MM-SS)
+filelist = ['tle23.xyz','tle24.xyz','tle25.xyz'] #Have to be in the same folder as this script
 
-filelist = ['tle23.xyz','tle24.xyz','tle25.xyz']
-#1 Calculation position groundstation in J2000
+#Calculation of the start position of the groundstation in J2000 reference system
 ewi_sealevel = math.sqrt(((((earth_a**2)*math.cos(ewi_latt*math.pi/180))**2)+(((earth_b**2)*math.sin(ewi_latt*math.pi/180))**2))/((((earth_a)*math.cos(ewi_latt*math.pi/180))**2)+(((earth_b)*math.sin(ewi_latt*math.pi/180))**2)))
 gs_radius = ewi_sealevel + ewi_nap + ewi_heigth
 
@@ -25,8 +28,7 @@ gs_x0 = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180)
 gs_y0 = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180)
 gs_z0 = gs_radius*math.sin(ewi_latt*math.pi/180)
 
-
-#2 time calculations
+#Time definitions and difference calculations
 t_ref = dt.datetime(2000,01,01,11,58,55)
 t_start = dt.datetime(date_meas[0],date_meas[1],date_meas[2],date_meas[3],date_meas[4],date_meas[5])
 t_dif = dt.timedelta(meas_dur[1],meas_dur[4],0,0,meas_dur[3],meas_dur[2],meas_dur[0])
@@ -35,23 +37,14 @@ t_end = t_start+t_dif
 
 trange = (t_start-t_ref).total_seconds()
 
-
-
-def gs_position(t):
-    gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*(trange+t))
-    gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180+earth_omega*(trange+t))
-    gs_z = gs_radius*math.sin(ewi_latt+math.pi/180)
-
-    return gs_x, gs_y, gs_z
-
-
-#De aardbol, de banen van de gs en sataliet plotten.    
-def gs_plot(dt):
-
+#Returns three arrays (x,y,z) of the position of the groundstation
+#During the measurement datetime defined by the user   
+def gs_pos():
+    #Calculates the shape of the earth
     earth_xtab = []
     earth_ytab = []
     earth_ztab = []
-
+    
     for latt in range(-180,181):
         for longi in range(-90,91):
             earth_radius = math.sqrt(((((earth_a**2)*math.cos(latt*math.pi/180))**2)+(((earth_b**2)*math.sin(latt*math.pi/180))**2))/((((earth_a)*math.cos(latt*math.pi/180))**2)+(((earth_b)*math.sin(latt*math.pi/180))**2)))
@@ -62,32 +55,23 @@ def gs_plot(dt):
             earth_xtab.append(earth_x)
             earth_ytab.append(earth_y)
             earth_ztab.append(earth_z)
-
+    #Calculates the position of the groundstation
     xtab = []
     ytab = []
     ztab = []
-    for i in xrange(int(trange),int(trange)+dt+1):
+    
+    for i in xrange(int(trange),int(trange)+int(t_dif_sec)+1):
         gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*i)
         gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180+earth_omega*i)
         gs_z = gs_z0
-
+        
         xtab.append(gs_x)
         ytab.append(gs_y)
-        ztab.append(gs_z)
-        dt = dt + 1
+        ztab.append(gs_z)      
     
-    #fig = plt.figure()
-    #ax = fig.add_subplot(111, projection='3d')
-    #ax.plot(earth_xtab,earth_ytab,earth_ztab,color='b')         #plot earth
-    #ax.plot(xtab,ytab,ztab,color='r',linewidth=1.)              #plot groundstation track
-    #tlextab,tleytab,tleztab = tle_dataimport()
-    #ax.plot(tlextab,tleytab,tleztab,color='g', linewidth=1.)    #plot satalite track
-    #plt.show()
-
     return np.array(xtab),np.array(ytab),np.array(ztab)
-
-
-#TLE data importeren en het gedeelte selecteren dat de juiste tijd heeft.   
+    
+#Import the TLE data of the selected measurement datetime   
 def tle_dataimport(fname):
     f = np.genfromtxt(fname,delimiter="")
     tlextab=[]
@@ -108,35 +92,38 @@ def tle_dataimport(fname):
     return np.array(tlextab),np.array(tleytab),np.array(tleztab)
 
 
-#De verschillen in x, y, z positie bepalen tussen gs en sataliet. Die vervolgens kwadrateren, bij elkaar optellen en de wortel daarvan geeft de afstand.
+#Determination of the distance between the satellite and the groundstation
+#During the measurement datetime given by the user
+#Returns an array with time and distance for each TLE data file in [filename,time,distance]
 def position_diff():
-    xtab,ytab,ztab = gs_plot(int(t_dif_sec))
-    tlextab,tleytab,tleztab = tle_dataimport()
-    distance = []
-    barx = []
-    bary = []
-    barz = []
-    ttab = []
-    t = 0
-    for i in range(len(xtab)):
-        x = abs(xtab[i]-tlextab[i])
-        y = abs(ytab[i]-tleytab[i])
-        z = abs(ztab[i]-tleztab[i])
-        t = t + 1
-
-        dist = ((x**2)+(y**2)+(z**2))**0.5
-
-        distance.append(dist)
-        barx.append(x)
-        bary.append(y)
-        barz.append(z)
-        
-        ttab.append(t)
-
-    return distance, ttab, barx, bary,barz
-
-def groundmap(gsx,gsy,gsz,trange):
+    posdif = []
+    xtab,ytab,ztab = gs_pos()
+    for l in range(len(filelist)):
+        fname = filelist[l]
+        tlextab,tleytab,tleztab = tle_dataimport(fname)
+        dtab = []
+        ttab = []
+        t = 0
+        for i in range(len(xtab)):
+            x = abs(xtab[i]-tlextab[i])
+            y = abs(ytab[i]-tleytab[i])
+            z = abs(ztab[i]-tleztab[i])
+            t = t + 1
     
+            dist = ((x**2)+(y**2)+(z**2))**0.5
+    
+            dtab.append(dist)
+            ttab.append(t)
+        dummy = [filelist[l],ttab,dtab]
+        posdif.append(dummy)
+    return posdif
+    
+#Draws the groundtracks of given TLE files 
+#Draws the position of the groundstation
+def groundmap():
+    #Determine position of groundstation
+    gsx,gsy,gsz = gs_pos()
+    #BaseMap drawings
     gmap = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
             llcrnrlon=-180,urcrnrlon=180,resolution='c')
     gmap.drawcoastlines(linewidth=.25)
@@ -148,42 +135,32 @@ def groundmap(gsx,gsy,gsz,trange):
     
     tlong = np.arange(trange,trange+t_dif_sec+1,1)
     
+    #Converting from xyz j2000 to longitude and latitude
     longref = (((tlong*earth_omega)%(2*np.pi))*(180./np.pi))
     longref = 360-longref
     longgs = (180./np.pi)*np.arctan2(gsy,gsx)
     latgs = (180./np.pi)*np.arctan2(gsz,np.sqrt(gsx*gsx+gsy*gsy))
+    #Compensates for the rotation of the earth for groundstation
     for i in range(len(tlong)):
         longgs[i] += longref[i]   
-    debuglist = []    
-    for i in range(len(filelist)):
-        fname = filelist[i]
+    #Converts xyz of TLE files to longitude and latitude  
+    for k in range(len(filelist)):
+        fname = filelist[k]
         lcolor = ['r','y','black'] 
-        print i,lcolor[i]
         x,y,z = tle_dataimport(fname)
         longsat = ((180./np.pi)*np.arctan2(y,x))   
         latsat = (180./np.pi)*np.arctan2(z,np.sqrt(x*x+y*y))        
         for j in range(len(tlong)):
             longsat[j] += longref[j]
-        
+        #Rescales satellite coordinates for map draw and draws the track
         x,y = gmap(longsat,latsat)
-        gmap.plot(x,y,color=lcolor[i],linewidth=1)
-        debuglist.append(x)
+        gmap.plot(x,y,color=lcolor[k],linewidth=1)
+    #Rescales groundstation coordinates for map draw and draws the position  
     gsx,gsy = gmap(longgs,latgs)
     gmap.plot(gsx,gsy,color='y',linewidth=2)
     
-    plt.show()
+    return plt.show()
     
-    
-    return debuglist
-#Plot tijd vs. afstand gs/sataliet
-#plt.plot(position_diff()[1],position_diff()[0])
-#plt.plot(position_diff()[1],position_diff()[2])
-#plt.plot(position_diff()[1],position_diff()[3])
-#plt.plot(position_diff()[1],position_diff()[4])
-
-#aanpassing
-gsx,gsy,gsz = gs_plot(int(t_dif_sec))
-debuglist = groundmap(gsx,gsy,gsz,trange)
 
 
-plt.show()
+
