@@ -13,13 +13,22 @@ earth_a = 6378.135              #radius of the earth at the equatorial plane (km
 earth_b = 6356.750              #radius of the earth at the polaire plane (km)
 earth_omega = 7.29211509*10**-5   #angular velocity of the earth (rad/s)
 
-#===============================================================================
+#===================================================================================================
 #                  User Input of Measurement time and files
-#===============================================================================
+#===================================================================================================
 date_meas = [2013,11,21,10,16,46]   #Start datetime of measurement (YYYY-MM-DD-HH-MM-SS)
 meas_dur = [0,0,0,21,33]            #Duration of measurement (WW-DD-HH-MM-SS)
 filelist = ['tle23.xyz','tle24.xyz','tle25.xyz'] #Have to be in the same folder as this script
 
+#===================================================================================================
+#                                  Code
+#Written by projectgroup A6 for the second year project AE2223-I
+#This file consists of four functions
+#   gs_pos()        -Determines the position of the groundstation for the given datetime
+#   tle_import()    -Returns (x,y,z) arrays in J2000 of the satellite for a given TLE data file
+#   position_diff() -Returns an [filename,time,distance] array for all TLE data files
+#   groundmap()     -Draws the position of the groundstation and groundtracks for all TLE data files
+#====================================================================================================
 #Calculation of the start position of the groundstation in J2000 reference system
 ewi_sealevel = math.sqrt(((((earth_a**2)*math.cos(ewi_latt*math.pi/180))**2)+(((earth_b**2)*math.sin(ewi_latt*math.pi/180))**2))/((((earth_a)*math.cos(ewi_latt*math.pi/180))**2)+(((earth_b)*math.sin(ewi_latt*math.pi/180))**2)))
 gs_radius = ewi_sealevel + ewi_nap + ewi_heigth
@@ -38,7 +47,6 @@ t_end = t_start+t_dif
 trange = (t_start-t_ref).total_seconds()
 
 #Returns three arrays (x,y,z) of the position of the groundstation
-#During the measurement datetime defined by the user   
 def gs_pos():
     #Calculates the shape of the earth
     earth_xtab = []
@@ -71,8 +79,8 @@ def gs_pos():
     
     return np.array(xtab),np.array(ytab),np.array(ztab)
     
-#Import the TLE data of the selected measurement datetime   
-def tle_dataimport(fname):
+#Import the TLE data of a single file during the selected measurement datetime   
+def tle_import(fname):
     f = np.genfromtxt(fname,delimiter="")
     tlextab=[]
     tleytab=[]
@@ -93,14 +101,12 @@ def tle_dataimport(fname):
 
 
 #Determination of the distance between the satellite and the groundstation
-#During the measurement datetime given by the user
-#Returns an array with time and distance for each TLE data file in [filename,time,distance]
 def position_diff():
     posdif = []
     xtab,ytab,ztab = gs_pos()
     for l in range(len(filelist)):
         fname = filelist[l]
-        tlextab,tleytab,tleztab = tle_dataimport(fname)
+        tlextab,tleytab,tleztab = tle_import(fname)
         dtab = []
         ttab = []
         t = 0
@@ -118,8 +124,8 @@ def position_diff():
         posdif.append(dummy)
     return posdif
     
-#Draws the groundtracks of given TLE files 
-#Draws the position of the groundstation
+ 
+#Draws the groundtracks and position of the groundstation 
 def groundmap():
     #Determine position of groundstation
     gsx,gsy,gsz = gs_pos()
@@ -147,7 +153,7 @@ def groundmap():
     for k in range(len(filelist)):
         fname = filelist[k]
         lcolor = ['r','y','black'] 
-        x,y,z = tle_dataimport(fname)
+        x,y,z = tle_import(fname)
         longsat = ((180./np.pi)*np.arctan2(y,x))   
         latsat = (180./np.pi)*np.arctan2(z,np.sqrt(x*x+y*y))        
         for j in range(len(tlong)):
@@ -161,6 +167,6 @@ def groundmap():
     
     return plt.show()
     
-
+groundmap()
 
 
