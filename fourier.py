@@ -2,11 +2,6 @@ from scipy import fftpack
 from scipy import signal
 import numpy as np
 
-def getFFTs(T, timeamplitudes):
-    frequencyamplitudes = []
-    for ta in timeamplitudes:
-        frequencyamplitudes.append(getFFT(T, ta))
-
 def getFFT(T, timeamplitude):
     N = len(timeamplitude[0])
     fourieramplitudes = fftpack.fft(timeamplitude[1])
@@ -24,6 +19,17 @@ def getFFT(T, timeamplitude):
     frequencies = fftpack.fftshift(np.fft.fftfreq(N, T))
     return frequencies, amplitudes
 
-# def getFFT(x, fs):
-# 	frequencies, power = signal.periodogram(x, fs=fs)
-# 	return frequencies, power
+# def getFFTs(T, timeamplitudes):
+#     frequencyamplitudes = []
+#     outputmatrix = []
+#     frequencies = []
+#     for amplitude in timeamplitudes:
+#         N = len(amplitude)
+#         t = []
+#         for i in range(0, N):
+#             t.append(i*T)
+#         print([t, amplitude])
+#         # frequencies, power = fourier.getFFT(T, [t, amplitude])
+#         # outputmatrix.append([sum(t)/float(len(t)), frequencies])
+
+#     return frequencies, outputmatrix
