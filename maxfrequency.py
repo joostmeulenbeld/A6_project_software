@@ -1,18 +1,26 @@
 import numpy as np
 
+#############################################################################################
+            #Read in Matrix A and set matrix with coordinates of maxes B
+#############################################################################################
+
 #find/make matrix A
 #find frequency vector f
-#A=np.random.rand(6,6)
+
 A=np.array([[0.,0.,0.,0.,0.,0.,1.],
-            [0.,0.,0.,0.,0.,1.,0.],
-            [1.,0.,0.,0.,1.,0.,0.],
+            [0.,0.,1.,0.,0.,1.,0.],
+            [0.,1.,0.,0.,1.,0.,0.],
             [0.,0.,0.,1.,0.,1.,0.],
-            [0.,0.,1.,0.,0.,0.,0.],
-            [0.,1.,0.,0.,0.,0.,0.],
+            [0.,0.,1.,0.,0.,1.,0.],
+            [0.,1.,0.,0.,1.,0.,0.],
             [1.,0.,0.,0.,0.,0.,0.]])
 #make zero matrix B for x,y values 
 B=np.zeros((7,2))
 columnsA=7
+
+#############################################################################################
+        #First run of least square finding and rewrite matrix B with elast square coordinates
+#############################################################################################
 
 #for loop for each row in matrix A
 for n in range (7):
@@ -47,13 +55,18 @@ for m in range(7):
     B[m]=[m,pr]
     
 print B #for check, new matrix with least square values
+
+#############################################################################################
+       #Same as above but iterate within a range next to the least square which gets smaller     
+#############################################################################################
+
 q=0
-for z in range (2):
+for z in range (3):
         #for loop for each row in matrix A
     for n in range (7):
         #find max value in row A CLOSE TO least square
         c=B[n,1]
-        print c
+        
         d=int(c-2+q)
         if d <= 0:
             d = 0
@@ -63,17 +76,21 @@ for z in range (2):
         if e >= 7:
             e=7
         k=0
+        
         print "-"
-        print e
+        print n
+        print c
         print d
+        print e
         h=max(A[n][d:e])
+        print h
         #find x,y value for the max in row n in A
-        while A[n,c]<>h:
-            c=c+1
+        while A[n,d]<>h:
+            d=d+1
            
             
         #print x,y value in matrix B, c being the new place of the CLOSE TO least square maximum
-        B[n]=n,c
+        B[n]=n,d
         
         
     # Chose a model that will create bimodality.
@@ -98,5 +115,10 @@ for z in range (2):
         #replace values of B by closest values in the least square  
         B[m]=[m,pr]
     q=q+1
-    print "q is",q
+    print "next q is",q
     print B
+
+#############################################################################################
+        #Give coordinates of the maxes found ion the matrix close to its least squares in B
+#############################################################################################
+print B 
