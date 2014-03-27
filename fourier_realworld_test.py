@@ -5,7 +5,7 @@ import csv
 
 
 def readoutputfile():
-	with open('output.txt', 'r') as f:
+	with open('output - Copy.txt', 'r') as f:
 		left_channel = []
 		right_channel = []
 		reader = csv.reader(f, delimiter=' ')

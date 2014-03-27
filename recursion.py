@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as p
 import wave
 
-fft_frame=10
+fft_frame=10000000
 left_channel=[0 for i in range(fft_frame)]
 right_channel=[0 for i in range(fft_frame)]
 t=[]

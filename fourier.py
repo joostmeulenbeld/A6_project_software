@@ -1,10 +1,15 @@
 from scipy import fftpack
-from scipy import signal
 import numpy as np
 
-def getFFT(T, timeamplitude):
-    N = len(timeamplitude[0])
-    fourieramplitudes = fftpack.fft(timeamplitude[1])
+# Input: 
+#       T           = Time between two samples (1/fs)
+#       amplitudes  = Amplitudes of the signal
+# Output:
+#       frequencies = frequencies in the input signal
+#       amplitudes  = amplitudes for the frequencies 
+def getFFT(T, amplitudes):
+    N = len(amplitudes[0])
+    fourieramplitudes = fftpack.fft(amplitudes[1])
     if N % 2 == 0:
     	positiveamplitude = 2.0/N * np.real(fourieramplitudes[0:N/2])
     	negativeamplitude = 2.0/N * np.imag(fourieramplitudes[N/2:N])
@@ -19,11 +24,11 @@ def getFFT(T, timeamplitude):
     frequencies = fftpack.fftshift(np.fft.fftfreq(N, T))
     return frequencies, amplitudes
 
-# def getFFTs(T, timeamplitudes):
+# def getFFTs(T, amplitudess):
 #     frequencyamplitudes = []
 #     outputmatrix = []
 #     frequencies = []
-#     for amplitude in timeamplitudes:
+#     for amplitude in amplitudess:
 #         N = len(amplitude)
 #         t = []
 #         for i in range(0, N):
