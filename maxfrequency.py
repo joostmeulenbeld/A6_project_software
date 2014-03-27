@@ -1,4 +1,5 @@
 import numpy as np
+from matplotlib.pylab import *
 
 #############################################################################################
             #Read in Matrix A and set matrix with coordinates of maxes B
@@ -6,21 +7,24 @@ import numpy as np
 
 #find/make matrix A
 #find frequency vector f
-A=np.array([[0.,0.,0.,0.,0.,0.,1.],
-            [0.,1.,0.,0.,0.,1.,0.],
-            [0.,0.,0.,0.,1.,0.,0.],
-            [0.,0.,0.,1.,0.,0.,0.],
-            [0.,0.,1.,0.,0.,1.,1.],
-            [0.,1.,0.,0.,1.,0.,0.],
-            [1.,0.,0.,1.,0.,0.,1.]])
+A=np.random.rand(10,10)
+#A=np.array([[0.,0.,0.,0.,0.,0.,1.],
+ #           [0.,0.,0.,0.,1.,2.,0.],
+  #          [0.,1.,0.,0.,1.,0.,0.],
+   #         [0.,0.,0.,2.,0.,0.,0.],
+    #        [1.,0.,1.,0.,0.,0.,0.],
+     #       [0.,1.,0.,0.,0.,2.,0.],
+      #      [1.,0.,2.,0.,0.,0.,0.]])
 #make zero matrix B for x,y values, same amount of rows as A 
 C=np.shape(A)
 rowsA=C[0]
 columnsA=C[1]
 B=np.zeros((rowsA,2))
-factorrange=0.75 #factor of how much of the columns of A range will be used
-factorr=0.25      #q=r-round(factorr*r) how much smaller q should be if its bigger than r
-factorq=0.1      #q=q+round(factorq*columnsA) how much smaller the interval gets
+E=np.zeros((rowsA,2))
+factorrange=0.6  #factor of how much of the columns of A range will be used for r
+factorr=0.1       #q=r-round(factorr*r) how much smaller q should be if its bigger than r
+factorq=0.15       #q=q+round(factorq*columnsA) how much smaller the interval gets
+iterationsZ=10     #number of iterations done 
 #############################################################################################
         #First run of least square finding and rewrite matrix B with elast square coordinates
 #############################################################################################
@@ -66,13 +70,13 @@ print B #for check, new matrix with least square values
 r=round(columnsA*factorrange)
 print r
 q=0
-for z in range (5):
+for z in range (int(iterationsZ)):
         #for loop for each row in matrix A
     for n in range (rowsA):
         #find max value in row A CLOSE TO least square
         c=B[n,1]
         
-        d=int(c-r+q)
+        d=int(c-r+q)-1
         if d <= 0:
             d = 0
         e=int(c+(2*r)+(-q))
@@ -84,7 +88,7 @@ for z in range (5):
         
      #   print "-"
       #  print n
-       # print c
+        #print c
         #print d
         #print e
         h=max(A[n][d:e])
@@ -94,9 +98,9 @@ for z in range (5):
             d=d+1
            
             
-        #print x,y value in matrix B, c being the new place of the CLOSE TO least square maximum
+        #print x,y value in matrix B, d being the new place of the "CLOSE TO least square" maximum
         B[n]=n,d
-        
+        E[n]=n,d
         
     # Chose a model that will create bimodality.
     def func(x, a, b, c ,d):
@@ -130,11 +134,12 @@ for z in range (5):
 #############################################################################################
         #Give coordinates of the maxes found on the matrix close to its least squares in B
 #############################################################################################
-print B 
-#print popt
-#for s in range(rowsA):
-   # B[s,1]=A[s,B[s,1]]
-#print A
 #print B
+#print E 
+#print popt
+F=np.zeros((10,10))
+for s in range(rowsA):
+    F[s,1]=A[s,B[s,1]]
 
-
+matshow(F, fignum=100,cmap=cm.gray)
+show()
