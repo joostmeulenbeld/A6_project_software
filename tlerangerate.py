@@ -74,17 +74,25 @@ def gs_pos():
     xtab = []
     ytab = []
     ztab = []
+    vxtab = []
+    vytab = []
+    vztab = []
     
     for i in xrange(int(trange),int(trange)+int(t_dif_sec)+1):
+    #for i in xrange(0,60*60*24*2):
         gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*i)
         gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180+earth_omega*i)
         gs_z = gs_z0
-        
+        gs_vx = gs_radius*math.cos(ewi_latt*math.pi/180)*earth_omega*(math.cos((ewi_long*math.pi/180.)+earth_omega*i))
+        gs_vy = gs_radius*math.cos(ewi_latt*math.pi/180)*earth_omega*(math.sin((ewi_long*math.pi/180.)+earth_omega*i))
+        gs_vz = 0
         xtab.append(gs_x)
         ytab.append(gs_y)
         ztab.append(gs_z)      
-    
-    return np.array(xtab),np.array(ytab),np.array(ztab)
+        vxtab.append(gs_vx)
+        vytab.append(gs_vy)
+        vztab.append(gs_vz)
+    return np.array(xtab),np.array(ytab),np.array(ztab),np.array(vxtab),np.array(vytab),np.array(vztab)
     
 #Import the TLE data of a single file during the selected measurement datetime   
 def tle_import(fname):
@@ -92,6 +100,9 @@ def tle_import(fname):
     tlextab=[]
     tleytab=[]
     tleztab=[]
+    tlevxtab=[]
+    tlevytab=[]
+    tlevztab=[]
     for i in range(len(f)):
         if dt.datetime(int(f[i][7]),int(f[i][8]),int(f[i][9]),int(f[i][10]),int(f[i][11]),int(f[i][12])) >= t_start:
             sfix =  int(round(f[i][12]))
@@ -104,16 +115,19 @@ def tle_import(fname):
                     tlextab.append(f[i][1])
                     tleytab.append(f[i][2])
                     tleztab.append(f[i][3])
-    return np.array(tlextab),np.array(tleytab),np.array(tleztab)
+                    tlevxtab.append(f[i][4])
+                    tlevytab.append(f[i][5])
+                    tlevztab.append(f[i][6])
+    return np.array(tlextab),np.array(tleytab),np.array(tleztab),np.array(tlevxtab),np.array(tlevytab),np.array(tlevztab)
 
 
 #Determination of the distance between the satellite and the groundstation
 def position_diff():
     posdif = []
-    xtab,ytab,ztab = gs_pos()
+    xtab,ytab,ztab,vxtab,vytab,vztab = gs_pos()
     for l in range(len(filelist)):
         fname = filelist[l]
-        tlextab,tleytab,tleztab = tle_import(fname)
+        tlextab,tleytab,tleztab,tlevx,tlevy,tlevz = tle_import(fname)
         dtab = []
         ttab = []
         t = 0
@@ -135,7 +149,8 @@ def position_diff():
 #Draws the groundtracks and position of the groundstation 
 def groundmap():
     #Determine position of groundstation
-    gsx,gsy,gsz = gs_pos()
+    gsx,gsy,gsz,gsvx,gsvy,gsvz = gs_pos()
+    
     #BaseMap drawings
     gmap = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
             llcrnrlon=-180,urcrnrlon=180,resolution='c')
@@ -156,12 +171,13 @@ def groundmap():
     
     #Compensates for the rotation of the earth for groundstation
     for i in range(len(tlong)):
-        longgs[i] += longref[i]   
+        longgs[i] += longref[i]
+    
     #Converts xyz of TLE files to longitude and latitude  
     for k in range(len(filelist)):
         fname = filelist[k]
         lcolor = ['r','y','black'] 
-        x,y,z = tle_import(fname)
+        x,y,z,vx,vy,vz = tle_import(fname)
         longsat = ((180./np.pi)*np.arctan2(y,x))   
         latsat = (180./np.pi)*np.arctan2(z,np.sqrt(x*x+y*y))        
         for j in range(len(tlong)):
@@ -170,9 +186,21 @@ def groundmap():
         #Rescales satellite coordinates for map draw and draws the track
         x,y = gmap(longsat,latsat)
         gmap.plot(x,y,color=lcolor[k],linewidth=1)
-        
+       
     #Rescales groundstation coordinates for map draw and draws the position  
     gsx,gsy = gmap(longgs,latgs)
-    gmap.plot(gsx,gsy,color='y',linewidth=2)
+    gmap.plot(gsx,gsy,color='aqua',linewidth=2)
     
     return plt.show()
+def rangerate():
+    for l in range(len(filelist)):
+        fname = filelist[l]
+        x,y,z,vx,vy,vz = tle_import(fname)
+        xgs,ygs,zgs,vxgs,vygs,vzgs = gs_pos()
+        tvx = vx-vxgs
+        tvy = vy-vygs
+        tvz = vz-vzgs
+        
+        radv = 
+x,long = groundmap()
+        
