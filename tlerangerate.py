@@ -25,6 +25,11 @@ filelist = ['tle23.xyz','tle24.xyz','tle25.xyz']    #Have to be in the same fold
 #===============================================================================
 #                                          Main Code
 #               Written by projectgroup A6 for the second year project AE2223-I
+#                                      Required Modules
+#   Matplotlib      -http://matplotlib.org/
+#   Numpy           -http://www.numpy.org/
+#   Basemap         -http://matplotlib.org/basemap/
+#
 #                           This file consists of four functions
 #   gs_pos()        -Determines the position of the groundstation for the given datetime
 #   tle_import()    -Returns (x,y,z) arrays in J2000 of the satellite for a given TLE data file
