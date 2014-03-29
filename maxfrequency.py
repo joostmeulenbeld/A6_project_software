@@ -1,5 +1,5 @@
 import numpy as np
-from matplotlib.pylab import *
+#from matplotlib.pylab import *
 
 #############################################################################################
             #Read in Matrix A and set matrix with coordinates of maxes B
@@ -8,13 +8,13 @@ from matplotlib.pylab import *
 #find/make matrix A
 #find frequency vector f
 #A=np.random.rand(10,10)
-A=np.array([[0.,1.,0.,0.,0.,0.,1.],
-            [1.,0.,0.,0.,0.,1.,0.],
-            [1.,0.,0.,0.,1.,0.,0.],
-            [0.,0.,0.,1.,0.,0.,0.],
-            [0.,0.,1.,0.,0.,0.,0.],
+A=np.array([[0.,0.,0.,1.,0.,0.,1.],
+            [0.,1.,0.,0.,0.,1.,0.],
+            [0.,0.,0.,0.,1.,0.,1.],
+            [1.,0.,0.,1.,0.,0.,0.],
+            [0.,0.,1.,0.,0.,1.,0.],
             [0.,1.,0.,0.,0.,0.,0.],
-            [1.,0.,0.,0.,0.,0.,0.]])
+            [1.,0.,0.,0.,0.,1.,0.]])
 #make zero matrix B for x,y values, same amount of rows as A 
 C=np.shape(A)
 rowsA=C[0]
@@ -33,14 +33,18 @@ iterationsZ=3     #number of iterations done
 for n in range (rowsA):
     #find max value in row A
     h=max(A[n,:])
+    #set k to zero so we know we have not yet executed the next step
     k=0
     for o in range (columnsA):
+        #search row for max values that are the same
         if A[n,o]==h:
-            
+            #if max is found it is checked to be existing in matrix B
+            #if its still 0,0 then k is set to 1 and the coordinates are printed in B
             if ((B[n]==[0,0]).all() and k==0):
                 B[n]=n,o
                 k=k+1
-            if ((B[n]==[0,0]).any() and k<>0):
+            #if above is already eprformed (k=1) then this part is executed  
+            if (k<>0): #(B[n]==[0,0]).any() and 
                 B[n,1]=round(((B[n,1]+o)/2))
                 
                 
@@ -90,9 +94,11 @@ for z in range (int(iterationsZ)):
         #find max value in row A CLOSE TO least square
         c=B[n,1]
         
-        d=int(c-r+q)
+        d=int(c-(2*r)+q)-1
         if d <= 0:
             d = 0
+        if d >= columnsA:
+            d=columnsA-1
         e=int(c+(2*r)+(-q))
         if e <= 0:
             e = 0
@@ -105,16 +111,32 @@ for z in range (int(iterationsZ)):
         print c
         print d
         print e
+               
+        #find max value in row A between d and e
         h=max(A[n][d:e])
+        #set k to zero so we know we have not yet executed the next step
+        k=0
+        for o in range (d ,e):
+            #search row for max values that are the same
+            if A[n,o]==h:
+                print "max gevonden! o is" , o
+                #if max is found it is checked to be existing in matrix B
+                #k is set to 1 and the coordinates are printed in B
+                if (k==0):
+                    B[n]=n,o
+                    k=k+1
+                #if above is already eprformed (k=1) then this part is executed  
+                if (k<>0): #(B[n]==[0,0]).any() and 
+                    B[n,1]=round(((B[n,1]+o)/2))
         #print h
         #find x,y value for the max in row n in A
-        while A[n,d]<>h:
-            d=d+1
-           
+        #while A[n,d]<>h:
+        #    d=d+1
+    print B
             
         #print x,y value in matrix B, d being the new place of the "CLOSE TO least square" maximum
-        B[n]=n,d
-        E[n]=n,d
+        #B[n]=n,d
+        #E[n]=n,d
         
     # Chose a model that will create bimodality.
     def func(x, a, b, c ,d):
@@ -130,7 +152,7 @@ for z in range (int(iterationsZ)):
     #print values for the least square function
     [popt, pcov] = optimization.curve_fit(func, xdata, ydata, x0, sigma)
     
-    
+    print popt
     #look for closest points to the least square function
     for m in range(rowsA):
         p=popt[0] + popt[1]*B[m,0] + popt[2]*B[m,0]*B[m,0] + popt[3]*B[m,0]*B[m,0]*B[m,0]
@@ -144,12 +166,13 @@ for z in range (int(iterationsZ)):
     print "next q is",q
     print "the r is", r
     print B
+    
 
 #############################################################################################
         #Give coordinates of the maxes found on the matrix close to its least squares in B
 #############################################################################################
 print B
-print E 
+#print E 
 print popt
 #F=np.zeros((10,10))
 #for s in range(rowsA):
