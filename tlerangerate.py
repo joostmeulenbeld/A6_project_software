@@ -33,7 +33,7 @@ filelist = ['tle23.xyz','tle24.xyz','tle25.xyz']    #Have to be in the same fold
 #                           This file consists of four functions
 #   gs_pos()        -Determines the position of the groundstation for the given datetime
 #   tle_import()    -Returns (x,y,z) arrays in J2000 of the satellite for a given TLE data file
-#   position_diff() -Returns an [filename,time,distance] array for all TLE data files
+#   position_diff() -Returns an [filename,time,distance,x,y,z] array for all TLE data files
 #   groundmap()     -Draws the position of the groundstation and groundtracks for all TLE data files
 #===============================================================================
 #Calculation of the start position of the groundstation in J2000
@@ -141,7 +141,7 @@ def position_diff():
     
             dtab.append(dist)
             ttab.append(t)
-        dummy = [filelist[l],ttab,dtab]
+        dummy = [filelist[l],ttab,dtab,xtab,ytab,ztab]
         posdif.append(dummy)
     return posdif
     
@@ -185,7 +185,7 @@ def groundmap():
             
         #Rescales satellite coordinates for map draw and draws the track
         x,y = gmap(longsat,latsat)
-        gmap.plot(x,y,color=lcolor[k],linewidth=1)
+        gmap.plot(x,y,color=lcolor[k],linewidth=2)
        
     #Rescales groundstation coordinates for map draw and draws the position  
     gsx,gsy = gmap(longgs,latgs)
@@ -193,14 +193,32 @@ def groundmap():
     
     return plt.show()
 def rangerate():
+    rrlist=[]
     for l in range(len(filelist)):
         fname = filelist[l]
         x,y,z,vx,vy,vz = tle_import(fname)
         xgs,ygs,zgs,vxgs,vygs,vzgs = gs_pos()
+        
         tvx = vx-vxgs
         tvy = vy-vygs
         tvz = vz-vzgs
-        
-        radv = 
-x,long = groundmap()
-        
+
+        posd = position_diff()
+        dotprod = []
+        for m in range(len(tvx)):
+            
+            tvect = np.array([tvx[m],tvy[m],tvz[m]])
+            pvect = np.array([posd[l][3][m],posd[l][4][m],posd[l][5][m]])
+            
+            plen = math.sqrt(pvect[0]*pvect[0]+pvect[1]*pvect[1]+pvect[2]*pvect[2])
+            pvectnorm = [pvect[0]/plen,pvect[1]/plen,pvect[2]/plen]
+            dotprod.append(np.dot(tvect,pvectnorm))
+            #print pvectnorm
+        dummy2 = [filelist[l],dotprod]
+        rrlist.append(dummy2)
+    return rrlist
+            
+groundmap()        
+a = rangerate()
+plt.plot(a[0][1])  
+plt.show()
