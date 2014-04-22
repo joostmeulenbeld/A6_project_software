@@ -27,8 +27,8 @@ for f in realFrequencies:
 for f in imagFrequencies:
 	y += np.sin(f*2.0*np.pi*t)*1j
 
-
-frequencies, power = fourier.getFFT(T, [t, y])
+print(y)
+frequencies, power = fourier.getFFT(T, y)
 
 plt.plot(frequencies, power)
 plt.show()

@@ -34,7 +34,7 @@ t = []
 for i in range(0, N):
     t.append(i*T)
 
-frequencies, amplitudes = fourier.getFFT(T, [t, signal])
+frequencies, amplitudes = fourier.getFFT(T, signal)
 
 plt.plot(frequencies, amplitudes)
 plt.show()

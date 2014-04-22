@@ -8,10 +8,8 @@ import numpy as np
 #       frequencies = frequencies in the input signal
 #       amplitudes  = amplitudes for the frequencies 
 def getFFT(T, amplitudes):
-    N = len(amplitudes)
-    print(N)
-    print(T)
-    fourieramplitudes = fftpack.fft(amplitudes)
+    N = len(amplitudes[0)
+    fourieramplitudes = fftpack.fft(amplitudes[1])
     if N % 2 == 0:
     	positiveamplitude = 2.0/N * np.real(fourieramplitudes[0:N/2])
     	negativeamplitude = 2.0/N * np.imag(fourieramplitudes[N/2:N])
