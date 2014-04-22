@@ -53,6 +53,10 @@ t_end = t_start+t_dif
 
 trange = (t_start-t_ref).total_seconds()
 
+print trange*earth_omega
+print (trange*earth_omega)%(2*np.pi)
+print trange
+print 31966%(2*np.pi)
 #Returns three arrays (x,y,z) of the position of the groundstation
 def gs_pos():
     #Calculates the shape of the earth
@@ -166,12 +170,13 @@ def groundmap():
     #Converting from xyz j2000 to longitude and latitude
     longref = (((tlong*earth_omega)%(2*np.pi))*(180./np.pi))
     longref = 360-longref
+    print longref
     longgs = (180./np.pi)*np.arctan2(gsy,gsx)
     latgs = (180./np.pi)*np.arctan2(gsz,np.sqrt(gsx*gsx+gsy*gsy))
     
     #Compensates for the rotation of the earth for groundstation
     for i in range(len(tlong)):
-        longgs[i] += longref[i]
+        longgs[i] +=longref[i]
     
     #Converts xyz of TLE files to longitude and latitude  
     for k in range(len(filelist)):
@@ -217,8 +222,28 @@ def rangerate():
         dummy2 = [filelist[l],dotprod]
         rrlist.append(dummy2)
     return rrlist
-            
+def zenangle():
+    posdif = position_diff()
+             
+    for l in range(len(filelist)):
+        fname = filelist[l]
+        x,y,z,vx,vy,vz = tle_import(fname)
+        xgs,ygs,zgs,vxgs,vygs,vzgs = gs_pos()
+        
+        alpha = np.arcsin(ewi_sealevel/gs_radius)
+        heightsat = np.sqrt(x*x+y*y+z*z)
+        r = posdif[l][2]
+        
+        r = np.array(r)
+          
+        beta = np.arccos(((gs_radius*gs_radius)+r*r-(heightsat*heightsat))/(2*(gs_radius)*r))
+        horangle = (beta-alpha)*(180./np.pi)
+        plt.plot(horangle)
+        #plt.plot(alpha)
+        
+    plt.show()
+zenangle()
 groundmap()        
-a = rangerate()
-plt.plot(a[0][1])  
-plt.show()
+#a = rangerate()
+#plt.plot(a[0][1])  
+#plt.show()

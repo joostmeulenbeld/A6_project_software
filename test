@@ -1,9 +1,0 @@
-import datetime as dt
-
-t0 = dt.datetime(2013,11,21,10,16,46)
-td = dt.timedelta(0,33,0,0,59,0,2)
-
-t = (t0+td)
-
-print t.minute
-
