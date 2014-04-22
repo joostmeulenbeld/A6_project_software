@@ -3,6 +3,7 @@ from scikits.audiolab import wavread
 import numpy as np
 import matplotlib.pyplot as p
 
+
 def output_signal(no_of_frames,start,raw):
     left_channel=np.zeros(no_of_frames)
     right_channel=np.zeros(no_of_frames)
@@ -12,7 +13,9 @@ def output_signal(no_of_frames,start,raw):
     for y in range(0,no_of_frames):
         left_channel[y]=data[y][0]
         right_channel[y]=data[y][1]
-        #t[y]=(x+y)/float(fs)
-        signal[y]=complex(left_channel[y],right_channel[y])
+    left=np.array(left_channel)
+    right=np.array(right_channel)
+    signal=left+right*1j
     return signal
+
 
