@@ -9,6 +9,8 @@ import numpy as np
 #       amplitudes  = amplitudes for the frequencies 
 def getFFT(T, amplitudes):
     N = len(amplitudes)
+    print(N)
+    print(T)
     fourieramplitudes = fftpack.fft(amplitudes)
     if N % 2 == 0:
     	positiveamplitude = 2.0/N * np.real(fourieramplitudes[0:N/2])
