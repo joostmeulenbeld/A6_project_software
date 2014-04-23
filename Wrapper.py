@@ -6,11 +6,11 @@ from wavReadFourier import wavReaderFourierTransformer
 
 ''' Input variables '''
 
-wavFileName = "Delfi-n3xt.wav"
-start = 11.0
-end = 13.0
-intervalWidth = 1.0
-intervalStartFrequency = 1.0
+wavFileName = "Delfi-n3xt.wav"	# the location of the wav file
+start = 11.0					# What time is the first interval in seconds
+end = 13.0						# What time is the last interval in seconds
+intervalWidth = 1.0				# How many seconds is one interval
+intervalStartFrequency = 1.0	# Every this many seconds a new interval starts
 
 ''' End of input variable
 
