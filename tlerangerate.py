@@ -13,8 +13,8 @@ ewi_heigth = 0.095              #heigth groundstation (km)
 ewi_nap = -0.001                #sealevel at groundstation (km)
 earth_a = 6378.135              #radius of the earth at the equatorial plane (km)
 earth_b = 6356.750              #radius of the earth at the polaire plane (km)
-earth_omega = 7.29211509*10**-5 #angular velocity of the earth (rad/s)
-
+earth_omega = 7.2921151467064*10**-5 #angular velocity of the earth (rad/s)
+delfi_carrier = 145.87*10**6    #Carrier frequency
 #===============================================================================
 #                  User Input of Measurement time and files
 #===============================================================================
@@ -45,6 +45,7 @@ gs_y0 = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180)
 gs_z0 = gs_radius*math.sin(ewi_latt*math.pi/180)
 
 #Time definitions and difference calculations
+t_2000 = dt.datetime(2000,01,01,12,00,00)
 t_ref = dt.datetime(2000,01,01,11,58,55)
 t_start = dt.datetime(date_meas[0],date_meas[1],date_meas[2],date_meas[3],date_meas[4],date_meas[5])
 t_dif = dt.timedelta(meas_dur[1],meas_dur[4],0,0,meas_dur[3],meas_dur[2],meas_dur[0])
@@ -52,11 +53,15 @@ t_dif_sec = (t_dif).total_seconds()
 t_end = t_start+t_dif
 
 trange = (t_start-t_ref).total_seconds()
+j = t_start - t_2000
 
-print trange*earth_omega
-print (trange*earth_omega)%(2*np.pi)
-print trange
-print 31966%(2*np.pi)
+julianfraction = ((j.seconds+1)/86399.)
+julianday = j.days + julianfraction
+EarthRotAngle = 2*np.pi*(0.7790572732640+1.00273781191135448*julianday)
+
+print EarthRotAngle
+print EarthRotAngle%(2*np.pi)
+
 #Returns three arrays (x,y,z) of the position of the groundstation
 def gs_pos():
     #Calculates the shape of the earth
@@ -84,11 +89,11 @@ def gs_pos():
     
     for i in xrange(int(trange),int(trange)+int(t_dif_sec)+1):
     #for i in xrange(0,60*60*24*2):
-        gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180+earth_omega*i)
-        gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180+earth_omega*i)
+        gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos(ewi_long*math.pi/180+EarthRotAngle)#earth_omega*i)
+        gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin(ewi_long*math.pi/180+EarthRotAngle)#earth_omega*i)
         gs_z = gs_z0
-        gs_vx = gs_radius*math.cos(ewi_latt*math.pi/180)*earth_omega*(math.cos((ewi_long*math.pi/180.)+earth_omega*i))
-        gs_vy = gs_radius*math.cos(ewi_latt*math.pi/180)*earth_omega*(math.sin((ewi_long*math.pi/180.)+earth_omega*i))
+        gs_vx = gs_radius*math.cos(ewi_latt*math.pi/180)*earth_omega*(math.cos((ewi_long*math.pi/180.)+EarthRotAngle))#earth_omega*i))
+        gs_vy = gs_radius*math.cos(ewi_latt*math.pi/180)*earth_omega*(math.sin((ewi_long*math.pi/180.)+EarthRotAngle))#earth_omega*i))
         gs_vz = 0
         xtab.append(gs_x)
         ytab.append(gs_y)
@@ -166,17 +171,21 @@ def groundmap():
     gmap.drawparallels(np.arange(-90,90,30))
     
     tlong = np.arange(trange,trange+t_dif_sec+1,1)
-    
+
+
     #Converting from xyz j2000 to longitude and latitude
-    longref = (((tlong*earth_omega)%(2*np.pi))*(180./np.pi))
+    longref = ((EarthRotAngle%(2*np.pi))*(180./np.pi))
     longref = 360-longref
     print longref
     longgs = (180./np.pi)*np.arctan2(gsy,gsx)
     latgs = (180./np.pi)*np.arctan2(gsz,np.sqrt(gsx*gsx+gsy*gsy))
-    
+    print latgs
+    print longgs
     #Compensates for the rotation of the earth for groundstation
     for i in range(len(tlong)):
-        longgs[i] +=longref[i]
+        longgs[i] +=longref
+        longgs[i] = longgs[i]%(360)
+    print longgs
     
     #Converts xyz of TLE files to longitude and latitude  
     for k in range(len(filelist)):
@@ -186,16 +195,18 @@ def groundmap():
         longsat = ((180./np.pi)*np.arctan2(y,x))   
         latsat = (180./np.pi)*np.arctan2(z,np.sqrt(x*x+y*y))        
         for j in range(len(tlong)):
-            longsat[j] += longref[j]
-            
+            longsat[j] += longref
+            longsat[i] = longsat[i]%(360)
         #Rescales satellite coordinates for map draw and draws the track
         x,y = gmap(longsat,latsat)
+        
         gmap.plot(x,y,color=lcolor[k],linewidth=2)
        
     #Rescales groundstation coordinates for map draw and draws the position  
     gsx,gsy = gmap(longgs,latgs)
-    gmap.plot(gsx,gsy,color='aqua',linewidth=2)
     
+    gmap.plot(gsx,gsy,color='aqua',linewidth=5)
+    EarthRotAngle
     return plt.show()
 def rangerate():
     rrlist=[]
@@ -218,8 +229,7 @@ def rangerate():
             plen = math.sqrt(pvect[0]*pvect[0]+pvect[1]*pvect[1]+pvect[2]*pvect[2])
             pvectnorm = [pvect[0]/plen,pvect[1]/plen,pvect[2]/plen]
             dotprod.append(np.dot(tvect,pvectnorm))
-            #print pvectnorm
-        dummy2 = [filelist[l],dotprod]
+            dummy2 = [filelist[l],dotprod]
         rrlist.append(dummy2)
     return rrlist
 def zenangle():
@@ -239,11 +249,14 @@ def zenangle():
         beta = np.arccos(((gs_radius*gs_radius)+r*r-(heightsat*heightsat))/(2*(gs_radius)*r))
         horangle = (beta-alpha)*(180./np.pi)
         plt.plot(horangle)
-        #plt.plot(alpha)
+        
         
     plt.show()
-zenangle()
+def reversedoppler():
+    
+    
+#zenangle()
 groundmap()        
-#a = rangerate()
-#plt.plot(a[0][1])  
-#plt.show()
+a = rangerate()
+plt.plot(a[0][1])  
+plt.show()
