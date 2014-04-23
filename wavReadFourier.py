@@ -55,9 +55,7 @@ class wavReaderFourierTransformer:
 		column_labels = list('Frequencies')
 		row_labels = list('Time')
 		amplitudes = np.ndarray(shape=(np.size(self.intervals[0]), np.size(self.frequencies)))
-		for data in self.intervals:
-			amplitudes.append(data[1])
-		print(data)
+		
 		data = amplitudes
 		fig, ax = plt.subplots()
 		heatmap = ax.pcolor(data, cmap=plt.cm.Blues)
@@ -77,7 +75,7 @@ class wavReaderFourierTransformer:
 	def getAmplitudes(self):
 		amplitudes = []
 		for data in self.intervals:
-			amplitudes.append(data[1])
+			amplitudes.append(data[1].tolist())
 		return amplitudes
 
 	def getFrequencies(self):
