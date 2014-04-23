@@ -64,7 +64,7 @@ Post-processing'''
 
 print("Maximum Fourier frequency: " + str(wavReader.getMaxFourierFrequency()))
 print("Delta Fourier frequency: " + str(wavReader.getDeltaFourierFrequency()))
-wavReader.plotWaterfallPlot()
+# wavReader.plotWaterfallPlot()
 # wavReader.plotFourierTransforms()
 
 
