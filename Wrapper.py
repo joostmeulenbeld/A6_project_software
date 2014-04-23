@@ -7,10 +7,10 @@ from wavReadFourier import wavReaderFourierTransformer
 ''' Input variables '''
 
 wavFileName = "Delfi-n3xt.wav"	# the location of the wav file
-start = 11.0					# What time is the first interval in seconds
-end = 13.0						# What time is the last interval in seconds
+start = 60*10.0					# What time is the first interval in seconds
+end = 60*15.001					# What time is the last interval in seconds
 intervalWidth = 1.0				# How many seconds is one interval
-intervalStartFrequency = 1.0	# Every this many seconds a new interval starts
+intervalStartFrequency = 60.0	# Every this many seconds a new interval starts
 
 factorrange=0.25  #factor of how much of the columns of A range will be used for r n plus and minus
 factorr=0.1       #q=r-round(factorr*r) how much smaller q should be if its bigger than r
@@ -27,13 +27,6 @@ Wav reading and Fourier transforming'''
 wavReader = wavReaderFourierTransformer(wavFileName, start, end, intervalWidth, intervalStartFrequency)
 frequencies, intervals = wavReader.getFrequencyAmplitudes()
 
-print("Maximum Fourier frequency: " + str(wavReader.getMaxFourierFrequency()))
-print("Delta Fourier frequency: " + str(wavReader.getDeltaFourierFrequency()))
-
-for i in range(len(intervals)):
-	plt.plot(frequencies, intervals[i][1])
-
-plt.show()
 
 ''' End of wav reading and fourier transforming
 
@@ -69,6 +62,10 @@ No code here
 Post-processing'''
 
 
+print("Maximum Fourier frequency: " + str(wavReader.getMaxFourierFrequency()))
+print("Delta Fourier frequency: " + str(wavReader.getDeltaFourierFrequency()))
+wavReader.plotWaterfallPlot()
+# wavReader.plotFourierTransforms()
 
 
 ''' End of Post-processing
