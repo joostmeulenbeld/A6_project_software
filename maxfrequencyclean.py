@@ -1,7 +1,7 @@
 import numpy as np
 #from matplotlib.pylab import *
 
-def maxFrequencies(A):
+def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
     #############################################################################################
                 #Read in Matrix A and set matrix with coordinates of maxes B
     #############################################################################################
@@ -16,10 +16,10 @@ def maxFrequencies(A):
     B=np.zeros((rowsA,2))
     E=np.zeros((rowsA,2))
     VectorZ=np.zeros((rowsA,2))
-    factorrange=0.25  #factor of how much of the columns of A range will be used for r n plus and minus
-    factorr=0.1       #q=r-round(factorr*r) how much smaller q should be if its bigger than r
-    factorq=0.2       #q=q+round(factorq*columnsA) how much smaller the interval gets
-    iterationsZ=3     #number of iterations done 
+    #factorrange=0.25  #factor of how much of the columns of A range will be used for r n plus and minus
+    #factorr=0.1       #q=r-round(factorr*r) how much smaller q should be if its bigger than r
+    #factorq=0.2       #q=q+round(factorq*columnsA) how much smaller the interval gets
+    #iterationsZ=3     #number of iterations done 
     #############################################################################################
             #First run of least square finding and rewrite matrix B with least square coordinates
     #############################################################################################

@@ -12,6 +12,11 @@ end = 13.0						# What time is the last interval in seconds
 intervalWidth = 1.0				# How many seconds is one interval
 intervalStartFrequency = 1.0	# Every this many seconds a new interval starts
 
+factorrange=0.25  #factor of how much of the columns of A range will be used for r n plus and minus
+factorr=0.1       #q=r-round(factorr*r) how much smaller q should be if its bigger than r
+factorq=0.2       #q=q+round(factorq*columnsA) how much smaller the interval gets
+iterationsZ=3     #number of iterations done 
+    
 ''' End of input variable
 
 No code here
@@ -37,7 +42,8 @@ No code here
 
 Maximum frequency and outlier detection '''
 
-
+A==intervals
+maxFrequency = maxfrequencyclean(A, factorrange, factorr, factorq, iterationsZ)
 
 
 
