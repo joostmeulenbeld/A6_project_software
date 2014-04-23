@@ -54,7 +54,8 @@ class wavReaderFourierTransformer:
 	def plotWaterfallPlot(self):
 		column_labels = list('Frequencies')
 		row_labels = list('Time')
-		amplitudes = np.ndarray(shape=(np.size(self.intervals[0]), np.size(self.frequencies)))
+		# amplitudes = np.ndarray(self.getAmplitudes())
+
 		
 		data = amplitudes
 		fig, ax = plt.subplots()
@@ -77,6 +78,9 @@ class wavReaderFourierTransformer:
 		for data in self.intervals:
 			amplitudes.append(data[1].tolist())
 		return amplitudes
+
+	def getAmplitudesRimsky(self):
+		return np.array(self.getAmplitudes())
 
 	def getFrequencies(self):
 		return self.frequencies

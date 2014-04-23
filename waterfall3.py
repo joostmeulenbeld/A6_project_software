@@ -1,6 +1,9 @@
 #   waterfall_FFT_plots         
 #
 from wavReadFourier import wavReaderFourierTransformer as wrft
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
 
 wavFileName = "Delfi-n3xt.wav"	# the location of the wav file
 start = 60*10.0					# What time is the first interval in seconds
