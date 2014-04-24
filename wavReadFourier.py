@@ -51,28 +51,6 @@ class wavReaderFourierTransformer:
 
 		plt.show()
 
-	def plotWaterfallPlot(self):
-		column_labels = list('Frequencies')
-		row_labels = list('Time')
-		# amplitudes = np.ndarray(self.getAmplitudes())
-
-		
-		data = amplitudes
-		fig, ax = plt.subplots()
-		heatmap = ax.pcolor(data, cmap=plt.cm.Blues)
-
-		# put the major ticks at the middle of each cell
-		ax.set_xticks(np.arange(data.shape[0])+0.5, minor=False)
-		ax.set_yticks(np.arange(data.shape[1])+0.5, minor=False)
-
-		# want a more natural, table-like display
-		ax.invert_yaxis()
-		ax.xaxis.tick_top()
-
-		ax.set_xticklabels(row_labels, minor=False)
-		ax.set_yticklabels(column_labels, minor=False)
-		plt.show()
-
 	def getAmplitudes(self):
 		amplitudes = []
 		for data in self.intervals:
@@ -96,3 +74,30 @@ class wavReaderFourierTransformer:
 
 	def getDeltaFourierFrequency(self):
 		return self.fs/self.intervalWidth
+
+	def plotWaterfallPlot(self, gridsize=100):
+		column_labels = list('Frequencies')
+		row_labels = list('Time')
+		amplitudes = getAmplitudes()
+		smallAmplitudes = []
+		for amp in amplitudes:
+			smallamp = []
+			for f in range(0, np.size(amp), gridsize):
+				smallamp.append(np.mean(amp[f:f+gridsize]))
+			smallAmplitudes.append(smallamp)
+
+		data = smallAmplitudes
+		fig, ax = plt.subplots()
+		heatmap = ax.pcolor(data, cmap=plt.cm.Blues)
+
+		# put the major ticks at the middle of each cell
+		ax.set_xticks(np.arange(data.shape[0])+0.5, minor=False)
+		ax.set_yticks(np.arange(data.shape[1])+0.5, minor=False)
+
+		# want a more natural, table-like display
+		ax.invert_yaxis()
+		ax.xaxis.tick_top()
+
+		ax.set_xticklabels(row_labels, minor=False)
+		ax.set_yticklabels(column_labels, minor=False)
+		plt.show()
