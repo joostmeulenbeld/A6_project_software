@@ -1,14 +1,17 @@
+
 from scikits.audiolab import Sndfile
 from scikits.audiolab import wavread
 import numpy as np
 import matplotlib.pyplot as plt
 from wavReadFourier import wavReaderFourierTransformer
-
+from maxfrequencyclean import maxFrequencies
+from rangerate import rangerateconvert
+from tlerangerate import compare
 ''' Input variables '''
 
 wavFileName = "Delfi-n3xt.wav"	# the location of the wav file
-start = 60*10.0					# What time is the first interval in seconds
-end = 60*15.001					# What time is the last interval in seconds
+start = 60*0.				# What time is the first interval in seconds
+end = 60*20.001					# What time is the last interval in seconds
 intervalWidth = 1.0				# How many seconds is one interval
 intervalStartFrequency = 60.0	# Every this many seconds a new interval starts
 
@@ -16,6 +19,8 @@ factorrange=0.25  #factor of how much of the columns of A range will be used for
 factorr=0.1       #q=r-round(factorr*r) how much smaller q should be if its bigger than r
 factorq=0.2       #q=q+round(factorq*columnsA) how much smaller the interval gets
 iterationsZ=3     #number of iterations done 
+
+carrierfreq = 145*10**6
     
 ''' End of input variable
 
@@ -35,8 +40,8 @@ No code here
 
 Maximum frequency and outlier detection '''
 
-A==intervals
-maxFrequency = maxfrequencyclean(A, factorrange, factorr, factorq, iterationsZ)
+
+maxFrequency = maxFrequencies(wavReader.getAmplitudesRimsky(), factorrange, factorr, factorq, iterationsZ)
 
 
 
@@ -48,10 +53,16 @@ No code here
 
 Doppler tracking '''
 
-
-
-
-
+freq = []
+lst = []
+for i in range(len(maxFrequency)):
+    freq.append(maxFrequency[i][1])    
+time = wavReader.getTimes()
+timefreq = [time,freq]
+print timefreq
+rangerate = rangerateconvert(timefreq,carrierfreq)
+print rangerate
+#testplot = compare(rangerate)
 
 
 ''' End of Doppler tracking 
@@ -64,8 +75,14 @@ Post-processing'''
 
 print("Maximum Fourier frequency: " + str(wavReader.getMaxFourierFrequency()))
 print("Delta Fourier frequency: " + str(wavReader.getDeltaFourierFrequency()))
+
 # wavReader.plotWaterfallPlot()
 # wavReader.plotFourierTransforms()
+# amplitudes, frequencies = wavReader.compressAll(1000, "maxMedianDifference")
+# print(np.size(amplitudes))
+# plt.plot(wavReader.getFrequencies(), wavReader.getAmplitudes()[0])
+# plt.plot(frequencies, amplitudes[0])
+# plt.show()
 
 
 ''' End of Post-processing

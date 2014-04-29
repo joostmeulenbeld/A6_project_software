@@ -1,21 +1,27 @@
 import numpy as np
 #from matplotlib.pylab import *
-
+carrierfrequency=145870000 #HZ
 def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
     #############################################################################################
                 #Read in Matrix A and set matrix with coordinates of maxes B
     #############################################################################################
     #find/make matrix A
-    A[:,0] *= 0.
+    
     
     
     #make zero matrix B for x,y values, same amount of rows as A 
     C=np.shape(A)
     rowsA=C[0]
     columnsA=C[1]
+    print columnsA
     B=np.zeros((rowsA,2))
     E=np.zeros((rowsA,2))
     VectorZ=np.zeros((rowsA,2))
+    #############################################################################################
+            #noise filtering
+    #############################################################################################
+    
+
     #factorrange=0.25  #factor of how much of the columns of A range will be used for r n plus and minus
     #factorr=0.1       #q=r-round(factorr*r) how much smaller q should be if its bigger than r
     #factorq=0.2       #q=q+round(factorq*columnsA) how much smaller the interval gets
@@ -26,13 +32,14 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
     
     #for loop for each row in matrix A
     for n in range (rowsA):
+        #print n
         #find max value in row A
-        h=max(A[n,:])
+        h=max(A[n])
         #set k to zero so we know we have not yet executed the next step
         k=0
         for o in range (columnsA):
             #search row for max values that are the same
-            if A[n,o]==h:
+            if A[n][o]==h:
                 #if max is found it is checked to be existing in matrix B
                 #if its still 0,0 then k is set to 1 and the coordinates are printed in B
                 if ((B[n]==[0,0]).all() and k==0):
@@ -41,7 +48,7 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
                 #if above is already eprformed (k=1) then this part is executed  
                 if (k<>0): 
                     B[n,1]=round(((B[n,1]+o)/2))
-
+                    
     # Chose a model that will create bimodality.
     def func(x, a, b, c ,d):
         return a + b*x +c*x*x +d*x*x*x
@@ -94,7 +101,7 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
             
             for o in range (d ,e):
                 #search row for max values that are the same
-                if A[n,o]==h:
+                if A[n][o]==h:
                     #if max is found it is checked to be existing in matrix B
                     #k is set to 1 and the coordinates are printed in B
                     if (k==0):
@@ -128,14 +135,16 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
             B[m]=[m,pr]
         #if q gets larger than r(range) it gets maxed to r minus 10 percent
         q=q+round(factorq*columnsA)
+        #print z
         if q >= r:
             q=r-round(factorr*r)
      
     #############################################################################################
             #Give coordinates of the maxes found on the matrix close to its least squares in B
     #############################################################################################
-   
-    print VectorZ
+    #print B
+    return B
+    
 
 if __name__ == "__main__":
     maxFrequencies()

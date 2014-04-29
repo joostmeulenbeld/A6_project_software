@@ -6,13 +6,9 @@ Input: Max Frequency over time matrix
 Output: Range rate over time matrix
 @author: Maarten Schild, Project A6
 """
-import maxfrequency
+#Add variable name of maxfrequency file here#
 
-timefreq = maxfrequency.#Add variable name of maxfrequency file here#
 
-debugfreq = 146*10**6
-
-carrierfreq = debugfreq #Hz
 speedoflight = 299792458 #m/s
 
 #Function to calculate the difference in velocity between receiver and transmitter
@@ -27,11 +23,9 @@ def calcrangerate(freq,carrierfreq,speedoflight):
 #Inputs are the time-maxfrequency matrix(list[t][Hz]), transmitted frequency (Hz) and speed of light(m/s)
 #Output is a time-rangerate matrix (list[t][m/s])
 #Uses calcrangerate function
-def rangerateconvert(timefreq,carrierfreq,speedoflight):
-    timerangerate = timefreq
-    for i in range(len(timefreq)):
-        timerangerate[i][1] = calcrangerate(timefreq[i][1],carrierfreq,speedoflight)
-    return timerangerate
-
+def rangerateconvert(timefreq,carrierfreq):
     
-rangerateconvert(timefreq,carrierfreq,speedoflight)
+    for i in range(len(timefreq[1])):
+        test = calcrangerate(timefreq[1][i],carrierfreq,speedoflight)
+        print test
+    return test
