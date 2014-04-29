@@ -140,3 +140,4 @@ class wavReaderFourierTransformer:
 			compressedAmplitudes.append(resultAmplitudes)
 		return compressedAmplitudes, resultFrequencies
 
+
