@@ -137,7 +137,7 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
             #Give coordinates of the maxes found on the matrix close to its least squares in B
     #############################################################################################
     print B
-    print VectorZ
+    
 
 if __name__ == "__main__":
     maxFrequencies()
