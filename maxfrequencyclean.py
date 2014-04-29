@@ -22,6 +22,9 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ, lowfrequency):
             #noise filtering
     #############################################################################################
     for n in range(rowsA):
+        A[0:7500]=A[0:7500]*0
+        A[17500:250000]=A[17500:250000]*0
+    for n in range(rowsA):
         for o in range(columnsA):
             SUM=0+A[n][o]
 
