@@ -39,6 +39,7 @@ class wavReaderFourierTransformer:
 			self.frequencies, amplitudes = fourier.getFFT(self.sampling_interval, output)
 
 			self.intervals.append([meanTime, amplitudes])
+			self.amplitudes = self.getAmplitudes()
 
 		self.wavFile.close()
 		del self.wavFile
@@ -101,3 +102,41 @@ class wavReaderFourierTransformer:
 		ax.set_xticklabels(row_labels, minor=False)
 		ax.set_yticklabels(column_labels, minor=False)
 		plt.show()
+
+	def median(self, amplitudes):
+		return np.median(amplitudes)
+
+	def mean(self, amplitudes):
+		return np.mean(amplitudes)
+
+	def maxMeanDifference(self, amplitudes):
+		return np.amax(amplitudes)-np.mean(amplitudes)
+
+	def maxMedianDifference(self, amplitudes):
+		return np.amax(amplitudes)-np.median(amplitudes)
+
+	def compress(self, frequencies, amplitudes, intervalSize, compressionMethodString):
+		resultFrequencies = []
+		resultAmplitudes = []
+
+		method = {
+			"mean": self.mean,
+			"median": self.median,
+			"maxMeanDifference": self.maxMeanDifference,
+			"maxMedianDifference": self.maxMedianDifference
+		}.get(compressionMethodString, self.mean)
+
+		for i in range(0, np.size(amplitudes), intervalSize):
+			currentInterval = amplitudes[i:i+intervalSize]
+			resultAmplitudes.append(method(currentInterval))
+			resultFrequencies.append(np.mean(frequencies[i:i+intervalSize]))
+
+		return resultAmplitudes, resultFrequencies
+
+	def compressAll(self, intervalSize, compressionMethodString):
+		compressedAmplitudes = []
+		for amp in self.amplitudes:
+			resultAmplitudes, resultFrequencies = self.compress(self.frequencies, amp, intervalSize, compressionMethodString)
+			compressedAmplitudes.append(resultAmplitudes)
+		return compressedAmplitudes, resultFrequencies
+
