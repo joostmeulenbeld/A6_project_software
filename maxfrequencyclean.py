@@ -1,6 +1,7 @@
 import numpy as np
 #from matplotlib.pylab import *
 carrierfrequency=145870000 #HZ
+lowfrequency=carrierfrequency-125000 #HZ
 def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
     #############################################################################################
                 #Read in Matrix A and set matrix with coordinates of maxes B
@@ -143,6 +144,10 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
             #Give coordinates of the maxes found on the matrix close to its least squares in B
     #############################################################################################
     #print B
+    for n in range(rowsA):
+        B[n][1]=(B[n][1])+lowfrequency
+
+    print B
     return B
     
 
