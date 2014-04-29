@@ -1,10 +1,11 @@
+
 from scikits.audiolab import Sndfile
 from scikits.audiolab import wavread
 import numpy as np
 import matplotlib.pyplot as plt
 from wavReadFourier import wavReaderFourierTransformer
 from maxfrequencyclean import maxFrequencies
-
+from rangerate import rangerateconvert
 ''' Input variables '''
 
 wavFileName = "Delfi-n3xt.wav"	# the location of the wav file
@@ -51,7 +52,7 @@ Doppler tracking '''
 
 
 
-
+rangerate = rangerateconvert(timefreq,carrierfreq)
 
 
 
