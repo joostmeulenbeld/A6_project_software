@@ -1,7 +1,7 @@
 import numpy as np
 #from matplotlib.pylab import *
 
-def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
+def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ, lowfrequency):
     #############################################################################################
                 #Read in Matrix A and set matrix with coordinates of maxes B
     #############################################################################################
@@ -145,8 +145,8 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
     for n in range(rowsA):
         B[n][1]=(B[n][1])+lowfrequency
 
-    print B
-    return B
+    
+    return VectorZ
     
 
 if __name__ == "__main__":
