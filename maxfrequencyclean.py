@@ -26,7 +26,7 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
     
     #for loop for each row in matrix A
     for n in range (rowsA):
-        print n
+        #print n
         #find max value in row A
         h=max(A[n])
         #set k to zero so we know we have not yet executed the next step
@@ -129,14 +129,14 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
             B[m]=[m,pr]
         #if q gets larger than r(range) it gets maxed to r minus 10 percent
         q=q+round(factorq*columnsA)
-        print z
+        #print z
         if q >= r:
             q=r-round(factorr*r)
      
     #############################################################################################
             #Give coordinates of the maxes found on the matrix close to its least squares in B
     #############################################################################################
-    print B
+    #print B
     return B
     
 
