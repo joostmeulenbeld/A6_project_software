@@ -19,14 +19,15 @@ ff=wavReader.getFrequencies()
 def  waterfallplot(freq_p,time_a,store_p): 
     from matplotlib import cm  
     from numpy import meshgrid  
+    from mpl_toolkits.mplot3d import Axes3D
        
     fig=plt.figure(3)
 
-    X,Y = meshgrid(freq_p,time_a)
+    X,Y = meshgrid(store_p,freq_p)
 
     ax = fig.gca(projection='3d')
         
-    surf = ax.plot_surface(X, Y, store_p, rstride=1, cstride=1, cmap=cm.jet,
+    surf = ax.plot_surface(X, Y, time_a,rstride=1, cstride=1, cmap=cm.jet,
             linewidth=0, antialiased=False)
 
 
@@ -36,6 +37,7 @@ def  waterfallplot(freq_p,time_a,store_p):
     ax.set_xlabel('Frequency (Hz)')
     ax.set_ylabel('Time (sec)')
     ax.set_zlabel('Magnitude')
+    #plt.ioff()
     
     plt.show() 
     
