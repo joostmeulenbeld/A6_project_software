@@ -22,7 +22,7 @@ factorr=0.1       #q=r-round(factorr*r) how much smaller q should be if its bigg
 factorq=0.2       #q=q+round(factorq*columnsA) how much smaller the interval gets
 iterationsZ=3     #number of iterations done 
 
-carrierfreq = 145*10**6
+carrierfreq = 145870000#Hz
     
 ''' End of input variable
 
@@ -61,9 +61,10 @@ for i in range(len(maxFrequency)):
     freq.append(maxFrequency[i][1])    
 time = wavReader.getTimes()
 timefreq = [time,freq]
-print timefreq
+
 rangerate = rangerateconvert(timefreq,carrierfreq)
-print rangerate
+plt.plot(time,rangerate)
+plt.show()
 #testplot = compare(rangerate)
 
 
