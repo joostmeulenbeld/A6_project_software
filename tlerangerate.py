@@ -238,6 +238,7 @@ def zenangle():
     for l in range(len(filelist)):
         fname = filelist[l]
         x,y,z,vx,vy,vz = tle_import(fname)
+        
         xgs,ygs,zgs,vxgs,vygs,vzgs = gs_pos()
         
         alpha = np.arcsin(ewi_sealevel/gs_radius)
@@ -248,13 +249,10 @@ def zenangle():
           
         beta = np.arccos(((gs_radius*gs_radius)+r*r-(heightsat*heightsat))/(2*(gs_radius)*r))
         horangle = (beta-alpha)*(180./np.pi)
-        plt.plot(horangle)
-        
+        plt.plot(horangle)        
         
     plt.show()
-#def reversedoppler():
-    
-    
+   
 #zenangle()
 groundmap()        
 a = rangerate()
