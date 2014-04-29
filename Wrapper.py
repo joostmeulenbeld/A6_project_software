@@ -3,6 +3,7 @@ from scikits.audiolab import wavread
 import numpy as np
 import matplotlib.pyplot as plt
 from wavReadFourier import wavReaderFourierTransformer
+from maxfrequencyclean import maxFrequencies
 
 ''' Input variables '''
 
@@ -35,8 +36,8 @@ No code here
 
 Maximum frequency and outlier detection '''
 
-A==intervals
-maxFrequency = maxfrequencyclean(A, factorrange, factorr, factorq, iterationsZ)
+
+maxFrequency = maxFrequencies(wavReader.getAmplitudesRimsky(), factorrange, factorr, factorq, iterationsZ)
 
 
 
