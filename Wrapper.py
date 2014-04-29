@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from wavReadFourier import wavReaderFourierTransformer
 from maxfrequencyclean import maxFrequencies
 from rangerate import rangerateconvert
-from tlerangerate import compare
+from tlerangerate import tlerangerate
 ''' Input variables '''
 
 wavFileName = "Delfi-n3xt.wav"	# the location of the wav file
@@ -15,14 +15,14 @@ end = 60*20.001					# What time is the last interval in seconds
 intervalWidth = 1.0				# How many seconds is one interval
 intervalStartFrequency = 60.0	# Every this many seconds a new interval starts
 
-carrierfrequency=105870000 #HZ
-lowfrequency=carrierfrequency-125000 #HZ
+carrierfrequency=105870000 #Hz
+lowfrequency=carrierfrequency-125000 #Hz
 factorrange=0.25  #factor of how much of the columns of A range will be used for r n plus and minus
 factorr=0.1       #q=r-round(factorr*r) how much smaller q should be if its bigger than r
 factorq=0.2       #q=q+round(factorq*columnsA) how much smaller the interval gets
 iterationsZ=3     #number of iterations done 
 
-carrierfreq = 145870000#Hz
+
     
 ''' End of input variable
 
@@ -62,8 +62,9 @@ for i in range(len(maxFrequency)):
 time = wavReader.getTimes()
 timefreq = [time,freq]
 
-rangerate = rangerateconvert(timefreq,carrierfreq)
+rangerate = rangerateconvert(timefreq,carrierfrequency)
 plt.plot(time,rangerate)
+plt.plot(tlerangerate)
 plt.show()
 #testplot = compare(rangerate)
 
