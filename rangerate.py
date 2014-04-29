@@ -9,13 +9,14 @@ Output: Range rate over time matrix
 #Add variable name of maxfrequency file here#
 
 
-speedoflight = 299792458 #m/s
+speedoflight = 299792.458 #km/s
 
 #Function to calculate the difference in velocity between receiver and transmitter
 #Inputs are received frequency(Hz), transmitted frequency(Hz) and speed of light(m/s)
 #Output is difference in velocity (m/s)
 def calcrangerate(freq,carrierfreq,speedoflight):
     deltafreq = freq - carrierfreq
+    print deltafreq
     deltav = (deltafreq * speedoflight)/carrierfreq
     return deltav
     
@@ -24,8 +25,8 @@ def calcrangerate(freq,carrierfreq,speedoflight):
 #Output is a time-rangerate matrix (list[t][m/s])
 #Uses calcrangerate function
 def rangerateconvert(timefreq,carrierfreq):
-    
+    test = []
     for i in range(len(timefreq[1])):
-        test = calcrangerate(timefreq[1][i],carrierfreq,speedoflight)
-        print test
+        test.append(calcrangerate(timefreq[1][i],carrierfreq,speedoflight))
+        
     return test

@@ -208,7 +208,7 @@ def groundmap():
     gmap.plot(gsx,gsy,color='aqua',linewidth=5)
     EarthRotAngle
     return plt.show()
-def rangerate():
+def tlerangerate():
     rrlist=[]
     for l in range(len(filelist)):
         fname = filelist[l]
@@ -253,8 +253,9 @@ def zenangle():
         
     plt.show()
 def compare(exprangerate):
-    tlerangerate = rangerate()
-    for i in range(len(tlerangerate)):
-        plt.plot(tlerangerate[i][1])
-        plt.plot(exprangerate)
+    tlerr = tlerangerate()
+    
+    for i in range(len(tlerr)):
+        plt.plot(tlerr[i][1])
+        plt.plot(exprangerate[0],exprangerate[1])
     plt.show()

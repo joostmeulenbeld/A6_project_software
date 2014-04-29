@@ -7,6 +7,7 @@ from wavReadFourier import wavReaderFourierTransformer
 from maxfrequencyclean import maxFrequencies
 from rangerate import rangerateconvert
 from tlerangerate import compare
+
 ''' Input variables '''
 
 wavFileName = "Delfi-n3xt.wav"	# the location of the wav file
@@ -15,12 +16,14 @@ end = 60*20.001					# What time is the last interval in seconds
 intervalWidth = 1.0				# How many seconds is one interval
 intervalStartFrequency = 60.0	# Every this many seconds a new interval starts
 
+carrierfrequency=145870000 #Hz
+lowfrequency=carrierfrequency-125000 #Hz
 factorrange=0.25  #factor of how much of the columns of A range will be used for r n plus and minus
 factorr=0.1       #q=r-round(factorr*r) how much smaller q should be if its bigger than r
 factorq=0.2       #q=q+round(factorq*columnsA) how much smaller the interval gets
 iterationsZ=3     #number of iterations done 
 
-carrierfreq = 145*10**6
+
     
 ''' End of input variable
 
@@ -41,7 +44,7 @@ No code here
 Maximum frequency and outlier detection '''
 
 
-maxFrequency = maxFrequencies(wavReader.getAmplitudesRimsky(), factorrange, factorr, factorq, iterationsZ)
+maxFrequency = maxFrequencies(wavReader.getAmplitudesRimsky(), factorrange, factorr, factorq, iterationsZ,lowfrequency)
 
 
 
@@ -59,10 +62,10 @@ for i in range(len(maxFrequency)):
     freq.append(maxFrequency[i][1])    
 time = wavReader.getTimes()
 timefreq = [time,freq]
-print timefreq
-rangerate = rangerateconvert(timefreq,carrierfreq)
-print rangerate
-#testplot = compare(rangerate)
+
+rangerate = rangerateconvert(timefreq,carrierfrequency)
+timedeltav = [time,rangerate]
+compare(timedeltav)
 
 
 ''' End of Doppler tracking 

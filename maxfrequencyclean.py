@@ -1,7 +1,7 @@
 import numpy as np
 #from matplotlib.pylab import *
-carrierfrequency=145870000 #HZ
-def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
+
+def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ, lowfrequency):
     #############################################################################################
                 #Read in Matrix A and set matrix with coordinates of maxes B
     #############################################################################################
@@ -13,15 +13,21 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
     C=np.shape(A)
     rowsA=C[0]
     columnsA=C[1]
-    print columnsA
     B=np.zeros((rowsA,2))
     E=np.zeros((rowsA,2))
     VectorZ=np.zeros((rowsA,2))
+    SUM=0
+
     #############################################################################################
             #noise filtering
     #############################################################################################
-    
+    for n in range(rowsA):
+        for o in range(columnsA):
+            SUM=0+A[n][o]
 
+    Mean=SUM/(rowsA*columnsA)
+    
+           
     #factorrange=0.25  #factor of how much of the columns of A range will be used for r n plus and minus
     #factorr=0.1       #q=r-round(factorr*r) how much smaller q should be if its bigger than r
     #factorq=0.2       #q=q+round(factorq*columnsA) how much smaller the interval gets
@@ -106,7 +112,7 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
                     #k is set to 1 and the coordinates are printed in B
                     if (k==0):
                         B[n]=n,o
-                        VectorZ[n]=n,h
+                        VectorZ[n]=n,o
                         k=k+1
                     #if above is already eprformed (k=1) then this part is executed  
                     if (k<>0): 
@@ -143,6 +149,10 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
             #Give coordinates of the maxes found on the matrix close to its least squares in B
     #############################################################################################
     #print B
+    for n in range(rowsA):
+        B[n][1]=(B[n][1])+lowfrequency
+
+    
     return B
     
 
