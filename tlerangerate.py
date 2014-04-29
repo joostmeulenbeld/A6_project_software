@@ -258,4 +258,4 @@ def compare(exprangerate):
         plt.plot(tlerangerate[i][1])
         plt.plot(exprangerate)
     plt.show()
-compare()
+
