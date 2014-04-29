@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from wavReadFourier import wavReaderFourierTransformer
 from maxfrequencyclean import maxFrequencies
 from rangerate import rangerateconvert
-from tlerangerate import tlerangerate
+from tlerangerate import compare
 
 ''' Input variables '''
 
@@ -64,10 +64,7 @@ time = wavReader.getTimes()
 timefreq = [time,freq]
 
 rangerate = rangerateconvert(timefreq,carrierfrequency)
-plt.plot(time,rangerate)
-#plt.plot(tlerangerate()[0])
-plt.show()
-#testplot = compare(rangerate)
+compare(timefreq,rangerate)
 
 
 ''' End of Doppler tracking 

@@ -253,8 +253,9 @@ def zenangle():
         
     plt.show()
 def compare(exprangerate):
-    tlerangerate = tlerangerate()
-    for i in range(len(tlerangerate)):
-        plt.plot(tlerangerate[i][1])
-        plt.plot(exprangerate)
+    tlerr = tlerangerate()
+    
+    for i in range(len(tlerr)):
+        plt.plot(tlerr[i][1])
+        plt.plot(exprangerate[0],exprangerate[1])
     plt.show()
