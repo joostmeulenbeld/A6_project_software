@@ -163,13 +163,13 @@ def groundmap():
     #BaseMap drawings
     gmap = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,\
             llcrnrlon=-180,urcrnrlon=180,resolution='c')
-    gmap.drawcoastlines(linewidth=.25)
-    gmap.drawcountries(linewidth=.25)
-    gmap.fillcontinents(color='g',lake_color='b')
+    #gmap.drawcoastlines(linewidth=.25)
+    #gmap.drawcountries(linewidth=.25)
+    #gmap.fillcontinents(color='g',lake_color='b')
     gmap.drawmapboundary(fill_color='b')
     gmap.drawmeridians(np.arange(0,360,30))
     gmap.drawparallels(np.arange(-90,90,30))
-    
+    gmap.bluemarble()
     tlong = np.arange(trange,trange+t_dif_sec+1,1)
 
 
@@ -252,7 +252,7 @@ def zenangle():
         
         
     plt.show()
-def reversedoppler():
+#def reversedoppler():
     
     
 #zenangle()
