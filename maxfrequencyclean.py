@@ -42,7 +42,7 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
                 #if above is already eprformed (k=1) then this part is executed  
                 if (k<>0): 
                     B[n,1]=round(((B[n,1]+o)/2))
-
+                    
     # Chose a model that will create bimodality.
     def func(x, a, b, c ,d):
         return a + b*x +c*x*x +d*x*x*x
@@ -129,6 +129,7 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
             B[m]=[m,pr]
         #if q gets larger than r(range) it gets maxed to r minus 10 percent
         q=q+round(factorq*columnsA)
+        print z
         if q >= r:
             q=r-round(factorr*r)
      
