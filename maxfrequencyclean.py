@@ -146,7 +146,7 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ, lowfrequency):
         B[n][1]=(B[n][1])+lowfrequency
 
     
-    return VectorZ
+    return B
     
 
 if __name__ == "__main__":
