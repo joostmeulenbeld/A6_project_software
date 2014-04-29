@@ -1,6 +1,6 @@
 import numpy as np
 #from matplotlib.pylab import *
-
+carrierfrequency=145870000 #HZ
 def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
     #############################################################################################
                 #Read in Matrix A and set matrix with coordinates of maxes B
@@ -13,9 +13,15 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ):
     C=np.shape(A)
     rowsA=C[0]
     columnsA=C[1]
+    print columnsA
     B=np.zeros((rowsA,2))
     E=np.zeros((rowsA,2))
     VectorZ=np.zeros((rowsA,2))
+    #############################################################################################
+            #noise filtering
+    #############################################################################################
+    
+
     #factorrange=0.25  #factor of how much of the columns of A range will be used for r n plus and minus
     #factorr=0.1       #q=r-round(factorr*r) how much smaller q should be if its bigger than r
     #factorq=0.2       #q=q+round(factorq*columnsA) how much smaller the interval gets
