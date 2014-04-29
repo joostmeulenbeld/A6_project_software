@@ -20,7 +20,7 @@ factorr=0.1       #q=r-round(factorr*r) how much smaller q should be if its bigg
 factorq=0.2       #q=q+round(factorq*columnsA) how much smaller the interval gets
 iterationsZ=3     #number of iterations done 
 
-carrierfreq = 146*10**6
+carrierfreq = 145*10**6
     
 ''' End of input variable
 
