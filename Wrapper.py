@@ -64,7 +64,8 @@ time = wavReader.getTimes()
 timefreq = [time,freq]
 
 rangerate = rangerateconvert(timefreq,carrierfrequency)
-compare(timefreq,rangerate)
+timedeltav = [time,rangerate]
+compare(timedeltav)
 
 
 ''' End of Doppler tracking 
