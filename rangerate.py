@@ -9,7 +9,7 @@ Output: Range rate over time matrix
 #Add variable name of maxfrequency file here#
 
 
-speedoflight = 299792458 #m/s
+speedoflight = 299792.458 #km/s
 
 #Function to calculate the difference in velocity between receiver and transmitter
 #Inputs are received frequency(Hz), transmitted frequency(Hz) and speed of light(m/s)
