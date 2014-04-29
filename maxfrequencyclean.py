@@ -16,11 +16,20 @@ def maxFrequencies(A, factorrange, factorr, factorq, iterationsZ, lowfrequency):
     B=np.zeros((rowsA,2))
     E=np.zeros((rowsA,2))
     VectorZ=np.zeros((rowsA,2))
+    SUM=0
+
     #############################################################################################
             #noise filtering
     #############################################################################################
-    
+    for n in range(rowsA):
+        for o in range(columnsA):
+            SUM=0+A[n][o]
 
+    Mean=SUM/(rowsA*columnsA)
+    for n in range(rowsA):
+        for o in range(columnsA):
+            if A[n][o]>=(2*Mean):
+                A[n][o]=0
     #factorrange=0.25  #factor of how much of the columns of A range will be used for r n plus and minus
     #factorr=0.1       #q=r-round(factorr*r) how much smaller q should be if its bigger than r
     #factorq=0.2       #q=q+round(factorq*columnsA) how much smaller the interval gets
