@@ -7,6 +7,7 @@ from wavReadFourier import wavReaderFourierTransformer
 from maxfrequencyclean import maxFrequencies
 from rangerate import rangerateconvert
 from tlerangerate import tlerangerate
+
 ''' Input variables '''
 
 wavFileName = "Delfi-n3xt.wav"	# the location of the wav file
