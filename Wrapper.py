@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from wavReadFourier import wavReaderFourierTransformer
 from maxfrequencyclean import maxFrequencies
 from rangerate import rangerateconvert
+from tlerangerate import compare
 ''' Input variables '''
 
 wavFileName = "Delfi-n3xt.wav"	# the location of the wav file
@@ -53,7 +54,7 @@ Doppler tracking '''
 
 
 rangerate = rangerateconvert(timefreq,carrierfreq)
-
+testplot = compare(rangerate)
 
 
 ''' End of Doppler tracking 

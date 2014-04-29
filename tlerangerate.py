@@ -59,9 +59,6 @@ julianfraction = ((j.seconds+1)/86399.)
 julianday = j.days + julianfraction
 EarthRotAngle = 2*np.pi*(0.7790572732640+1.00273781191135448*julianday)
 
-print EarthRotAngle
-print EarthRotAngle%(2*np.pi)
-
 #Returns three arrays (x,y,z) of the position of the groundstation
 def gs_pos():
     #Calculates the shape of the earth
@@ -252,9 +249,10 @@ def zenangle():
         plt.plot(horangle)        
         
     plt.show()
-   
-#zenangle()
-groundmap()        
-a = rangerate()
-plt.plot(a[0][1])  
-plt.show()
+def compare(exprangerate):
+    tlerangerate = rangerate()
+    for i in range(len(tlerangerate)):
+        plt.plot(tlerangerate[i][1])
+        plt.plot(exprangerate)
+    plt.show()
+compare()
