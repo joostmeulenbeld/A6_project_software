@@ -40,6 +40,7 @@ class wavReaderFourierTransformer:
 
 			self.intervals.append([meanTime, amplitudes])
 			self.amplitudes = self.getAmplitudes()
+			print(intervalStartFrame/self.fs)
 
 		self.wavFile.close()
 		del self.wavFile
@@ -76,32 +77,42 @@ class wavReaderFourierTransformer:
 	def getDeltaFourierFrequency(self):
 		return self.fs/self.intervalWidth
 
-	def plotWaterfallPlot(self, gridsize=100):
-		column_labels = list('Frequencies')
-		row_labels = list('Time')
-		amplitudes = getAmplitudes()
-		smallAmplitudes = []
-		for amp in amplitudes:
-			smallamp = []
-			for f in range(0, np.size(amp), gridsize):
-				smallamp.append(np.mean(amp[f:f+gridsize]))
-			smallAmplitudes.append(smallamp)
+	def plotAmplitudeHeatMap(self):
+		amplitudes, frequencies = self.compressAll(100, "maxMedianDifference")
+		self.plotHeatMap(amplitudes, frequencies)
 
-		data = smallAmplitudes
+	def plotHeatMap(self, amplitudes, frequencies):
+		data = np.array(amplitudes)
 		fig, ax = plt.subplots()
-		heatmap = ax.pcolor(data, cmap=plt.cm.Blues)
+		heatmap = ax.pcolor(data)
 
-		# put the major ticks at the middle of each cell
-		ax.set_xticks(np.arange(data.shape[0])+0.5, minor=False)
-		ax.set_yticks(np.arange(data.shape[1])+0.5, minor=False)
+		column_labels = frequencies
+		row_labels = self.getTimes()
+		# put the major ticks at the middle of each cell, notice "reverse" use of dimension
+		ax.set_yticks(np.arange(data.shape[0])+0.5, minor=False)
+		ax.set_xticks(np.arange(data.shape[1])+0.5, minor=False)
 
-		# want a more natural, table-like display
-		ax.invert_yaxis()
-		ax.xaxis.tick_top()
 
-		ax.set_xticklabels(row_labels, minor=False)
-		ax.set_yticklabels(column_labels, minor=False)
-		plt.show()
+		ax.set_xticklabels(column_labels, minor=False)
+		ax.set_yticklabels(row_labels, minor=False)
+		plt.show()		
+
+	def getNarrowSpectra(self, spectrumWidth):
+		amplitudes = []
+		frequencies = []
+		for amp in self.amplitudes:
+			amplitude, frequency = self.getNarrowSpectrum(amp, self.frequencies, spectrumWidth)
+			amplitudes.append(amplitude)
+			frequencies.append(frequency)
+		return amplitudes, frequencies
+
+
+	def getNarrowSpectrum(self, amplitudes, frequencies, spectrumWidth):
+		cutOff = np.where(frequencies==-spectrumWidth)[0]
+		amplitudes = amplitudes[cutOff:-cutOff]
+		frequencies = frequencies[cutOff:-cutOff]
+		return amplitudes, frequencies
+
 
 	def median(self, amplitudes):
 		return np.median(amplitudes)
