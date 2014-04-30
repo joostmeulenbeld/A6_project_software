@@ -39,7 +39,11 @@ def maxFrequencies(A, lowfrequency):
             absLst = [h if h > 0 else -h for h in A[j][i:i*1000]] 
             lst2.append(sum(absLst))
         lst.append(lst2)
-    
+    for g in range(len(lst)):
+        maxintervalindex= lst[g].index(max(lst[g]))
+        maxfreq = max(A[g][((maxintervalindex*1000)-1000):(maxintervalindex*1000)+1000])
+        maxfreqindex = A[g][((maxintervalindex*1000)-1000):(maxintervalindex*1000)+1000].index(maxfreq)
+        maxfreqindex +=maxintervalindex-1000
                     
     # Chose a model that will create bimodality.
     def func(x, a, b, c ,d):
