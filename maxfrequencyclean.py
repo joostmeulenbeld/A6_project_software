@@ -32,13 +32,14 @@ def maxFrequencies(A, lowfrequency):
     #############################################################################################
             #First run of least square finding and rewrite matrix B with least square coordinates
     #############################################################################################
+    lst=[]    
     for j in range(len(A)):
-        lst=[]
+        lst2=[]
         for i in range(len(A[j])/1000):
-            lst.append(A[0][i:i*1000])
-        lst2.append(lst)
-    for k in range(len(A)):
-        print A[k].index(max(A[k]))," Value: ",max(A[k])
+            absLst = [h if h > 0 else -h for h in A[j][i:i*1000]] 
+            lst2.append(sum(absLst))
+        lst.append(lst2)
+    
                     
     # Chose a model that will create bimodality.
     def func(x, a, b, c ,d):
