@@ -80,13 +80,14 @@ Post-processing'''
 print("Maximum Fourier frequency: " + str(wavReader.getMaxFourierFrequency()))
 print("Delta Fourier frequency: " + str(wavReader.getDeltaFourierFrequency()))
 
-# wavReader.plotWaterfallPlot()
-# wavReader.plotFourierTransforms()
-# amplitudes, frequencies = wavReader.compressAll(1000, "maxMedianDifference")
-# print(np.size(amplitudes))
-# plt.plot(wavReader.getFrequencies(), wavReader.getAmplitudes()[0])
-# plt.plot(frequencies, amplitudes[0])
-# plt.show()
+print("narrowing")
+amplitudes, frequencies = wavReader.getNarrowSpectra(10000)
+print("compressing")
+amplitudes, frequencies = wavReader.compressAmplitudes(amplitudes, frequencies, 10, "maxMedianDifference")
+print("plotting")
+wavReader.plotHeatMap(amplitudes, frequencies)
+
+
 
 
 ''' End of Post-processing
