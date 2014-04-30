@@ -3,11 +3,12 @@ from scikits.audiolab import wavread
 import numpy as np
 import matplotlib.pyplot as p
 
-numframes=100
+
 left_channel=[]
 right_channel=[]
 t=[]
 fs=250000
+numframes=fs*60
 
 raw = Sndfile('Delfi-n3xt.wav', 'r')
 data = np.array(raw.read_frames(numframes), dtype=np.float64)
@@ -21,4 +22,4 @@ t=np.linspace(0, len(left_channel)/fs, num=len(left_channel))
 p.plot(left_channel)
 p.show()
 
-np.savetxt('output.txt',data)
+#np.savetxt('output.txt',data)
