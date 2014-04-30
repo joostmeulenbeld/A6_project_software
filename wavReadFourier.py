@@ -104,18 +104,17 @@ class wavReaderFourierTransformer:
 		ax.set_yticklabels(row_labels, minor=False)
 		plt.show()		
 
-	def getNarrowSpectraFromAmplitudes(self, amplitudes, frequencies, spectrumWidth):
+	def getNarrowSpectraFromAmplitudes(self, inputamplitudes, inputfrequencies, spectrumWidth):
 		amplitudes = []
 		frequencies = []
-		for amp in amplitudes:
-			amplitude, frequency = self.getNarrowSpectrum(amp, frequencies, spectrumWidth)
+		for amp in inputamplitudes:
+			amplitude, frequency = self.getNarrowSpectrum(amp, inputfrequencies, spectrumWidth)
 			amplitudes.append(amplitude)
 			frequencies.append(frequency)
-
 		return amplitudes, frequencies
 
 	def getNarrowSpectra(self, spectrumWidth):
-		return getNarrowSpectraFromAmplitudes(self.amplitudes, self.frequencies, spectrumWidth)
+		return self.getNarrowSpectraFromAmplitudes(self.amplitudes, self.frequencies, spectrumWidth)
 
 
 	def getNarrowSpectrum(self, amplitudes, frequencies, spectrumWidth):
@@ -124,7 +123,6 @@ class wavReaderFourierTransformer:
 		amplitudes = amplitudes[cutOff:-cutOff]
 		frequencies = frequencies[cutOff:-cutOff]
 		return amplitudes, frequencies
-
 
 	def median(self, amplitudes):
 		return np.median(amplitudes)
