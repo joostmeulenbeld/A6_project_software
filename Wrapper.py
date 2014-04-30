@@ -1,4 +1,3 @@
-
 from scikits.audiolab import Sndfile
 from scikits.audiolab import wavread
 import numpy as np
@@ -14,7 +13,7 @@ wavFileName = "Delfi-n3xt.wav"	# the location of the wav file
 start = 60*0.0			# What time is the first interval in seconds
 end = 60*21.0+33					# What time is the last interval in seconds
 intervalWidth = 1.0				# How many seconds is one interval
-intervalStartFrequency = 10.0	# Every this many seconds a new interval starts
+intervalStartFrequency = 60.0	# Every this many seconds a new interval starts
 
 carrierfrequency = 145870000 #Hz
 lowfrequency = carrierfrequency-125000 #Hz

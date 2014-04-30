@@ -14,7 +14,6 @@ speedoflight = 299792.458 #km/s
 #Output is difference in velocity (m/s)
 def calcrangerate(freq,carrierfreq,speedoflight):
     deltafreq = freq - carrierfreq
-    print deltafreq
     deltav = (deltafreq * speedoflight)/carrierfreq
     return deltav
     

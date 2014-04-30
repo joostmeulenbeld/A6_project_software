@@ -1,5 +1,4 @@
 import numpy as np
-#from matplotlib.pylab import *
 
 def maxFrequencies(A, lowfrequency):
     #############################################################################################
@@ -45,37 +44,12 @@ def maxFrequencies(A, lowfrequency):
     
     for g in range(len(lst)):
         maxintervalindex = lst[g].index(max(lst[g]))
-        print maxintervalindex
         maxfreqindex = A[g][((maxintervalindex*1000)-1000):(maxintervalindex*1000)+1000].argmax()
-        print maxfreqindex
         maxfreqindex +=(maxintervalindex*1000)-1000
         maxfreqlist.append(maxfreqindex)
         print "Interval: ",g," Found Max Freq: ",maxfreqindex
     
     print "Found all maximum frequencies"
-    
-    # Chose a model that will create bimodality.
-#    def func(x, a, b, c ,d):
-#        return a + b*x +c*x*x +d*x*x*x
-    
-#    # Create the data for curve_fit.
-#    xdata = range(len(maxfreqlist))
-#    ydata = maxfreqlist
-#    sigma = np.ones(rowsA)
-#    x0    = np.array([0.0, 0.0, 0.0, 0.0])
-#    import scipy.optimize as optimization
-#    
-#    #print values for the least square function
-#    [popt, pcov] = optimization.curve_fit(func, xdata, ydata, x0, sigma)
-#    
-#    #look for closest points to the least square function
-#    for m in range(rowsA):
-#        p=popt[0] + popt[1]*B[m,0] + popt[2]*B[m,0]*B[m,0] + popt[3]*B[m,0]*B[m,0]*B[m,0]
-#        pr=round(popt[0] + popt[1]*B[m,0] + popt[2]*B[m,0]*B[m,0] + popt[3]*B[m,0]*B[m,0]*B[m,0])  
-#        #replace values of B by closest values in the least square  
-#        B[m]=[m,pr]
-#        
-   
      
     #############################################################################################
             #Give coordinates of the maxes found on the matrix close to its least squares in B
@@ -84,9 +58,8 @@ def maxFrequencies(A, lowfrequency):
     for n in range(len(maxfreqlist)):
         maxfreqlist[n]+=lowfrequency
 
-    print maxfreqlist
     return maxfreqlist
-    
+    print "Added base frequencyS"
 
 #if __name__ == "__main__":
  #maxFrequencies()
