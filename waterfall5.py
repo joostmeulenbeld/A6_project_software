@@ -6,17 +6,17 @@ from mpl_toolkits.mplot3d import Axes3D
 
 
 wavFileName = "Delfi-n3xt.wav"	# the location of the wav file
-start = 60*10.0					# What time is the first interval in seconds
-end = 60*12.001					# What time is the last interval in seconds
+start = 60*5.0					# What time is the first interval in seconds
+end = 60*20.001					# What time is the last interval in seconds
 intervalWidth = 1.0				# How many seconds is one interval
-intervalStartFrequency = 5.0	# Every this many seconds a new interval starts
+intervalStartFrequency = 60.0	# Every this many seconds a new interval starts
 
 wavReader = wrft(wavFileName, start, end, intervalWidth, intervalStartFrequency)
 frequencies, intervals = wavReader.getFrequencyAmplitudes()
 
 tt=wavReader.getTimes()
 aa,ff=wavReader.getNarrowSpectra(10000)
-aa,ff=wavReader.compress(ff,aa,100,'maxMedianDifference')
+aa,ff=wavReader.compressAmplitudes(aa,ff,100,'maxMedianDifference')
 
 
 def  waterfallplot(freq_p,time_a,store_p): 
