@@ -111,9 +111,8 @@ class wavReaderFourierTransformer:
 			print("given frequency was not found")
 			return inputamplitudes, inputfrequencies
 		for amp in inputamplitudes:
-			amplitude, frequency = self.getNarrowSpectrum(amp, inputfrequencies, spectrumWidth)
+			amplitude, frequencies = self.getNarrowSpectrum(amp, inputfrequencies, spectrumWidth)
 			amplitudes.append(amplitude)
-			frequencies.append(frequency)
 		return amplitudes, frequencies
 
 	def getNarrowSpectra(self, spectrumWidth):
