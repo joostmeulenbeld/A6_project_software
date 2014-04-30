@@ -38,7 +38,7 @@ def maxFrequencies(A, lowfrequency):
             lst2.append(sum(absLst))
             
         lst.append(lst2)
-        print j
+        print "Searching in interval: ",j
     maxfreqlist = []
     print "Found first estimate interval"
     
