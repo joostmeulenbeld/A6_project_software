@@ -14,7 +14,7 @@ wavFileName = "Delfi-n3xt.wav"	# the location of the wav file
 start = 60*0.0			# What time is the first interval in seconds
 end = 60*21.0+33					# What time is the last interval in seconds
 intervalWidth = 1.0				# How many seconds is one interval
-intervalStartFrequency = 5.0	# Every this many seconds a new interval starts
+intervalStartFrequency = 10.0	# Every this many seconds a new interval starts
 
 carrierfrequency = 145870000 #Hz
 lowfrequency = carrierfrequency-125000 #Hz
@@ -74,15 +74,15 @@ Post-processing'''
 print("Maximum Fourier frequency: " + str(wavReader.getMaxFourierFrequency()))
 print("Delta Fourier frequency: " + str(wavReader.getDeltaFourierFrequency()))
 
-# wavReader.plotNarrowCompressedHeatMap()
+wavReader.plotNarrowCompressedHeatMap(10, "maxMedianDifference", 10000)
 # amplitudes, frequencies = wavReader.compressAll(100, "maxMedianDifference")
 # for amp in amplitudes:
 # 	plt.plot(frequencies, amp)
 # plt.show()
 
-wavReader.plotFourierTransforms()
+# wavReader.plotFourierTransforms()
 
-wavReader.waterFallPlot(100, "maxMedianDifference", 10000)
+# wavReader.waterFallPlot(10, "maxMedianDifference", 10000)
 
 ''' End of Post-processing
 
