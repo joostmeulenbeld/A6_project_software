@@ -15,7 +15,8 @@ wavReader = wrft(wavFileName, start, end, intervalWidth, intervalStartFrequency)
 frequencies, intervals = wavReader.getFrequencyAmplitudes()
 
 tt=wavReader.getTimes()
-aa,ff=wavReader.compressAll(100,'maxMedianDifference')
+aa,ff=wavReader.getNarrowSpectra(10000)
+aa,ff=wavReader.compress(ff,aa,100,'maxMedianDifference')
 
 
 def  waterfallplot(freq_p,time_a,store_p): 
