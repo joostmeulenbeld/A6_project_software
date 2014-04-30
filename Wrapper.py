@@ -54,10 +54,10 @@ print "Doppler tracking"
 
 freq = []
 for i in range(len(maxFrequency)):
-    freq.append(maxFrequency[i][1])    
+    freq.append(maxFrequency[i])    
 time = wavReader.getTimes()
 timefreq = [time,freq]
-
+print timefreq
 rangerate = rangerateconvert(timefreq,carrierfrequency)
 timedeltav = [time,rangerate]
 compare(timedeltav)

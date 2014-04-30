@@ -25,8 +25,7 @@ def maxFrequencies(A, lowfrequency):
         for o in range(columnsA):
             if o<=75000 or o>=175000:
                 A[n][o]=0
-            if A[n][o]>=0.00015:
-                A[n][o]=0
+
     print "Noise filtering done!"
     
     #############################################################################################
@@ -38,52 +37,55 @@ def maxFrequencies(A, lowfrequency):
         for i in range(len(A[j])/1000):
             absLst = [h if h > 0 else -h for h in A[j][i*1000:(i*1000)+1000]] 
             lst2.append(sum(absLst))
-            print i
+            
         lst.append(lst2)
         print j
     maxfreqlist = []
-
+    print "Found first estimate interval"
+    
     for g in range(len(lst)):
-        maxintervalindex= lst[g].index(max(lst[g]))
-        maxfreq = max(A[g][((maxintervalindex*1000)-1000):(maxintervalindex*1000)+1000])
-        maxfreqindex = A[g][((maxintervalindex*1000)-1000):(maxintervalindex*1000)+1000].index(maxfreq)
-        maxfreqindex +=maxintervalindex-1000
+        maxintervalindex = lst[g].index(max(lst[g]))
+        print maxintervalindex
+        maxfreqindex = A[g][((maxintervalindex*1000)-1000):(maxintervalindex*1000)+1000].argmax()
+        print maxfreqindex
+        maxfreqindex +=(maxintervalindex*1000)-1000
         maxfreqlist.append(maxfreqindex)
-    print maxfreqlist
-    print "Bl"
+        print "Interval: ",g," Found Max Freq: ",maxfreqindex
+    
+    print "Found all maximum frequencies"
     
     # Chose a model that will create bimodality.
-    def func(x, a, b, c ,d):
-        return a + b*x +c*x*x +d*x*x*x
+#    def func(x, a, b, c ,d):
+#        return a + b*x +c*x*x +d*x*x*x
     
-    # Create the data for curve_fit.
-    xdata = B[:,0]
-    ydata = B[:,1]
-    sigma = np.ones(rowsA)
-    x0    = np.array([0.0, 0.0, 0.0, 0.0])
-    import scipy.optimize as optimization
-    
-    #print values for the least square function
-    [popt, pcov] = optimization.curve_fit(func, xdata, ydata, x0, sigma)
-    
-    #look for closest points to the least square function
-    for m in range(rowsA):
-        p=popt[0] + popt[1]*B[m,0] + popt[2]*B[m,0]*B[m,0] + popt[3]*B[m,0]*B[m,0]*B[m,0]
-        pr=round(popt[0] + popt[1]*B[m,0] + popt[2]*B[m,0]*B[m,0] + popt[3]*B[m,0]*B[m,0]*B[m,0])  
-        #replace values of B by closest values in the least square  
-        B[m]=[m,pr]
-        
+#    # Create the data for curve_fit.
+#    xdata = range(len(maxfreqlist))
+#    ydata = maxfreqlist
+#    sigma = np.ones(rowsA)
+#    x0    = np.array([0.0, 0.0, 0.0, 0.0])
+#    import scipy.optimize as optimization
+#    
+#    #print values for the least square function
+#    [popt, pcov] = optimization.curve_fit(func, xdata, ydata, x0, sigma)
+#    
+#    #look for closest points to the least square function
+#    for m in range(rowsA):
+#        p=popt[0] + popt[1]*B[m,0] + popt[2]*B[m,0]*B[m,0] + popt[3]*B[m,0]*B[m,0]*B[m,0]
+#        pr=round(popt[0] + popt[1]*B[m,0] + popt[2]*B[m,0]*B[m,0] + popt[3]*B[m,0]*B[m,0]*B[m,0])  
+#        #replace values of B by closest values in the least square  
+#        B[m]=[m,pr]
+#        
    
      
     #############################################################################################
             #Give coordinates of the maxes found on the matrix close to its least squares in B
     #############################################################################################
     #print B
-    for n in range(rowsA):
-        B[n][1]=(B[n][1])+lowfrequency
+    for n in range(len(maxfreqlist)):
+        maxfreqlist[n]+=lowfrequency
 
-    
-    return B
+    print maxfreqlist
+    return maxfreqlist
     
 
 #if __name__ == "__main__":
