@@ -45,7 +45,7 @@ No code here
 Maximum frequency and outlier detection '''
 print "Maximum frequency and outlier detection"
 
-maxFrequency = maxFrequencies(wavReader.getAmplitudesRimsky(), factorrange, factorr, factorq, iterationsZ,lowfrequency)
+maxFrequency = maxFrequencies(wavReader.getAmplitudesRimsky(),lowfrequency)
 
 
 
