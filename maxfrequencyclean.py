@@ -27,7 +27,7 @@ def maxFrequencies(A, lowfrequency):
                 A[n][o]=0
             if A[n][o]>=0.00015:
                 A[n][o]=0
-    print n      
+    print "Noise filtering done!"
     
     #############################################################################################
             #First run of least square finding and rewrite matrix B with least square coordinates
@@ -36,10 +36,13 @@ def maxFrequencies(A, lowfrequency):
     for j in range(len(A)):
         lst2=[]
         for i in range(len(A[j])/1000):
-            absLst = [h if h > 0 else -h for h in A[j][i:i*1000]] 
+            absLst = [h if h > 0 else -h for h in A[j][i*1000:(i*1000)+1000]] 
             lst2.append(sum(absLst))
+            print i
         lst.append(lst2)
+        print j
     maxfreqlist = []
+
     for g in range(len(lst)):
         maxintervalindex= lst[g].index(max(lst[g]))
         maxfreq = max(A[g][((maxintervalindex*1000)-1000):(maxintervalindex*1000)+1000])
@@ -47,6 +50,8 @@ def maxFrequencies(A, lowfrequency):
         maxfreqindex +=maxintervalindex-1000
         maxfreqlist.append(maxfreqindex)
     print maxfreqlist
+    print "Bl"
+    
     # Chose a model that will create bimodality.
     def func(x, a, b, c ,d):
         return a + b*x +c*x*x +d*x*x*x
