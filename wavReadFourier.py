@@ -6,6 +6,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import fourier
 
+from matplotlib import cm  
+from numpy import meshgrid  
+from mpl_toolkits.mplot3d import Axes3D
+
 class wavReaderFourierTransformer:
 
 	def __init__(self, wavFileName, startSeconds, endSeconds, intervalWidthSeconds, intervalStartSeconds):
@@ -80,12 +84,12 @@ class wavReaderFourierTransformer:
 	def plotAmplitudeHeatMap(self):
 		self.plotHeatMap(self.amplitudes, self.frequencies)
 
-	def plotCompressedHeatMap(self, intervalSize, compressionMethodString):
-		amplitudes, frequencies = self.compressAll(intervalSize, compressionMethodString)
-		self.plotHeatMap(amplitudes, frequencies)
-
-	def plotNarrowHeatMap(self, spectrumWidth):
+	def plotNarrowCompressedHeatMap(self, intervalSize, compressionMethodString, spectrumWidth):
+		print("narrowing")
 		amplitudes, frequencies = self.getNarrowSpectra(spectrumWidth)
+		print("compressing")
+		amplitudes, frequencies = self.compressAmplitudes(amplitudes, frequencies, intervalSize, compressionMethodString)
+		print("plotting")
 		self.plotHeatMap(amplitudes, frequencies)
 
 	def plotHeatMap(self, amplitudes, frequencies):
@@ -165,3 +169,25 @@ class wavReaderFourierTransformer:
 
 	def compressAll(self, intervalSize, compressionMethodString):
 		return self.compressAmplitudes(self.amplitudes, self.frequencies, intervalSize, compressionMethodString)
+	
+	def  waterFallPlot(self, compressionIntervalWidth, compressionMethodString, spectrumWidth):
+
+		tt=self.getTimes()
+		aa,ff=self.getNarrowSpectra(spectrumWidth)
+		aa,ff=self.compressAmplitudes(aa,ff,compressionIntervalWidth,compressionMethodString)
+		fig=plt.figure(1)
+		ax=fig.add_subplot(1,1,1,projection='3d')
+
+		X,Y=meshgrid(ff,tt)
+		p = ax.plot_surface(X, Y, aa, rstride=4, cstride=4, cmap=cm.coolwarm, linewidth=0, antialiased=False)
+
+
+
+		ax.view_init(elev=45, azim=-100)
+
+		ax.set_xlabel('Frequency (Hz)')
+		ax.set_ylabel('Time (sec)')
+		ax.set_zlabel('Magnitude')
+	    
+		plt.show() 
+	    
