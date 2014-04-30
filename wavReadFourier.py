@@ -142,11 +142,11 @@ class wavReaderFourierTransformer:
 	def compressAmplitudes(self, amplitudes, frequencies, intervalSize, compressionMethodString):
 		compressedAmplitudes = []
 		for amp in amplitudes:
-			resultAmplitudes, resultFrequencies = self.compress(frequencies, amp, intervalSize, compressionMethodString)
+			resultAmplitudes, resultFrequencies = self.compress(amp, frequencies, intervalSize, compressionMethodString)
 			compressedAmplitudes.append(resultAmplitudes)
 		return compressedAmplitudes, resultFrequencies
 
-	def compress(self, frequencies, amplitudes, intervalSize, compressionMethodString):
+	def compress(self, amplitudes, frequencies, intervalSize, compressionMethodString):
 		resultFrequencies = []
 		resultAmplitudes = []
 
@@ -165,4 +165,4 @@ class wavReaderFourierTransformer:
 		return resultAmplitudes, resultFrequencies
 
 	def compressAll(self, intervalSize, compressionMethodString):
-		return self.compressAmplitudes(self.frequencies, self.amplitudes, intervalSize, compressionMethodString)
+		return self.compressAmplitudes(self.amplitudes, self.frequencies, intervalSize, compressionMethodString)
