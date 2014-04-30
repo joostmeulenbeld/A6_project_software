@@ -7,8 +7,6 @@ Output: Range rate over time matrix
 @author: Maarten Schild, Project A6
 """
 #Add variable name of maxfrequency file here#
-
-
 speedoflight = 299792.458 #km/s
 
 #Function to calculate the difference in velocity between receiver and transmitter
