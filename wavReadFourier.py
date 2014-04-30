@@ -78,7 +78,14 @@ class wavReaderFourierTransformer:
 		return self.fs/self.intervalWidth
 
 	def plotAmplitudeHeatMap(self):
-		amplitudes, frequencies = self.compressAll(100, "maxMedianDifference")
+		self.plotHeatMap(self.amplitudes, self.frequencies)
+
+	def plotCompressedHeatMap(self, intervalSize, compressionMethodString):
+		amplitudes, frequencies = self.compressAll(intervalSize, compressionMethodString)
+		self.plotHeatMap(amplitudes, frequencies)
+
+	def plotNarrowHeatMap(self, spectrumWidth):
+		amplitudes, frequencies = self.getNarrowSpectra(spectrumWidth)
 		self.plotHeatMap(amplitudes, frequencies)
 
 	def plotHeatMap(self, amplitudes, frequencies):
@@ -97,18 +104,23 @@ class wavReaderFourierTransformer:
 		ax.set_yticklabels(row_labels, minor=False)
 		plt.show()		
 
-	def getNarrowSpectra(self, spectrumWidth):
+	def getNarrowSpectraFromAmplitudes(self, amplitudes, frequencies, spectrumWidth):
 		amplitudes = []
 		frequencies = []
-		for amp in self.amplitudes:
-			amplitude, frequency = self.getNarrowSpectrum(amp, self.frequencies, spectrumWidth)
+		for amp in amplitudes:
+			amplitude, frequency = self.getNarrowSpectrum(amp, frequencies, spectrumWidth)
 			amplitudes.append(amplitude)
 			frequencies.append(frequency)
+
 		return amplitudes, frequencies
+
+	def getNarrowSpectra(self, spectrumWidth):
+		return getNarrowSpectraFromAmplitudes(self.amplitudes, self.frequencies, spectrumWidth)
 
 
 	def getNarrowSpectrum(self, amplitudes, frequencies, spectrumWidth):
-		cutOff = np.where(frequencies==-spectrumWidth)[0]
+		cutOff = np.where(frequencies==-spectrumWidth)
+		cutOff = cutOff[0][0]
 		amplitudes = amplitudes[cutOff:-cutOff]
 		frequencies = frequencies[cutOff:-cutOff]
 		return amplitudes, frequencies

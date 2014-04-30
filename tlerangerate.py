@@ -252,6 +252,7 @@ def zenangle():
         plt.plot(horangle)        
         
     plt.show()
+    
 def compare(exprangerate):
     tlerr = tlerangerate()
     
