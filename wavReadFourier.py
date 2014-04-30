@@ -94,7 +94,7 @@ class wavReaderFourierTransformer:
 		heatmap = ax.pcolor(data)
 
 		column_labels = frequencies
-		row_labels = self.getTimes()
+		row_labels = np.floor(np.array(self.getTimes())/60.0)
 		# put the major ticks at the middle of each cell, notice "reverse" use of dimension
 		ax.set_yticks(np.arange(data.shape[0])+0.5, minor=False)
 		ax.set_xticks(np.arange(data.shape[1])+0.5, minor=False)
@@ -107,6 +107,9 @@ class wavReaderFourierTransformer:
 	def getNarrowSpectraFromAmplitudes(self, inputamplitudes, inputfrequencies, spectrumWidth):
 		amplitudes = []
 		frequencies = []
+		if (not(-spectrumWidth in inputfrequencies)):
+			print("given frequency was not found")
+			return inputamplitudes, inputfrequencies
 		for amp in inputamplitudes:
 			amplitude, frequency = self.getNarrowSpectrum(amp, inputfrequencies, spectrumWidth)
 			amplitudes.append(amplitude)
@@ -136,6 +139,13 @@ class wavReaderFourierTransformer:
 	def maxMedianDifference(self, amplitudes):
 		return np.amax(amplitudes)-np.median(amplitudes)
 
+	def compressAmplitudes(self, amplitudes, frequencies, intervalSize, compressionMethodString):
+		compressedAmplitudes = []
+		for amp in amplitudes:
+			resultAmplitudes, resultFrequencies = self.compress(frequencies, amp, intervalSize, compressionMethodString)
+			compressedAmplitudes.append(resultAmplitudes)
+		return compressedAmplitudes, resultFrequencies
+
 	def compress(self, frequencies, amplitudes, intervalSize, compressionMethodString):
 		resultFrequencies = []
 		resultAmplitudes = []
@@ -155,10 +165,4 @@ class wavReaderFourierTransformer:
 		return resultAmplitudes, resultFrequencies
 
 	def compressAll(self, intervalSize, compressionMethodString):
-		compressedAmplitudes = []
-		for amp in self.amplitudes:
-			resultAmplitudes, resultFrequencies = self.compress(self.frequencies, amp, intervalSize, compressionMethodString)
-			compressedAmplitudes.append(resultAmplitudes)
-		return compressedAmplitudes, resultFrequencies
-
-
+		return self.compressAmplitudes(self.frequencies, self.amplitudes, intervalSize, compressionMethodString)
