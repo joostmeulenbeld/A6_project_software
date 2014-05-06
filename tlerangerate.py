@@ -267,4 +267,4 @@ def compare(exprangerate):
 #dummydif = position_diff()
 #plt.plot(dummydif[0][1],dummydif[0][2])
 #plt.show()
-#groundmap()
+groundmap()
