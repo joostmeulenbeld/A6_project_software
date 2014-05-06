@@ -38,7 +38,7 @@ No code here
 Maximum frequency and outlier detection '''
 print "Start noise reduction and maximum interval frequency detection"
 
-maxFrequency = maxFrequencies(wavReader,lowfrequency)
+maxFrequency = maxFrequencies(wavReader,carrierfrequency)
 
 print "Completed noise reduction and maximum interval frequency detection"
 ''' End of noise reduction and maximum interval frequency detection

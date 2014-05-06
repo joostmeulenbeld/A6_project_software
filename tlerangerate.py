@@ -139,18 +139,23 @@ def position_diff():
         tlextab,tleytab,tleztab,tlevx,tlevy,tlevz = tle_import(fname)
         dtab = []
         ttab = []
+        dxtab=[]
+        dytab=[]
+        dztab=[]
         t = 0
         for i in range(len(xtab)):
-            x = abs(xtab[i]-tlextab[i])
-            y = abs(ytab[i]-tleytab[i])
-            z = abs(ztab[i]-tleztab[i])
+            x = xtab[i]-tlextab[i]
+            y = ytab[i]-tleytab[i]
+            z = ztab[i]-tleztab[i]
             t = t + 1
     
             dist = ((x**2)+(y**2)+(z**2))**0.5
-    
+            dxtab.append(x)
+            dytab.append(y)
+            dztab.append(z)            
             dtab.append(dist)
             ttab.append(t)
-        dummy = [filelist[l],ttab,dtab,xtab,ytab,ztab]
+        dummy = [filelist[l],ttab,dtab,dxtab,dytab,dztab]
         posdif.append(dummy)
         
     return posdif
