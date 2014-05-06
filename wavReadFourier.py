@@ -120,6 +120,7 @@ class wavReaderFourierTransformer:
 
 		if (cutOffIndex==-1):
 			print("given frequency was not found")
+			cutOffIndex = 0
 
 		for amp in inputamplitudes:
 			amplitude, frequencies = self.getNarrowSpectrum(amp, inputfrequencies, cutOffIndex)
