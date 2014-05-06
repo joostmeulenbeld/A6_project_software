@@ -21,6 +21,10 @@ def maxFrequencies(wavReader, carrierfrequency):
             #noise filtering removing 0->75000 and 125000->250000
     #############################################################################################
 
+    for n in range(rowsA):
+        for o in range(columnsA):
+            if o<=75000 or o>=175000:
+                A[n][o]=0
 
     print "Noise filtering done!"
     
