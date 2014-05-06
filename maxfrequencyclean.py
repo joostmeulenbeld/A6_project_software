@@ -1,6 +1,6 @@
 import numpy as np
 
-def maxFrequencies(A, lowfrequency):
+def maxFrequencies(wavReader, lowfrequency):
     #############################################################################################
                 #Read in Matrix A and set matrix with coordinates of maxes B
     #############################################################################################
@@ -8,6 +8,7 @@ def maxFrequencies(A, lowfrequency):
        
     
     #make zero matrix B for x,y values, same amount of rows as A 
+    A = wavReader.getAmplitudesRimsky()
     C=np.shape(A)
     rowsA=C[0]
     columnsA=C[1]
@@ -41,12 +42,13 @@ def maxFrequencies(A, lowfrequency):
         print "Searching in interval: ",j
     maxfreqlist = []
     print "Found first estimate interval"
-    
+    frequencies = wavReader.getFrequencies()
     for g in range(len(lst)):
         maxintervalindex = lst[g].index(max(lst[g]))
         maxfreqindex = A[g][((maxintervalindex*1000)-1000):(maxintervalindex*1000)+1000].argmax()
         maxfreqindex +=(maxintervalindex*1000)-1000
-        maxfreqlist.append(maxfreqindex)
+
+        maxfreqlist.append(frequencies[maxfreqindex])
         print "Interval: ",g," Found Max Freq: ",maxfreqindex
     
     print "Found all maximum frequencies"
