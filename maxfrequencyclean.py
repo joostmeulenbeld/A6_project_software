@@ -44,11 +44,6 @@ def maxFrequencies(wavReader, carrierfrequency):
         maxfreqindex = A[g][((maxintervalindex*1000)-1000):(maxintervalindex*1000)+1000].argmax()
         maxfreqindex +=(maxintervalindex*1000)-1000
         maxfreqlist.append(frequencies[maxfreqindex])
-        print("------------------")
-        print(maxfreqindex)
-        print(frequencies[maxfreqindex])
-        print(maxfreqindex+carrierfrequency-125000)
-        print(frequencies[maxfreqindex]+carrierfrequency)
         print "Interval: ",g," Found Max Freq: ",maxfreqindex
     
     print "Found all maximum frequencies"
