@@ -111,11 +111,20 @@ class wavReaderFourierTransformer:
 	def getNarrowSpectraFromAmplitudes(self, inputamplitudes, inputfrequencies, spectrumWidth):
 		amplitudes = []
 		frequencies = []
-		if (not(-spectrumWidth in inputfrequencies)):
+		spectrumWidth = -abs(spectrumWidth)
+		cutOffIndex = -1
+		for i in range(np.size(inputfrequencies)-1):
+			if ((inputfrequencies[i]-spectrumWidth)*(inputfrequencies[i+1]-spectrumWidth)<=0):
+				cutOffIndex = i
+				break
+
+		print(i)
+
+		if (cutOffIndex==-1):
 			print("given frequency was not found")
-			return inputamplitudes, inputfrequencies
+
 		for amp in inputamplitudes:
-			amplitude, frequencies = self.getNarrowSpectrum(amp, inputfrequencies, spectrumWidth)
+			amplitude, frequencies = self.getNarrowSpectrum(amp, inputfrequencies, cutOffIndex)
 			amplitudes.append(amplitude)
 		return amplitudes, frequencies
 
@@ -123,11 +132,9 @@ class wavReaderFourierTransformer:
 		return self.getNarrowSpectraFromAmplitudes(self.amplitudes, self.frequencies, spectrumWidth)
 
 
-	def getNarrowSpectrum(self, amplitudes, frequencies, spectrumWidth):
-		cutOff = np.where(frequencies==-spectrumWidth)
-		cutOff = cutOff[0][0]
-		amplitudes = amplitudes[cutOff:-cutOff]
-		frequencies = frequencies[cutOff:-cutOff]
+	def getNarrowSpectrum(self, amplitudes, frequencies, cutOffIndex):
+		amplitudes = amplitudes[cutOffIndex:-cutOffIndex]
+		frequencies = frequencies[cutOffIndex:-cutOffIndex]
 		return amplitudes, frequencies
 
 	def median(self, amplitudes):
