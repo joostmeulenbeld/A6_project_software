@@ -152,6 +152,7 @@ def position_diff():
             ttab.append(t)
         dummy = [filelist[l],ttab,dtab,xtab,ytab,ztab]
         posdif.append(dummy)
+        
     return posdif
     
  
@@ -228,9 +229,12 @@ def tlerangerate():
             
             plen = math.sqrt(pvect[0]*pvect[0]+pvect[1]*pvect[1]+pvect[2]*pvect[2])
             pvectnorm = [pvect[0]/plen,pvect[1]/plen,pvect[2]/plen]
-            dotprod.append(np.dot(tvect,pvectnorm))
+            #dotprod.append(np.dot(tvect,pvectnorm))
+            dotprod.append(np.dot(pvectnorm,tvect))            
             dummy2 = [filelist[l],dotprod]
+                    
         rrlist.append(dummy2)
+        
     return rrlist
 def zenangle():
     posdif = position_diff()
@@ -260,3 +264,7 @@ def compare(exprangerate):
         plt.plot(tlerr[i][1])
         plt.plot(exprangerate[0],exprangerate[1])
     plt.show()
+#dummydif = position_diff()
+#plt.plot(dummydif[0][1],dummydif[0][2])
+#plt.show()
+#groundmap()
