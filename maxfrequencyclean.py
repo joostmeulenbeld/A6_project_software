@@ -1,6 +1,6 @@
 import numpy as np
 
-def maxFrequencies(wavReader, lowfrequency):
+def maxFrequencies(wavReader, carrierfrequency):
     #############################################################################################
                 #Read in Matrix A and set matrix with coordinates of maxes B
     #############################################################################################
@@ -58,7 +58,7 @@ def maxFrequencies(wavReader, lowfrequency):
     #############################################################################################
     #print B
     for n in range(len(maxfreqlist)):
-        maxfreqlist[n]+=lowfrequency
+        maxfreqlist[n]+=carrierfrequency
 
     return maxfreqlist
     print "Added base frequencyS"

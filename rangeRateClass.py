@@ -27,7 +27,7 @@ class rangeRate:
 		self.wavReader.getFrequencyAmplitudes()
 
 		print("start noise reduction and maximum interval frequency detection")
-		self.maxFrequency = maxFrequencies(wavReader.getAmplitudesRimsky(),lowfrequency)
+		self.maxFrequency = maxFrequencies(wavReader.getAmplitudesRimsky(), carrierfrequency)
 
 		print("Start Doppler tracking")
 		self.dopplerTracking(self.maxFrequency, self.wavReader)
