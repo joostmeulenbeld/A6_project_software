@@ -64,7 +64,7 @@ if __name__ == "__main__":
 	rr = rangeRate(wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency, satelliteVelocity)
 	rr.doCalculations()
 	# rr.plotWaterfallPlot()
-	# rr.plotComparison()
+	rr.plotComparison()
 
 
 

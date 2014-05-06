@@ -118,8 +118,6 @@ class wavReaderFourierTransformer:
 				cutOffIndex = i
 				break
 
-		print(i)
-
 		if (cutOffIndex==-1):
 			print("given frequency was not found")
 
