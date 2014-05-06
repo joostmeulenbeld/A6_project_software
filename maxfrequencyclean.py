@@ -20,11 +20,7 @@ def maxFrequencies(wavReader, carrierfrequency):
     #############################################################################################
             #noise filtering removing 0->75000 and 125000->250000
     #############################################################################################
-   
-    for n in range(rowsA):
-        for o in range(columnsA):
-            if o<=75000 or o>=175000:
-                A[n][o]=0
+
 
     print "Noise filtering done!"
     
@@ -47,10 +43,12 @@ def maxFrequencies(wavReader, carrierfrequency):
         maxintervalindex = lst[g].index(max(lst[g]))
         maxfreqindex = A[g][((maxintervalindex*1000)-1000):(maxintervalindex*1000)+1000].argmax()
         maxfreqindex +=(maxintervalindex*1000)-1000
-        print("index: ", maxfreqindex)
-        print("frequency: ", frequencies[maxfreqindex])
-
         maxfreqlist.append(frequencies[maxfreqindex])
+        print("------------------")
+        print(maxfreqindex)
+        print(frequencies[maxfreqindex])
+        print(maxfreqindex+carrierfrequency-125000)
+        print(frequencies[maxfreqindex]+carrierfrequency)
         print "Interval: ",g," Found Max Freq: ",maxfreqindex
     
     print "Found all maximum frequencies"

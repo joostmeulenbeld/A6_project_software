@@ -20,7 +20,6 @@ class rangeRate:
 		self.wavReader = wavReaderFourierTransformer(self.wavFileName, self.start, self.end, self.intervalWidth, self.intervalStartFrequency)
 		self.lowfrequency = self.carrierfrequency - self.wavReader.getMaxFourierFrequency()
 		self.cutOff = 1.5*satelliteVelocity/(3e8)*self.carrierfrequency
-		print(self.cutOff)
 
 
 	def doCalculations(self):
@@ -64,5 +63,9 @@ if __name__ == "__main__":
 
 	rr = rangeRate(wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency, satelliteVelocity)
 	rr.doCalculations()
-	rr.plotWaterfallPlot()
-	rr.plotComparison()
+	# rr.plotWaterfallPlot()
+	# rr.plotComparison()
+
+
+
+
