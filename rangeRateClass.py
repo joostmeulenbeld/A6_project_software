@@ -60,8 +60,9 @@ if __name__ == "__main__":
 	intervalWidth = 1.0						# How many seconds is one interval
 	intervalStartFrequency = 20.0			# Every this many seconds a new interval starts
 	carrierfrequency = 145870000			# Hz
-	lowfrequency = carrierfrequency-125000	# Hz
+	satelliteVelocity = 7000
 
-	rr = rangeRate(wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency, 7000)
+	rr = rangeRate(wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency, satelliteVelocity)
 	rr.doCalculations()
-	rr.plotFrequencyHeatMap()
+	rr.plotWaterfallPlot()
+	rr.plotComparison()
