@@ -26,7 +26,7 @@ def maxFrequencies(wavReader, carrierfrequency):
             if o<=110000 or o>=140000:
                 A[n][o]=0
 
-    print "Noise filtering done!"
+    print "Cut Off Done"
     
     #############################################################################################
             #First run of least square finding and rewrite matrix B with least square coordinates
@@ -39,28 +39,29 @@ def maxFrequencies(wavReader, carrierfrequency):
             lst2.append(sum(absLst))
             
         lst.append(lst2)
-        print "Searching in interval: ",j
+        print "Searching first estimate in interval: ",j+1,"/",len(A)
     maxfreqlist = []
-    print "Found first estimate interval"
+    print "Found first estimate intervals"
+    print "Searching for max frequencies in intervals"
     frequencies = wavReader.getFrequencies()
     for g in range(len(lst)):
         maxintervalindex = lst[g].index(max(lst[g]))
         maxfreqindex = A[g][((maxintervalindex*1000)-1000):(maxintervalindex*1000)+1000].argmax()
         maxfreqindex +=(maxintervalindex*1000)-1000
         maxfreqlist.append(frequencies[maxfreqindex])
-        print "Interval: ",g," Found Max Freq: ",maxfreqindex
+        print "Interval: ",g+1,"/",len(lst)," Found Max Freq: ",maxfreqindex
     
     print "Found all maximum frequencies"
      
     #############################################################################################
             #Give coordinates of the maxes found on the matrix close to its least squares in B
     #############################################################################################
-    #print B
+    
     for n in range(len(maxfreqlist)):
         maxfreqlist[n]+=carrierfrequency
-
+    print "Added base frequencys"
     return maxfreqlist
-    print "Added base frequencyS"
+    
 
 #if __name__ == "__main__":
  #maxFrequencies()

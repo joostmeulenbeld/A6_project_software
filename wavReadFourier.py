@@ -44,7 +44,7 @@ class wavReaderFourierTransformer:
 
 			self.intervals.append([meanTime, amplitudes])
 			self.amplitudes = self.getAmplitudes()
-			print(intervalStartFrame/self.fs)
+			print (intervalStartFrame/self.fs),"/",self.end/self.fs
 
 		self.wavFile.close()
 		del self.wavFile

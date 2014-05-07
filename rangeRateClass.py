@@ -58,15 +58,15 @@ if __name__ == "__main__":
 	start = 60*0.0			# What time is the first interval in seconds
 	end = 60*21.0+33		# What time is the last interval in seconds
 	intervalWidth = 1.0		# How many seconds is one interval
-	intervalStartFrequency = 20.0	# Every this many seconds a new interval starts
+	intervalStartFrequency = 60.0	# Every this many seconds a new interval starts
 	carrierfrequency = 145870000	# Hz
 	satelliteVelocity = 8000
 
 	rr = rangeRate(wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency, satelliteVelocity)
 	rr.doCalculations()
-	# rr.plotFrequencyHeatMap()
-	rr.plotWaterfallPlot(rr.cutOff)
-	# rr.plotComparison()
+	rr.plotFrequencyHeatMap()
+	#rr.plotWaterfallPlot(rr.cutOff)
+	rr.plotComparison()
 
 
 
