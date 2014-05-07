@@ -12,7 +12,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 class wavReaderFourierTransformer:
 
-	def __init__(self, wavFileName, startSeconds, endSeconds, intervalWidthSeconds, intervalStartSeconds):
+	def __init__(self, wavFileName, startSeconds, endSeconds, intervalWidthSeconds, intervalStartSeconds, spectrumWidth):
 		self.wavFileName = wavFileName
 
 		self.wavFile = Sndfile(self.wavFileName, 'r')
@@ -21,6 +21,8 @@ class wavReaderFourierTransformer:
 		self.enc=self.wavFile.encoding
 		self.wavFile.close()
 		del self.wavFile
+
+		self.spectrumWidth = spectrumWidth
 
 		self.sampling_interval = 1.0/self.fs
 
@@ -48,7 +50,7 @@ class wavReaderFourierTransformer:
 
 		self.wavFile.close()
 		del self.wavFile
-
+		self.narrowSpectra = self.__getNarrowSpectra(self.spectrumWidth)
 		return self.frequencies, self.intervals
 
 	def plotFourierTransforms(self):
@@ -154,9 +156,12 @@ class wavReaderFourierTransformer:
 			amplitudes.append(amplitude)
 		return amplitudes, frequencies
 
-	def getNarrowSpectra(self, spectrumWidth):
+	def __getNarrowSpectra(self, spectrumWidth):
 		return self.getNarrowSpectraFromAmplitudes(self.amplitudes, self.frequencies, spectrumWidth)
 
+
+	def getNarrowSpectra(self):
+		return self.narrowSpectra
 
 	def getNarrowSpectrum(self, amplitudes, frequencies, cutOffIndex):
 		amplitudes = amplitudes[cutOffIndex:-cutOffIndex]
