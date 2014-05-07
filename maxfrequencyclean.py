@@ -28,6 +28,22 @@ def maxFrequencies(wavReader, carrierfrequency):
     #############################################################################################
 
 
+    # lst = []
+    # for amplitudes in A:
+    #     lst2 = []
+    #     tempSum = np.sum(np.abs(amplitudes[0:1000]))
+    #     oldTenSum = np.sum(np.abs(amplitudes[0:10]))
+    #     lst2.append(tempSum)
+    #     for index in range(10, np.size(amplitudes)-1000, 10):
+    #         newTenSum = np.sum(np.abs(amplitudes[index+1000:index+1010]))
+    #         oldTenSum = np.sum(np.abs(amplitudes[index-10:index]))
+    #         tempSum += newTenSum - oldTenSum
+    #         # print("joost index: " + str(index) + " sum: " + str(tempSum))
+    #         lst2.append(tempSum)
+    #     # print("joost index 500 value: " + str(lst2[500]))
+    #     # print(np.size(lst2))
+    #     lst.append(lst2)
+    
     
     #############################################################################################
             #First run of least square finding and rewrite matrix B with least square coordinates
