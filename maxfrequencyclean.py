@@ -28,21 +28,21 @@ def maxFrequencies(wavReader, carrierfrequency):
     #############################################################################################
 
 
-    # lst = []
-    # for amplitudes in A:
-    #     lst2 = []
-    #     tempSum = np.sum(np.abs(amplitudes[0:1000]))
-    #     oldTenSum = np.sum(np.abs(amplitudes[0:10]))
-    #     lst2.append(tempSum)
-    #     for index in range(10, np.size(amplitudes)-1000, 10):
-    #         newTenSum = np.sum(np.abs(amplitudes[index+1000:index+1010]))
-    #         oldTenSum = np.sum(np.abs(amplitudes[index-10:index]))
-    #         tempSum += newTenSum - oldTenSum
-    #         # print("joost index: " + str(index) + " sum: " + str(tempSum))
-    #         lst2.append(tempSum)
-    #     # print("joost index 500 value: " + str(lst2[500]))
-    #     # print(np.size(lst2))
-    #     lst.append(lst2)
+    lst = []
+    for amplitudes in A:
+        lst2 = []
+        tempSum = np.sum(np.abs(amplitudes[0:1000]))
+        oldTenSum = np.sum(np.abs(amplitudes[0:10]))
+        lst2.append(tempSum)
+        for index in range(10, np.size(amplitudes)-1000, 10):
+            newTenSum = np.sum(np.abs(amplitudes[index+1000:index+1010]))
+            oldTenSum = np.sum(np.abs(amplitudes[index-10:index]))
+            tempSum += newTenSum - oldTenSum
+            # print("joost index: " + str(index) + " sum: " + str(tempSum))
+            lst2.append(tempSum)
+        # print("joost index 500 value: " + str(lst2[500]))
+        # print(np.size(lst2))
+        lst.append(lst2)
     
     
     #############################################################################################
@@ -70,18 +70,18 @@ def maxFrequencies(wavReader, carrierfrequency):
 #    
 #    print "Found all maximum frequencies OLLD"
     ##
-    lst = []
-    for interval in range(len(A)): 
-        lst2=[]
-        absLst = [h if h > 0 else -h for h in A[interval][0:1000]] 
-        lst2.append(sum(absLst))        
-        for i in range((len(A[interval])-1010)/10):
-            lst3 = [h if h > 0 else -h for h in A[interval][1000+(i*10):(i*10)+1010]]
-            absLst = absLst[10:1000]
-            absLst.extend(lst3)
-            lst2.append(sum(absLst))
-        lst.append(lst2)
-        print "Searching first estimate in interval: ",interval+1,"/",len(A)
+    # lst = []
+    # for interval in range(len(A)): 
+    #     lst2=[]
+    #     absLst = [h if h > 0 else -h for h in A[interval][0:1000]] 
+    #     lst2.append(sum(absLst))        
+    #     for i in range((len(A[interval])-1010)/10):
+    #         lst3 = [h if h > 0 else -h for h in A[interval][1000+(i*10):(i*10)+1010]]
+    #         absLst = absLst[10:1000]
+    #         absLst.extend(lst3)
+    #         lst2.append(sum(absLst))
+    #     lst.append(lst2)
+    #     print "Searching first estimate in interval: ",interval+1,"/",len(A)
         
         
     maxfreqlist = []
