@@ -2,21 +2,11 @@ import numpy as np
 
 def maxFrequencies(wavReader, carrierfrequency):
     #############################################################################################
-                #Read in Matrix A and set matrix with coordinates of maxes B
+            #Read in Matrix A 
     #############################################################################################
     #find/make matrix A
-       
-    
-    #make zero matrix B for x,y values, same amount of rows as A 
     A = wavReader.getAmplitudesRimsky()
-    C=np.shape(A)
-    rowsA=C[0]
-    columnsA=C[1]
-    B=np.zeros((rowsA,2))
-    E=np.zeros((rowsA,2))
-    VectorZ=np.zeros((rowsA,2))
-    SUM=0
-
+      
     #############################################################################################
             #noise filtering removing 0->75000 and 125000->250000
     #############################################################################################
