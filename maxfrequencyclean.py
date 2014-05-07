@@ -26,10 +26,10 @@ def maxFrequencies(wavReader, carrierfrequency):
     lst=[]    
     for j in range(len(A)):
         lst2=[]
-        for i in range(len(A[j])/1000):
-            absLst = [h if h > 0 else -h for h in A[j][i*1000:(i*1000)+1000]] 
+        for i in range((len(A[j])-1000)/10):
+            absLst = [h if h > 0 else -h for h in A[j][i*10:(i*10)+1000]] 
             lst2.append(sum(absLst))
-            
+        
         lst.append(lst2)
         print "Searching first estimate in interval: ",j+1,"/",len(A)
     maxfreqlist = []
@@ -38,8 +38,8 @@ def maxFrequencies(wavReader, carrierfrequency):
     frequencies = wavReader.getFrequencies()
     for g in range(len(lst)):
         maxintervalindex = lst[g].index(max(lst[g]))
-        maxfreqindex = A[g][((maxintervalindex*1000)-1000):(maxintervalindex*1000)+1000].argmax()
-        maxfreqindex +=(maxintervalindex*1000)-1000
+        maxfreqindex = A[g][((maxintervalindex*10)):(maxintervalindex*10)+1000].argmax()
+        maxfreqindex +=(maxintervalindex*10)-1000
         maxfreqlist.append(frequencies[maxfreqindex])
         print "Interval: ",g+1,"/",len(lst)," Found Max Freq: ",maxfreqindex
     

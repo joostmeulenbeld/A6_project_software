@@ -263,8 +263,12 @@ def compare(exprangerate):
     tlerr = tlerangerate()
     
     for i in range(len(tlerr)):
-        plt.plot(tlerr[i][1])
-        plt.plot(exprangerate[0],exprangerate[1])
+        pltlabel = filelist[i]
+        plt.plot(tlerr[i][1],label=pltlabel)
+    plt.plot(exprangerate[0],exprangerate[1],label='Experiment')
+    plt.xlabel("Time (s)")
+    plt.ylabel("Range-Rate (km/s)")
+    plt.legend()
     plt.show()
 #dummydif = position_diff()
 #plt.plot(dummydif[0][1],dummydif[0][2])

@@ -26,7 +26,7 @@ class rangeRate:
 	def doCalculations(self):
 		print("Start .wav reading and fourier transforming")
 		self.wavReader.getFrequencyAmplitudes()
-
+                
 		print("Start noise reduction and maximum interval frequency detection")
 		self.maxFrequency = maxFrequencies(self.wavReader, self.carrierfrequency)
 
@@ -68,8 +68,8 @@ if __name__ == "__main__":
 	rr.doCalculations()
 	#rr.plotFrequencyHeatMap()
 	#rr.plotWaterfallPlot(rr.cutOff)
-	#rr.plotComparison()
-        rr.plotGroundMap()
+	rr.plotComparison()
+        #rr.plotGroundMap()
 
 
 
