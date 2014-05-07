@@ -17,7 +17,7 @@ class rangeRate:
 		self.intervalWidth = intervalWidth
 		self.intervalStartFrequency = intervalStartFrequency
 		self.carrierfrequency = carrierfrequency
-		self.wavReader = wavReaderFourierTransformer(self.wavFileName, self.start, self.end, self.intervalWidth, self.intervalStartFrequency)
+		self.wavReader = wavReaderFourierTransformer(self.wavFileName, self.start, self.end, self.intervalWidth, self.intervalStartFrequency, self.cutOff)
 		self.lowfrequency = self.carrierfrequency - self.wavReader.getMaxFourierFrequency()
 		self.cutOff = 3.0*satelliteVelocity/(3e8)*self.carrierfrequency
 		
