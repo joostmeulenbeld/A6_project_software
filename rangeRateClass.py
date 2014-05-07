@@ -54,6 +54,13 @@ class rangeRate:
 	def plotComparison(self):
 		compare(self.timedeltav)
 
+	def saveFourierPlots(self):
+		self.wavReader.getFrequencyAmplitudes()
+		self.wavReader.saveFourierTransformPlots()
+
+	def saveFourierPlotsWithoutStoringData(self):
+		self.wavReader.saveFourierTransformPlotsWithoutStoringData()
+
 
 if __name__ == "__main__":
 	wavFileName = "Delfi-n3xt.wav"	# The location of the wav file

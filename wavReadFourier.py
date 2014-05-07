@@ -57,6 +57,33 @@ class wavReaderFourierTransformer:
 
 		plt.show()
 
+	def saveFourierTransformPlots(self):
+		times = self.getTimes()
+		for i in range(len(self.intervals)):
+			plt.plot(self.frequencies, self.intervals[i][1])
+			plt.savefig('img/fourier/fourier_' + str(times[i]) + '_seconds.png', bbox_inches='tight', dpi=400)
+			plt.close()
+
+	def saveFourierTransformPlotsWithoutStoringData(self):
+		self.wavFile = Sndfile(self.wavFileName, 'r')
+
+		for intervalStartFrame in range(self.start, self.end, self.intervalStartFrequency):
+			startTime = intervalStartFrame*self.sampling_interval
+			endTime = (intervalStartFrame+self.intervalWidth)*self.sampling_interval
+			meanTime = (startTime+endTime)/2.0
+
+			output = amplitude.output_signal(self.intervalWidth, intervalStartFrame, self.wavFile)
+			self.frequencies, amplitudes = fourier.getFFT(self.sampling_interval, output)
+
+			plt.plot(self.frequencies, amplitudes)
+			plt.savefig('img/fourier/fourier_' + str(startTime) + '_seconds.png', bbox_inches='tight', dpi=400)
+			plt.close()
+
+			print(intervalStartFrame/self.fs)
+
+		self.wavFile.close()
+		del self.wavFile		
+
 	def getAmplitudes(self):
 		amplitudes = []
 		for data in self.intervals:
