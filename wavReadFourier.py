@@ -66,6 +66,13 @@ class wavReaderFourierTransformer:
 			plt.savefig('img/fourier/fourier_' + str(times[i]) + '_seconds.png', bbox_inches='tight', dpi=400)
 			plt.close()
 
+	def saveNarrowFourierPlots(self):
+		times = self.getTimes()
+		for i in range(len(self.intervals)):
+			plt.plot(self.narrowFrequencies, self.narrowSpectra[i])
+			plt.savefig('img/narrowFourier/fourier_' + str(times[i]) + '_seconds.png', bbox_inches='tight', dpi=400)
+			plt.close()
+
 	def saveFourierTransformPlotsWithoutStoringData(self):
 		self.wavFile = Sndfile(self.wavFileName, 'r')
 
@@ -85,6 +92,26 @@ class wavReaderFourierTransformer:
 
 		self.wavFile.close()
 		del self.wavFile		
+
+	# def saveNarrowFourierPlotsWithoutStoringData(self):
+	# 	self.wavFile = Sndfile(self.wavFileName, 'r')
+
+	# 	for intervalStartFrame in range(self.start, self.end, self.intervalStartFrequency):
+	# 		startTime = intervalStartFrame*self.sampling_interval
+	# 		endTime = (intervalStartFrame+self.intervalWidth)*self.sampling_interval
+	# 		meanTime = (startTime+endTime)/2.0
+
+	# 		output = amplitude.output_signal(self.intervalWidth, intervalStartFrame, self.wavFile)
+	# 		self.frequencies, amplitudes = fourier.getFFT(self.sampling_interval, output)
+
+	# 		plt.plot(self.frequencies, self.getNarrowSpectrum(amplitudes, self.frequencies, self.))
+	# 		plt.savefig('img/narrowFourier/fourier_' + str(startTime) + '_seconds.png', bbox_inches='tight', dpi=400)
+	# 		plt.close()
+
+	# 		print(intervalStartFrame/self.fs)
+
+	# 	self.wavFile.close()
+	# 	del self.wavFile		
 
 	def getAmplitudes(self):
 		amplitudes = []
@@ -208,7 +235,7 @@ class wavReaderFourierTransformer:
 	def compressAll(self, intervalSize, compressionMethodString):
 		return self.compressAmplitudes(self.amplitudes, self.frequencies, intervalSize, compressionMethodString)
 	
-	def  waterFallPlot(self, compressionIntervalWidth, compressionMethodString, spectrumWidth):
+	def waterFallPlot(self, compressionIntervalWidth, compressionMethodString, spectrumWidth):
 
 		tt=self.getTimes()
 		aa,ff=self.__getNarrowSpectra(spectrumWidth)

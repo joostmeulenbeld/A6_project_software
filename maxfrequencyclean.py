@@ -1,5 +1,28 @@
 import numpy as np
 
+def getSum(interval):
+    return np.sum(np.abs(interval))
+
+def getMedian(interval):
+    return np.median(np.abs(interval))
+
+def getInitialGuess(amplitudesArray, frequencies, method):
+    lst = []
+    for amplitudes in amplitudesArray:
+        lst2 = []
+        tempSum = method(amplitudes[0:1000])
+        oldTenSum = method(amplitudes[0:10])
+        lst2.append(tempSum)
+        for index in range(10, np.size(amplitudes)-1000, 10):
+            newTenSum = np.sum(np.abs(amplitudes[index+1000:index+1010]))
+            oldTenSum = np.sum(np.abs(amplitudes[index-10:index]))
+            tempSum += newTenSum - oldTenSum
+            lst2.append(tempSum)
+
+        lst.append(lst2)
+
+    return lst
+
 def maxFrequencies(wavReader, carrierfrequency):
     #############################################################################################
             #Read in Matrix A 
@@ -9,40 +32,7 @@ def maxFrequencies(wavReader, carrierfrequency):
     A, frequencies = wavReader.getNarrowSpectra()
     A = np.array(A)
 
-    # frequencies = wavReader.getFrequencies()
-    # A = wavReader.getAmplitudesRimsky()
-
-    # C=np.shape(A)
-    # rowsA=C[0]
-    # columnsA=C[1]
-    
-    # for n in range(rowsA):
-    #     for o in range(columnsA):
-    #         if o<=110000 or o>=140000:
-    #             A[n][o]=0
-
-    # print "Cut Off Done"
-
-    #############################################################################################
-            #noise filtering removing 0->75000 and 125000->250000
-    #############################################################################################
-
-
-    lst = []
-    for amplitudes in A:
-        lst2 = []
-        tempSum = np.sum(np.abs(amplitudes[0:1000]))
-        oldTenSum = np.sum(np.abs(amplitudes[0:10]))
-        lst2.append(tempSum)
-        for index in range(10, np.size(amplitudes)-1000, 10):
-            newTenSum = np.sum(np.abs(amplitudes[index+1000:index+1010]))
-            oldTenSum = np.sum(np.abs(amplitudes[index-10:index]))
-            tempSum += newTenSum - oldTenSum
-            # print("joost index: " + str(index) + " sum: " + str(tempSum))
-            lst2.append(tempSum)
-        # print("joost index 500 value: " + str(lst2[500]))
-        # print(np.size(lst2))
-        lst.append(lst2)
+    lst = getInitialGuess(A, frequencies, getMedian)
     
     
     #############################################################################################
@@ -110,5 +100,3 @@ def maxFrequencies(wavReader, carrierfrequency):
     return maxfreqlist
     
 
-#if __name__ == "__main__":
- #maxFrequencies()
