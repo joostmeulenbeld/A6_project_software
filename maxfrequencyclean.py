@@ -5,20 +5,29 @@ def maxFrequencies(wavReader, carrierfrequency):
             #Read in Matrix A 
     #############################################################################################
     #find/make matrix A
-    A = wavReader.getAmplitudesRimsky()
-    C=np.shape(A)
-    rowsA=C[0]
-    columnsA=C[1]
+
+    A, frequencies = wavReader.getNarrowSpectra()
+    A = np.array(A)
+
+    # frequencies = wavReader.getFrequencies()
+    # A = wavReader.getAmplitudesRimsky()
+
+    # C=np.shape(A)
+    # rowsA=C[0]
+    # columnsA=C[1]
+    
+    # for n in range(rowsA):
+    #     for o in range(columnsA):
+    #         if o<=110000 or o>=140000:
+    #             A[n][o]=0
+
+    # print "Cut Off Done"
+
     #############################################################################################
             #noise filtering removing 0->75000 and 125000->250000
     #############################################################################################
 
-    for n in range(rowsA):
-        for o in range(columnsA):
-            if o<=110000 or o>=140000:
-                A[n][o]=0
 
-    print "Cut Off Done"
     
     #############################################################################################
             #First run of least square finding and rewrite matrix B with least square coordinates
@@ -35,7 +44,6 @@ def maxFrequencies(wavReader, carrierfrequency):
     maxfreqlist = []
     print "Found first estimate intervals"
     print "Searching for max frequencies in intervals"
-    frequencies = wavReader.getFrequencies()
     for g in range(len(lst)):
         maxintervalindex = lst[g].index(max(lst[g]))
         maxfreqindex = A[g][((maxintervalindex*1000)-1000):(maxintervalindex*1000)+1000].argmax()

@@ -115,7 +115,7 @@ class wavReaderFourierTransformer:
 
 	def plotNarrowCompressedHeatMap(self, intervalSize, compressionMethodString, spectrumWidth):
 		print("narrowing")
-		amplitudes, frequencies = self.getNarrowSpectra(spectrumWidth)
+		amplitudes, frequencies = self.__getNarrowSpectra(spectrumWidth)
 		print("compressing")
 		amplitudes, frequencies = self.compressAmplitudes(amplitudes, frequencies, intervalSize, compressionMethodString)
 		print("plotting")
@@ -211,7 +211,7 @@ class wavReaderFourierTransformer:
 	def  waterFallPlot(self, compressionIntervalWidth, compressionMethodString, spectrumWidth):
 
 		tt=self.getTimes()
-		aa,ff=self.getNarrowSpectra(spectrumWidth)
+		aa,ff=self.__getNarrowSpectra(spectrumWidth)
 		aa,ff=self.compressAmplitudes(aa,ff,compressionIntervalWidth,compressionMethodString)
 		fig=plt.figure(1)
 		ax=fig.add_subplot(1,1,1,projection='3d')
