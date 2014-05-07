@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 from wavReadFourier import wavReaderFourierTransformer
 from maxfrequencyclean import maxFrequencies
 from rangerate import rangerateconvert
-from tlerangerate import compare
+from tlerangerate import compare,groundmap
 
 class rangeRate:
 
 
 	def __init__(self, wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency, satelliteVelocity):
-		self.wavFileName = wavFileName
+                self.wavFileName = wavFileName
 		self.start = start
 		self.end = end
 		self.intervalWidth = intervalWidth
@@ -48,6 +48,8 @@ class rangeRate:
 
 	def plotWaterfallPlot(self, halfSpectrumWidth):
 		self.wavReader.waterFallPlot(10, "maxMedianDifference", halfSpectrumWidth)
+        def plotGroundMap(self):
+                groundmap()
 
 	def plotComparison(self):
 		compare(self.timedeltav)
@@ -64,9 +66,10 @@ if __name__ == "__main__":
 
 	rr = rangeRate(wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency, satelliteVelocity)
 	rr.doCalculations()
-	rr.plotFrequencyHeatMap()
+	#rr.plotFrequencyHeatMap()
 	#rr.plotWaterfallPlot(rr.cutOff)
-	rr.plotComparison()
+	#rr.plotComparison()
+        rr.plotGroundMap()
 
 
 
