@@ -20,14 +20,14 @@ class rangeRate:
 		self.wavReader = wavReaderFourierTransformer(self.wavFileName, self.start, self.end, self.intervalWidth, self.intervalStartFrequency)
 		self.lowfrequency = self.carrierfrequency - self.wavReader.getMaxFourierFrequency()
 		self.cutOff = 3.0*satelliteVelocity/(3e8)*self.carrierfrequency
-		print(self.cutOff)
+		
 
 
 	def doCalculations(self):
-		print("start .wav reading and fourier transforming")
+		print("Start .wav reading and fourier transforming")
 		self.wavReader.getFrequencyAmplitudes()
 
-		print("start noise reduction and maximum interval frequency detection")
+		print("Start noise reduction and maximum interval frequency detection")
 		self.maxFrequency = maxFrequencies(self.wavReader, self.carrierfrequency)
 
 		print("Start Doppler tracking")
