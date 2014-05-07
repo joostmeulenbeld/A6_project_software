@@ -182,16 +182,13 @@ def groundmap():
     #Converting from xyz j2000 to longitude and latitude
     longref = ((EarthRotAngle%(2*np.pi))*(180./np.pi))
     longref = 360-longref
-    print longref
     longgs = (180./np.pi)*np.arctan2(gsy,gsx)
     latgs = (180./np.pi)*np.arctan2(gsz,np.sqrt(gsx*gsx+gsy*gsy))
-    print latgs
-    print longgs
     #Compensates for the rotation of the earth for groundstation
     for i in range(len(tlong)):
         longgs[i] +=longref
         longgs[i] = longgs[i]%(360)
-    print longgs
+
     
     #Converts xyz of TLE files to longitude and latitude  
     for k in range(len(filelist)):
@@ -266,8 +263,12 @@ def compare(exprangerate):
     tlerr = tlerangerate()
     
     for i in range(len(tlerr)):
-        plt.plot(tlerr[i][1])
-        plt.plot(exprangerate[0],exprangerate[1])
+        pltlabel = filelist[i]
+        plt.plot(tlerr[i][1],label=pltlabel)
+    plt.plot(exprangerate[0],exprangerate[1],label='Experiment')
+    plt.xlabel("Time (s)")
+    plt.ylabel("Range-Rate (km/s)")
+    plt.legend()
     plt.show()
 #dummydif = position_diff()
 #plt.plot(dummydif[0][1],dummydif[0][2])

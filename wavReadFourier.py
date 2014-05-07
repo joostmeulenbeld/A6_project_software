@@ -12,7 +12,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 class wavReaderFourierTransformer:
 
-	def __init__(self, wavFileName, startSeconds, endSeconds, intervalWidthSeconds, intervalStartSeconds):
+	def __init__(self, wavFileName, startSeconds, endSeconds, intervalWidthSeconds, intervalStartSeconds, spectrumWidth):
 		self.wavFileName = wavFileName
 
 		self.wavFile = Sndfile(self.wavFileName, 'r')
@@ -21,6 +21,8 @@ class wavReaderFourierTransformer:
 		self.enc=self.wavFile.encoding
 		self.wavFile.close()
 		del self.wavFile
+
+		self.spectrumWidth = spectrumWidth
 
 		self.sampling_interval = 1.0/self.fs
 
@@ -44,11 +46,11 @@ class wavReaderFourierTransformer:
 
 			self.intervals.append([meanTime, amplitudes])
 			self.amplitudes = self.getAmplitudes()
-			print(intervalStartFrame/self.fs)
+			print (intervalStartFrame/self.fs),"/",self.end/self.fs
 
 		self.wavFile.close()
 		del self.wavFile
-
+		self.narrowSpectra, self.narrowFrequencies = self.__getNarrowSpectra(self.spectrumWidth)
 		return self.frequencies, self.intervals
 
 	def plotFourierTransforms(self):
@@ -56,6 +58,33 @@ class wavReaderFourierTransformer:
 			plt.plot(self.frequencies, self.intervals[i][1])
 
 		plt.show()
+
+	def saveFourierTransformPlots(self):
+		times = self.getTimes()
+		for i in range(len(self.intervals)):
+			plt.plot(self.frequencies, self.intervals[i][1])
+			plt.savefig('img/fourier/fourier_' + str(times[i]) + '_seconds.png', bbox_inches='tight', dpi=400)
+			plt.close()
+
+	def saveFourierTransformPlotsWithoutStoringData(self):
+		self.wavFile = Sndfile(self.wavFileName, 'r')
+
+		for intervalStartFrame in range(self.start, self.end, self.intervalStartFrequency):
+			startTime = intervalStartFrame*self.sampling_interval
+			endTime = (intervalStartFrame+self.intervalWidth)*self.sampling_interval
+			meanTime = (startTime+endTime)/2.0
+
+			output = amplitude.output_signal(self.intervalWidth, intervalStartFrame, self.wavFile)
+			self.frequencies, amplitudes = fourier.getFFT(self.sampling_interval, output)
+
+			plt.plot(self.frequencies, amplitudes)
+			plt.savefig('img/fourier/fourier_' + str(startTime) + '_seconds.png', bbox_inches='tight', dpi=400)
+			plt.close()
+
+			print(intervalStartFrame/self.fs)
+
+		self.wavFile.close()
+		del self.wavFile		
 
 	def getAmplitudes(self):
 		amplitudes = []
@@ -86,7 +115,7 @@ class wavReaderFourierTransformer:
 
 	def plotNarrowCompressedHeatMap(self, intervalSize, compressionMethodString, spectrumWidth):
 		print("narrowing")
-		amplitudes, frequencies = self.getNarrowSpectra(spectrumWidth)
+		amplitudes, frequencies = self.__getNarrowSpectra(spectrumWidth)
 		print("compressing")
 		amplitudes, frequencies = self.compressAmplitudes(amplitudes, frequencies, intervalSize, compressionMethodString)
 		print("plotting")
@@ -120,15 +149,19 @@ class wavReaderFourierTransformer:
 
 		if (cutOffIndex==-1):
 			print("given frequency was not found")
+			cutOffIndex = 0
 
 		for amp in inputamplitudes:
 			amplitude, frequencies = self.getNarrowSpectrum(amp, inputfrequencies, cutOffIndex)
 			amplitudes.append(amplitude)
 		return amplitudes, frequencies
 
-	def getNarrowSpectra(self, spectrumWidth):
+	def __getNarrowSpectra(self, spectrumWidth):
 		return self.getNarrowSpectraFromAmplitudes(self.amplitudes, self.frequencies, spectrumWidth)
 
+
+	def getNarrowSpectra(self):
+		return self.narrowSpectra, self.narrowFrequencies
 
 	def getNarrowSpectrum(self, amplitudes, frequencies, cutOffIndex):
 		amplitudes = amplitudes[cutOffIndex:-cutOffIndex]
@@ -178,7 +211,7 @@ class wavReaderFourierTransformer:
 	def  waterFallPlot(self, compressionIntervalWidth, compressionMethodString, spectrumWidth):
 
 		tt=self.getTimes()
-		aa,ff=self.getNarrowSpectra(spectrumWidth)
+		aa,ff=self.__getNarrowSpectra(spectrumWidth)
 		aa,ff=self.compressAmplitudes(aa,ff,compressionIntervalWidth,compressionMethodString)
 		fig=plt.figure(1)
 		ax=fig.add_subplot(1,1,1,projection='3d')
