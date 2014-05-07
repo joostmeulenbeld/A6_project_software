@@ -50,7 +50,7 @@ class wavReaderFourierTransformer:
 
 		self.wavFile.close()
 		del self.wavFile
-		self.narrowSpectra = self.__getNarrowSpectra(self.spectrumWidth)
+		self.narrowSpectra, self.narrowFrequencies = self.__getNarrowSpectra(self.spectrumWidth)
 		return self.frequencies, self.intervals
 
 	def plotFourierTransforms(self):
@@ -161,7 +161,7 @@ class wavReaderFourierTransformer:
 
 
 	def getNarrowSpectra(self):
-		return self.narrowSpectra
+		return self.narrowSpectra, self.narrowFrequencies
 
 	def getNarrowSpectrum(self, amplitudes, frequencies, cutOffIndex):
 		amplitudes = amplitudes[cutOffIndex:-cutOffIndex]
