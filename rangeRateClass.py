@@ -29,10 +29,10 @@ class rangeRate:
 		self.wavReader.getFrequencyAmplitudes()
                 
 		print("Start noise reduction and maximum interval frequency detection")
-		self.maxFrequency = maxFrequencies(self.wavReader, self.carrierfrequency)
+		self.maxFrequencySum = maxFrequencies(self.wavReader, self.carrierfrequency, "sum")
 
 		print("Start Doppler tracking")
-		self.dopplerTracking(self.maxFrequency, self.wavReader)
+		self.dopplerTracking(self.maxFrequencySum, self.wavReader)
 
 	def dopplerTracking(self, maxFrequency, wavReader):
 		freq = []
@@ -58,7 +58,7 @@ class rangeRate:
 
 if __name__ == "__main__":
 	wavFileName = "Delfi-n3xt.wav"	# The location of the wav file
-	start = 60*0.0			# What time is the first interval in seconds
+	start = 60*4.0			# What time is the first interval in seconds
 	end = 60*21.0+33		# What time is the last interval in seconds
 	intervalWidth = 1.0		# How many seconds is one interval
 	intervalStartFrequency = 10.0	# Every this many seconds a new interval starts
@@ -67,10 +67,8 @@ if __name__ == "__main__":
 
 	rr = rangeRate(wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency, satelliteVelocity)
 	rr.doCalculations()
-	#rr.plotFrequencyHeatMap()
-	#rr.plotWaterfallPlot(rr.cutOff)
 	rr.plotComparison()
-        #rr.plotGroundMap()
+	# rr.plotFrequencyHeatMap()
 
 
 
