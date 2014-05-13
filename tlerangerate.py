@@ -193,7 +193,7 @@ def groundmap():
     #Converts xyz of TLE files to longitude and latitude  
     for k in range(len(filelist)):
         fname = filelist[k]
-        lcolor = ['r','y','black'] 
+        lcolor = ['y','y','y'] 
         x,y,z,vx,vy,vz = tle_import(fname)
         longsat = ((180./np.pi)*np.arctan2(y,x))   
         latsat = (180./np.pi)*np.arctan2(z,np.sqrt(x*x+y*y))        
@@ -273,4 +273,4 @@ def compare(exprangerate):
 #dummydif = position_diff()
 #plt.plot(dummydif[0][1],dummydif[0][2])
 #plt.show()
-#groundmap()
+groundmap()
