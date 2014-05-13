@@ -10,8 +10,8 @@ def getInitialGuess(amplitudesArray, frequencies, method):
     lst = []
     for amplitudes in amplitudesArray:
         lst2 = []
-        tempSum = method(amplitudes[0:1000])
-        oldTenSum = method(amplitudes[0:10])
+        tempSum = np.sum(amplitudes[0:1000])
+        oldTenSum = np.sum(amplitudes[0:10])
         lst2.append(tempSum)
         for index in range(10, np.size(amplitudes)-1000, 10):
             newTenSum = np.sum(np.abs(amplitudes[index+1000:index+1010]))
