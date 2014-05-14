@@ -270,6 +270,22 @@ def compare(exprangerate):
     plt.ylabel("Range-Rate (km/s)")
     plt.legend()
     plt.show()
+    
+    for s in range(len(tlerr)):
+        errorlist = []
+        for t in range(len(exprangerate[1])):
+            print len(exprangerate[0])
+            time = exprangerate[0][t]
+            timelow= int(time)
+            timedif=time-timelow
+            interpolated = tlerr[s][1][timelow]+timedif*(tlerr[s][1][timelow+1]-tlerr[s][1][timelow])
+            error = abs(exprangerate[1][t]-interpolated)
+            
+            errorlist.append(error)
+        plt.plot(exprangerate[0],errorlist)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Error (km/s)")
+    plt.show()
 #dummydif = position_diff()
 #plt.plot(dummydif[0][1],dummydif[0][2])
 #plt.show()
