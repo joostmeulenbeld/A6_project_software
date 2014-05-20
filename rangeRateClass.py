@@ -25,14 +25,10 @@ class rangeRate:
 
 
 	def doCalculations(self):
-		print("Start .wav reading and fourier transforming")
-		self.wavReader.getFrequencyAmplitudes()
-                
-		print("Start noise reduction and maximum interval frequency detection")
-		self.maxFrequencySum = maxFrequencies(self.wavReader, self.carrierfrequency, "sum")
+		self.wavReaderCalc()
+		self.maxFrequencyCalc()
+		self.dopplerTrackingCalc()
 
-		print("Start Doppler tracking")
-		self.dopplerTracking(self.maxFrequencySum, self.wavReader)
 
 	def dopplerTracking(self, maxFrequency, wavReader):
 		freq = []
@@ -41,11 +37,14 @@ class rangeRate:
 		time = wavReader.getTimes()
 		timefreq = [time,freq]
 
-		rangerate = rangerateconvert(timefreq, carrierfrequency)
+		rangerate = rangerateconvert(timefreq, self.carrierfrequency)
 		self.timedeltav = [time,rangerate]	
 
 	def plotFrequencyHeatMap(self):
 		self.wavReader.plotNarrowCompressedHeatMap(10, "maxMedianDifference", self.cutOff)
+
+	def plotFrequencyHeatMapOnly(self):
+		self.wavReader.plotHeatMapWithoutStoringData()
 
 	def plotWaterfallPlot(self, halfSpectrumWidth):
 		self.wavReader.waterFallPlot(10, "maxMedianDifference", halfSpectrumWidth)
@@ -55,21 +54,35 @@ class rangeRate:
 	def plotComparison(self):
 		compare(self.timedeltav)
 
+	def wavReaderCalc(self):
+		print("Start .wav reading and fourier transforming")
+		self.wavReader.getFrequencyAmplitudes()
 
-if __name__ == "__main__":
+	def maxFrequencyCalc(self):
+		print("Start noise reduction and maximum interval frequency detection")
+		self.maxFrequencySum = maxFrequencies(self.wavReader, self.carrierfrequency, "sum")
+
+	def dopplerTrackingCalc(self):
+		print("Start Doppler tracking")
+		self.dopplerTracking(self.maxFrequencySum, self.wavReader)
+
+
+def init():
 	wavFileName = "Delfi-n3xt.wav"	# The location of the wav file
 	start = 60*4.0			# What time is the first interval in seconds
 	end = 60*21.0+33		# What time is the last interval in seconds
 	intervalWidth = 1.0		# How many seconds is one interval
-	intervalStartFrequency = 10.0	# Every this many seconds a new interval starts
+	intervalStartFrequency = 240.0	# Every this many seconds a new interval starts
 	carrierfrequency = 145870000	# Hz
 	satelliteVelocity = 8000
 
 	rr = rangeRate(wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency, satelliteVelocity)
-	rr.doCalculations()
-	rr.plotComparison()
+	return rr
 	# rr.plotFrequencyHeatMap()
 
 
+if __name__ == "__main__":
+	rr = init()
+	rr.plotFrequencyHeatMapOnly()
 
 
