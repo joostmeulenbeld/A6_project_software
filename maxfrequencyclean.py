@@ -14,7 +14,7 @@ def getInitialGuess(amplitudesArray, frequencies):
         oldTenSum = np.sum(amplitudes[0:10])
         lst2.append(tempSum)
         for index in range(10, np.size(amplitudes)-1000, 10):
-            newTenSum = np.sum(np.abs(amplitudes[index+1000:index+1010]))
+            newTenSum = np.sum(np.abs(amplitudes[index+990:index+1000]))
             oldTenSum = np.sum(np.abs(amplitudes[index-10:index]))
             tempSum += newTenSum - oldTenSum
             lst2.append(tempSum)
@@ -28,12 +28,12 @@ def getInitialGuessByMethod(A, frequencies, method):
     for interval in range(len(A)): 
         lst2=[]
         absLst = [h if h > 0 else -h for h in A[interval][0:1000]] 
-        lst2.append(sum(absLst))        
+        lst2.append(method(absLst))        
         for i in range((len(A[interval])-1010)/10):
             lst3 = [h if h > 0 else -h for h in A[interval][1000+(i*10):(i*10)+1010]]
             absLst = absLst[10:1000]
             absLst.extend(lst3)
-            lst2.append(sum(absLst))
+            lst2.append(method(absLst))
         lst.append(lst2)
         print "Searching first estimate in interval: ",interval+1,"/",len(A)
     return lst
@@ -71,7 +71,7 @@ def maxFrequencies(wavReader, carrierfrequency, intervalMethodString):
         print max(lst[g])
         maxintervalindex = lst[g].index(max(lst[g]))
         maxfreqindex = A[g][((maxintervalindex*10)):(maxintervalindex*10)+1000].argmax()
-        maxfreqindex +=(maxintervalindex*10)
+        maxfreqindex += (maxintervalindex*10)
         maxfreqlist.append(frequencies[maxfreqindex])
         print "Interval: ",g+1,"/",len(lst)," Found Max Freq: ",maxfreqindex
     
@@ -86,7 +86,7 @@ def maxFrequencies(wavReader, carrierfrequency, intervalMethodString):
     
     for n in range(len(maxfreqlist)):
         maxfreqlist[n]+=carrierfrequency
-    print "Added base frequencys"
+    print "Added base frequencies"
     return maxfreqlist
     
 
