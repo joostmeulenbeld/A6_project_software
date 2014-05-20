@@ -30,8 +30,10 @@ class wavReaderFourierTransformer:
 		self.end = int(self.fs*endSeconds)
 		self.intervalWidth = int(self.fs*intervalWidthSeconds)
 		self.intervalStartFrequency = int(self.fs*intervalStartSeconds)
-		self.intervals = []
+		self.amplitudes = []
 		self.frequencies = []
+		self.times = []
+		self.narrowAmplitudes = []
 
 	def getFrequencyAmplitudes(self):
 		self.wavFile = Sndfile(self.wavFileName, 'r')
@@ -39,19 +41,59 @@ class wavReaderFourierTransformer:
 		for intervalStartFrame in range(self.start, self.end, self.intervalStartFrequency):
 			startTime = intervalStartFrame*self.sampling_interval
 			endTime = (intervalStartFrame+self.intervalWidth)*self.sampling_interval
-			meanTime = (startTime+endTime)/2.0
 
 			output = amplitude.output_signal(self.intervalWidth, intervalStartFrame, self.wavFile)
 			self.frequencies, amplitudes = fourier.getFFT(self.sampling_interval, output)
 
-			self.intervals.append([meanTime, amplitudes])
-			self.amplitudes = self.getAmplitudes()
+			self.amplitudes.append(amplitudes)
+			self.times.append(startTime)
+			print (intervalStartFrame/self.fs),"/",self.end/self.fs
+
+		self.wavFile.close()
+
+		del self.wavFile
+
+		self.narrowSpectra, self.narrowFrequencies = self.__getNarrowSpectra(self.spectrumWidth)
+
+		return self.frequencies, self.amplitudes
+
+
+	def plotHeatMapWithoutStoringData(self):
+		self.wavFile = Sndfile(self.wavFileName, 'r')
+
+		output = amplitude.output_signal(self.intervalWidth, 0, self.wavFile)
+		self.frequencies, amplitudes = fourier.getFFT(self.sampling_interval, output)		
+
+		spectrumWidth = -abs(self.spectrumWidth)
+		cutOffIndex = -1
+
+		for i in range(np.size(self.frequencies)-1):
+			if ((self.frequencies[i]-spectrumWidth)*(self.frequencies[i+1]-spectrumWidth)<=0):
+				cutOffIndex = i
+				break
+
+		if (cutOffIndex==-1):
+			print("given frequency was not found")
+			cutOffIndex = 0
+				
+
+		for intervalStartFrame in range(self.start, self.end, self.intervalStartFrequency):
+			startTime = intervalStartFrame*self.sampling_interval
+			endTime = (intervalStartFrame+self.intervalWidth)*self.sampling_interval
+
+			output = amplitude.output_signal(self.intervalWidth, intervalStartFrame, self.wavFile)
+			self.frequencies, amplitudes = fourier.getFFT(self.sampling_interval, output)
+			amplitudes, self.frequencies = self.getNarrowSpectrum(amplitudes, self.frequencies, cutOffIndex)
+			amplitudes, self.frequencies = self.compress(amplitudes, self.frequencies, 10, "maxMedianDifference")
+
+			self.narrowAmplitudes.append(amplitudes)
+			self.times.append(startTime)
 			print (intervalStartFrame/self.fs),"/",self.end/self.fs
 
 		self.wavFile.close()
 		del self.wavFile
-		self.narrowSpectra, self.narrowFrequencies = self.__getNarrowSpectra(self.spectrumWidth)
-		return self.frequencies, self.intervals
+		self.plotHeatMap(self.narrowAmplitudes, self.frequencies)
+
 
 	def plotFourierTransforms(self):
 		for i in range(len(self.intervals)):
@@ -91,45 +133,13 @@ class wavReaderFourierTransformer:
 			print(intervalStartFrame/self.fs)
 
 		self.wavFile.close()
-		del self.wavFile		
-
-	# def saveNarrowFourierPlotsWithoutStoringData(self):
-	# 	self.wavFile = Sndfile(self.wavFileName, 'r')
-
-	# 	for intervalStartFrame in range(self.start, self.end, self.intervalStartFrequency):
-	# 		startTime = intervalStartFrame*self.sampling_interval
-	# 		endTime = (intervalStartFrame+self.intervalWidth)*self.sampling_interval
-	# 		meanTime = (startTime+endTime)/2.0
-
-	# 		output = amplitude.output_signal(self.intervalWidth, intervalStartFrame, self.wavFile)
-	# 		self.frequencies, amplitudes = fourier.getFFT(self.sampling_interval, output)
-
-	# 		plt.plot(self.frequencies, self.getNarrowSpectrum(amplitudes, self.frequencies, self.))
-	# 		plt.savefig('img/narrowFourier/fourier_' + str(startTime) + '_seconds.png', bbox_inches='tight', dpi=400)
-	# 		plt.close()
-
-	# 		print(intervalStartFrame/self.fs)
-
-	# 	self.wavFile.close()
-	# 	del self.wavFile		
-
-	def getAmplitudes(self):
-		amplitudes = []
-		for data in self.intervals:
-			amplitudes.append(data[1].tolist())
-		return amplitudes
-
-	def getAmplitudesRimsky(self):
-		return np.array(self.getAmplitudes())
+		del self.wavFile			
 
 	def getFrequencies(self):
 		return self.frequencies
 
 	def getTimes(self):
-		times = []
-		for data in self.intervals:
-			times.append(data[0])
-		return times
+		return self.times
 
 	def getMaxFourierFrequency(self):
 		return self.fs/2.0
@@ -148,6 +158,27 @@ class wavReaderFourierTransformer:
 		print("plotting")
 		self.plotHeatMap(amplitudes, frequencies)
 
+	def plotHeatMapNew(self, amplitudes, frequencies):
+		times = self.getTimes()
+		amplitudes = np.array(amplitudes)
+		freqGrid, timesGrid = np.meshgrid(frequencies, times, sparse=False)
+
+		fig, ax = plt.subplots()
+		heatmap = plt.pcolor(freqGrid, timesGrid, amplitudes, cmap='RdBu',
+			vmin=np.min(amplitudes), vmax=np.max(amplitudes))
+		# heatmap = ax.pcolor(data)
+
+
+		times = np.floor(np.array(self.getTimes())/60.0)
+		# put the major ticks at the middle of each cell, notice "reverse" use of dimension
+		# ax.set_yticks(times, minor=False)
+		# ax.set_xticks(smallFrequencies, minor=False)
+
+		ax.axis([np.min(frequencies), np.max(frequencies), np.min(times), np.max(times)])
+		# ax.set_xticklabels(frequencies, minor=False)
+		# ax.set_yticklabels(times, minor=False)
+		plt.show()		
+
 	def plotHeatMap(self, amplitudes, frequencies):
 		data = np.array(amplitudes)
 		fig, ax = plt.subplots()
@@ -162,7 +193,7 @@ class wavReaderFourierTransformer:
 
 		ax.set_xticklabels(column_labels, minor=False)
 		ax.set_yticklabels(row_labels, minor=False)
-		plt.show()		
+		plt.show()	
 
 	def getNarrowSpectraFromAmplitudes(self, inputamplitudes, inputfrequencies, spectrumWidth):
 		amplitudes = []
