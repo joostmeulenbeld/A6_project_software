@@ -10,11 +10,11 @@ def getInitialGuess(amplitudesArray, frequencies):
     lst = []
     for amplitudes in amplitudesArray:
         lst2 = []
-        tempSum = np.sum(amplitudes[0:1000])
+        tempSum = np.sum(amplitudes[0:3000])
         oldTenSum = np.sum(amplitudes[0:10])
         lst2.append(tempSum)
-        for index in range(10, np.size(amplitudes)-1000, 10):
-            newTenSum = np.sum(np.abs(amplitudes[index+990:index+1000]))
+        for index in range(10, np.size(amplitudes)-3000, 10):
+            newTenSum = np.sum(np.abs(amplitudes[index+2990:index+3000]))
             oldTenSum = np.sum(np.abs(amplitudes[index-10:index]))
             tempSum += newTenSum - oldTenSum
             lst2.append(tempSum)
@@ -27,11 +27,11 @@ def getInitialGuessByMethod(A, frequencies, method):
     lst = []
     for interval in range(len(A)): 
         lst2=[]
-        absLst = [h if h > 0 else -h for h in A[interval][0:1000]] 
+        absLst = [h if h > 0 else -h for h in A[interval][0:3000]] 
         lst2.append(method(absLst))        
-        for i in range((len(A[interval])-1010)/10):
-            lst3 = [h if h > 0 else -h for h in A[interval][1000+(i*10):(i*10)+1010]]
-            absLst = absLst[10:1000]
+        for i in range((len(A[interval])-3010)/10):
+            lst3 = [h if h > 0 else -h for h in A[interval][3000+(i*10):(i*10)+3010]]
+            absLst = absLst[10:3000]
             absLst.extend(lst3)
             lst2.append(method(absLst))
         lst.append(lst2)
