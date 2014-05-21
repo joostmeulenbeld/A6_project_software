@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from wavReadFourier import wavReaderFourierTransformer
 from maxfrequencyclean import maxFrequencies
 from rangerate import rangerateconvert
-from tlerangerate import compare,groundmap
+from tlerangerate import compare
 
 class rangeRate:
 
@@ -43,9 +43,7 @@ class rangeRate:
 
 	def plot3DWaterfallPlot(self):
 		self.wavReader.plot3DWaterfallPlot()
-		
-	def plotGroundMap(self):
-		groundmap()
+
 
 	def plotComparison(self):
 		compare(self.timedeltav)
