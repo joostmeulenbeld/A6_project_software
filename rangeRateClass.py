@@ -21,8 +21,6 @@ class rangeRate:
 
 		self.wavReader = wavReaderFourierTransformer(self.wavFileName, self.start, self.end, self.intervalWidth, self.intervalStartFrequency, self.cutOff)
 		self.lowfrequency = self.carrierfrequency - self.wavReader.getMaxFourierFrequency()
-		
-
 
 	def doCalculations(self):
 		self.wavReaderCalc()
@@ -40,16 +38,14 @@ class rangeRate:
 		rangerate = rangerateconvert(timefreq, self.carrierfrequency)
 		self.timedeltav = [time,rangerate]	
 
-	def plotFrequencyHeatMap(self):
-		self.wavReader.plotNarrowCompressedHeatMap(10, "maxMedianDifference", self.cutOff)
+	def plot2DWaterfallPlot(self):
+		self.wavReader.plot2DWaterfallPlot()
 
-	def plotFrequencyHeatMapOnly(self):
-		self.wavReader.plotHeatMapWithoutStoringData()
-
-	def plotWaterfallPlot(self, halfSpectrumWidth):
-		self.wavReader.waterFallPlot(10, "maxMedianDifference", halfSpectrumWidth)
-        def plotGroundMap(self):
-                groundmap()
+	def plot3DWaterfallPlot(self):
+		self.wavReader.plot3DWaterfallPlot()
+		
+	def plotGroundMap(self):
+		groundmap()
 
 	def plotComparison(self):
 		compare(self.timedeltav)
@@ -83,7 +79,5 @@ def init():
 
 if __name__ == "__main__":
 	rr = init()
-	rr.doCalculations()
-	rr.plotComparison()
 
 

@@ -44,7 +44,7 @@ def maxFrequencies(wavReader, carrierfrequency, intervalMethodString):
     #############################################################################################
     #find/make matrix A
 
-    A, frequencies = wavReader.getNarrowSpectra()
+    frequencies, A = wavReader.getFrequencyAmplitudes()
 
     A = np.array(A)
 
@@ -68,7 +68,6 @@ def maxFrequencies(wavReader, carrierfrequency, intervalMethodString):
     print "Found first estimate intervals"
     print "Searching for max frequencies in intervals"
     for g in range(len(lst)):
-        print max(lst[g])
         maxintervalindex = lst[g].index(max(lst[g]))
         maxfreqindex = A[g][((maxintervalindex*10)):(maxintervalindex*10)+1000].argmax()
         maxfreqindex += (maxintervalindex*10)
