@@ -11,7 +11,7 @@ class rangeRate:
 
 
 	def __init__(self, wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency, satelliteVelocity):
-                self.wavFileName = wavFileName
+		self.wavFileName = wavFileName
 		self.start = start
 		self.end = end
 		self.intervalWidth = intervalWidth
@@ -72,7 +72,7 @@ def init():
 	start = 60*4.0			# What time is the first interval in seconds
 	end = 60*21.0+33		# What time is the last interval in seconds
 	intervalWidth = 1.0		# How many seconds is one interval
-	intervalStartFrequency = 240.0	# Every this many seconds a new interval starts
+	intervalStartFrequency = 60.0	# Every this many seconds a new interval starts
 	carrierfrequency = 145870000	# Hz
 	satelliteVelocity = 8000
 
@@ -83,6 +83,7 @@ def init():
 
 if __name__ == "__main__":
 	rr = init()
-	rr.plotFrequencyHeatMapOnly()
+	rr.doCalculations()
+	rr.plotComparison()
 
 

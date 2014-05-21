@@ -182,7 +182,7 @@ class wavReaderFourierTransformer:
 	def plotHeatMap(self, amplitudes, frequencies):
 		data = np.array(amplitudes)
 		fig, ax = plt.subplots()
-		heatmap = ax.pcolor(data)
+		heatmap = ax.pcolor(data, cmap='spectral')
 
 		column_labels = frequencies
 		row_labels = np.floor(np.array(self.getTimes())/60.0)
