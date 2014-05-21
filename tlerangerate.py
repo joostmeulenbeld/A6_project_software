@@ -169,19 +169,20 @@ def tlerangerate():
             pvectnorm = [pvect[0]/plen,pvect[1]/plen,pvect[2]/plen]
             dotprod.append(np.dot(tvect,pvectnorm))
                         
-            dummy2 = [filelist[l],dotprod]
+        dummy2 = [filelist[l],dotprod]
                     
         rrlist.append(dummy2)
         
     return rrlist
 
-def compare(exprangerate):
+def compare(exprangerate,newtimedeltav):
     tlerr = tlerangerate()
     
     for i in range(len(tlerr)):
         pltlabel = filelist[i]
         plt.plot(tlerr[i][1],label=pltlabel)
     plt.plot(exprangerate[0],exprangerate[1],label='Experiment')
+    plt.plot(newtimedeltav[0],newtimedeltav[1],label='Improved Experiment')
     plt.xlabel("Time (s)")
     plt.ylabel("Range-Rate (km/s)")
     plt.legend()
@@ -189,6 +190,7 @@ def compare(exprangerate):
     
     for s in range(len(tlerr)):
         errorlist = []
+        newerrorlist = []
         for t in range(len(exprangerate[1])):
             print len(exprangerate[0])
             time = exprangerate[0][t]
@@ -196,8 +198,9 @@ def compare(exprangerate):
             timedif=time-timelow
             interpolated = tlerr[s][1][timelow]+timedif*(tlerr[s][1][timelow+1]-tlerr[s][1][timelow])
             error = abs(exprangerate[1][t]-interpolated)
-            
+            newerror = abs(newtimedeltav[1][t]-interpolated)
             errorlist.append(error)
+            newerrorlist.append(newerror)
         plt.plot(exprangerate[0],errorlist)
     plt.xlabel("Time (s)")
     plt.ylabel("Error (km/s)")

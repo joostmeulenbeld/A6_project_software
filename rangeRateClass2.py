@@ -1,11 +1,11 @@
-#from scikits.audiolab import Sndfile
-#from scikits.audiolab import wavread
+from scikits.audiolab import Sndfile
+from scikits.audiolab import wavread
 import numpy as np
 import matplotlib.pyplot as plt
 from wavReadFourier import wavReaderFourierTransformer
 from maxfrequencyclean import maxFrequencies
 from rangerate import rangerateconvert
-from tlerangerate import compare,groundmap,tlerangerate
+from tlerangerate import compare,tlerangerate
 
 class rangeRate:
 
@@ -50,8 +50,6 @@ class rangeRate:
 
 	def plotWaterfallPlot(self, halfSpectrumWidth):
 		self.wavReader.waterFallPlot(10, "maxMedianDifference", halfSpectrumWidth)
-        def plotGroundMap(self):
-                groundmap()
 
 	def plotComparison(self):
 		compare(self.timedeltav)
@@ -67,58 +65,22 @@ class rangeRate:
 	def dopplerTrackingCalc(self):
 		print("Start Doppler tracking")
 		return self.dopplerTracking(self.maxFrequencySum, self.wavReader)
-  
-        def Differential(self,intervalStartFrequency,time,freq):                         
-#           timefreq = dopplerTrackingCalc()
-
-    
-            dx = intervalStartFrequency
-            dy = []
-            slope = []
-            plt.subplot(1,2,1)
-            print freq
-            for i in range(1,len(freq)):                      
-                dy.append(freq[i]-freq[i-1])
-                slope.append(dy[i-1]/dx)
-            plt.plot(time[1:],slope)
-            plt.xlim(700,900)
-        
-            start=0
-            end=0
-            for i in range(0,len(time)):
-                if time[i]==700:
-                    start=i
-                elif time[i]==900:
-                    end=i
-        
-            minimum=0
-            loc1=0
-            for i in range(start,end):
-                if slope[i]<minimum:
-                    minimum=slope[i]
-                    loc1=i
-        
-            print 'Carrier frequency is found at time:'
-            print time[loc1]
-        
-            loc2=len(time)+1
-            cfreq=0
-        
-            print time
-            for i in range(len(time)):
-                if time[i]==time[loc1]:
-                    loc2=i
-                if loc2!=len(time)+1:
-                    cfreq = freq[loc2]
-        
-            print 'Carrier frequency corresponding to time %d' %(time[loc1])        
-            print cfreq    
-        
-            plt.subplot(1,2,2)    
-            plt.plot(time,freq)
-            plt.show()
-          
-           #  tlerr=tlerangerate()
+        #Types can be "rr" or "freq"  
+        def Differential(self,time,ylist): 
+            dy = 0
+            dx = time[1]-time[0]            
+            slope = []            
+            for i in range(1,len(ylist)):                      
+                dy = (ylist[i]-ylist[i-1])
+                slope.append(dy/dx) 
+            lwall = int(divmod(600,dx)[0])
+            rwall = int(divmod(1000,dx)[0])
+            minslope = min(slope[lwall:rwall])
+            minslopeindex = slope.index(minslope)
+            minslopetime = minslopeindex*dx
+            minslopey = ylist[minslopeindex]
+            return minslopeindex,minslopetime,minslopey
+        def 
 
 def init():
 	wavFileName = "Delfi-n3xt.wav"	# The location of the wav file
@@ -139,11 +101,11 @@ if __name__ == "__main__":
     rr.doCalculations()
 #    rr.plotComparison()
     startfreq = rr.intervalStartFrequency
-#    timefreq=rr.dopplerTrackingCalc()
-#    rr.Differential(startfreq,timefreq[0],timefreq[1])
+    timefreq=rr.dopplerTrackingCalc()
+    print rr.Differential(timefreq[0],timefreq[1])
     
     tlerr=tlerangerate()
-    rr.Differential(rr.intervalStartFrequency,tlerr[0],tlerr[1])
+#    rr.Differential(range(len(tlerr[0][1])),tlerr[0][1],"rr")
     
 
 
