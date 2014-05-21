@@ -74,7 +74,7 @@ def init():
 	start = 60*4.0			# What time is the first interval in seconds
 	end = 60*21.0+33		# What time is the last interval in seconds
 	intervalWidth = 1.0		# How many seconds is one interval
-	intervalStartFrequency = 5.0	# Every this many seconds a new interval starts
+	intervalStartFrequency = 30.0	# Every this many seconds a new interval starts
 	carrierfrequency = 145870000	# Hz
 	satelliteVelocity = 8000
 
@@ -90,16 +90,8 @@ if __name__ == "__main__":
     timefreq = rr.dopplerTrackingCalc()
     time=timefreq[0]
     freq=timefreq[1]
-#    loc=len(time)+1
-#    cfreq=0
-#    for i in range(len(time)):
-#        if time[i]==815:
-#            loc=i
-#        if loc!=len(time)+1:
-#            cfreq = freq[loc]
-#            
-#    print cfreq
-    dx = 5
+    
+    dx = rr.intervalStartFrequency
     dy = []
     slope = []
     plt.subplot(1,2,1)
@@ -118,16 +110,28 @@ if __name__ == "__main__":
             end=i
     
     minimum=0
-    loc=0
+    loc1=0
     for i in range(start,end):
         if slope[i]<minimum:
             minimum=slope[i]
-            loc=i
+            loc1=i
             
     print 'Carrier frequency is found at time:'
-    print time[loc]
+    print time[loc1]
     
-
+    loc2=len(time)+1
+    cfreq=0
+    
+    print time
+    for i in range(len(time)):
+        if time[i]==time[loc1]:
+            loc2=i
+        if loc2!=len(time)+1:
+            cfreq = freq[loc2]
+    
+    print 'Carrier frequency corresponding to time %d' %(time[loc1])        
+    print cfreq    
+    
     plt.subplot(1,2,2)    
     plt.plot(time,freq)
     plt.show()
