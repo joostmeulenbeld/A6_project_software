@@ -10,13 +10,14 @@ from tlerangerate import compare,tlerangerate
 class rangeRate:
 
 
-	def __init__(self, wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency, satelliteVelocity):
+	def __init__(self, wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency,listeningfrequency, satelliteVelocity):
 		self.wavFileName = wavFileName
 		self.start = start
 		self.end = end
 		self.intervalWidth = intervalWidth
 		self.intervalStartFrequency = intervalStartFrequency
 		self.carrierfrequency = carrierfrequency
+                self.listeningfrequency = listeningfrequency
 		self.cutOff = 3.0*satelliteVelocity/(3e8)*self.carrierfrequency
 
 		self.wavReader = wavReaderFourierTransformer(self.wavFileName, self.start, self.end, self.intervalWidth, self.intervalStartFrequency, self.cutOff)
@@ -37,7 +38,9 @@ class rangeRate:
            self.timedeltav = [time,rangerate]	
            
            
-           newcarrier = rr.Differential(timefreq[0],timefreq[1])[2]
+           newcarrier = self.Differential(timefreq[0],timefreq[1])[2]
+           print "New Carrier:",newcarrier
+           print "Old Carrier:",self.carrierfrequency
            newrangerate = rangerateconvert(timefreq, newcarrier)
            self.newtimedeltav = [time,newrangerate]
            
@@ -62,7 +65,7 @@ class rangeRate:
 
 	def maxFrequencyCalc(self):
 		print("Start noise reduction and maximum interval frequency detection")
-		self.maxFrequencySum = maxFrequencies(self.wavReader, self.carrierfrequency, "sum")
+		self.maxFrequencySum = maxFrequencies(self.wavReader, self.listeningfrequency, "sum")
 
 	def dopplerTrackingCalc(self):
 		print("Start Doppler tracking")
@@ -89,11 +92,12 @@ def init():
 	start = 60*4.0			# What time is the first interval in seconds
 	end = 60*21.0+33		# What time is the last interval in seconds
 	intervalWidth = 1.0		# How many seconds is one interval
-	intervalStartFrequency = 30.0	# Every this many seconds a new interval starts
+	intervalStartFrequency = 2.0	# Every this many seconds a new interval starts
 	carrierfrequency = 145870000	# Hz
+        listeningfrequency = 145870000
 	satelliteVelocity = 8000
 
-	rr = rangeRate(wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency, satelliteVelocity)
+	rr = rangeRate(wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency,listeningfrequency, satelliteVelocity)
 	return rr
 	# rr.plotFrequencyHeatMap()
 
