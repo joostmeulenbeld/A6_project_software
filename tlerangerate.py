@@ -93,13 +93,14 @@ def gs_pos():
         julianfraction = ((j.seconds+i)/86400.)
         julianday = j.days + julianfraction
         EarthRotAngle = 2*np.pi*(0.7790572732640+1.00273781191135448*julianday)
-        gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos((ewi_long+EarthRotAngle)*math.pi/180)	#earth_omega*i)
-        gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin((ewi_long+EarthRotAngle)*math.pi/180)	#earth_omega*i)
+        gs_x = gs_radius*math.cos(ewi_latt*math.pi/180.)*math.cos(ewi_long*math.pi/180.+EarthRotAngle)#earth_omega*i)
+        gs_y = gs_radius*math.cos(ewi_latt*math.pi/180.)*math.sin(ewi_long*math.pi/180.+EarthRotAngle)#earth_omega*i)
         gs_z = gs_z0
-        gs_vx = ((math.pi*2)*gs_radius*math.cos(ewi_latt*math.pi/180))*(earth_omega/(math.pi*2))*(math.cos((ewi_long+EarthRotAngle)*math.pi/180))	#earth_omega*i))
-        gs_vy = ((math.pi*2)*gs_radius*math.cos(ewi_latt*math.pi/180))*(earth_omega/(math.pi*2))*(math.sin((ewi_long+EarthRotAngle)*math.pi/180))	#earth_omega*i))
+        gs_vx = ((math.pi*2.)*gs_radius*math.cos(ewi_latt*math.pi/180.))*(earth_omega/(math.pi*2.))*(math.cos(((ewi_long)*math.pi/180.)+EarthRotAngle))	#earth_omega*i))
+        gs_vy = ((math.pi*2.)*gs_radius*math.cos(ewi_latt*math.pi/180.))*(earth_omega/(math.pi*2.))*(math.sin(((ewi_long)*math.pi/180.)+EarthRotAngle))	#earth_omega*i))
         gs_vz = 0
-        xtab.append(gs_x)
+
+		xtab.append(gs_x)
         ytab.append(gs_y)
         ztab.append(gs_z)      
         vxtab.append(gs_vx)
