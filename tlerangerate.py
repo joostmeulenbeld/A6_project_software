@@ -188,20 +188,19 @@ def compare(exprangerate,newtimedeltav):
     plt.legend()
     plt.show()
     
-    for s in range(len(tlerr)):
-        errorlist = []
-        newerrorlist = []
-        for t in range(len(exprangerate[1])):
-            print len(exprangerate[0])
-            time = exprangerate[0][t]
-            timelow= int(time)
-            timedif=time-timelow
-            interpolated = tlerr[s][1][timelow]+timedif*(tlerr[s][1][timelow+1]-tlerr[s][1][timelow])
-            error = abs(exprangerate[1][t]-interpolated)
-            newerror = abs(newtimedeltav[1][t]-interpolated)
-            errorlist.append(error)
-            newerrorlist.append(newerror)
-        plt.plot(exprangerate[0],errorlist)
-    plt.xlabel("Time (s)")
-    plt.ylabel("Error (km/s)")
-    plt.show()
+#    for s in range(len(tlerr)):
+#        errorlist = []
+#        newerrorlist = []
+#        for t in range(len(exprangerate[1])):
+#            time = exprangerate[0][t]
+#            timelow= int(time)
+#            timedif=time-timelow
+#            interpolated = tlerr[s][1][timelow]+timedif*(tlerr[s][1][timelow+1]-tlerr[s][1][timelow])
+#            error = abs(exprangerate[1][t]-interpolated)
+#            newerror = abs(newtimedeltav[1][t]-interpolated)
+#            errorlist.append(error)
+#            newerrorlist.append(newerror)
+#        plt.plot(exprangerate[0],errorlist)
+#    plt.xlabel("Time (s)")
+#    plt.ylabel("Error (km/s)")
+#    plt.show()
