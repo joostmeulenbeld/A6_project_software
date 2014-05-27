@@ -74,11 +74,11 @@ def gs_pos():
         julianday = j.days + julianfraction
         EarthRotAngle = 2*np.pi*(0.7790572732640+1.00273781191135448*julianday)
         #Calculate position and velocity
-        gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos((ewi_long+EarthRotAngle)*math.pi/180)	
-        gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin((ewi_long+EarthRotAngle)*math.pi/180)	
+        gs_x = gs_radius*math.cos(ewi_latt*math.pi/180)*math.cos((ewi_long*math.pi/180)+EarthRotAngle)	
+        gs_y = gs_radius*math.cos(ewi_latt*math.pi/180)*math.sin((ewi_long*math.pi/180)+EarthRotAngle)	
         gs_z = gs_z0
-        gs_vx = ((math.pi*2)*gs_radius*math.cos(ewi_latt*math.pi/180))*(earth_omega/(math.pi*2))*(math.cos((ewi_long+EarthRotAngle)*math.pi/180))	
-        gs_vy = ((math.pi*2)*gs_radius*math.cos(ewi_latt*math.pi/180))*(earth_omega/(math.pi*2))*(math.sin((ewi_long+EarthRotAngle)*math.pi/180))	
+        gs_vx = ((math.pi*2)*gs_radius*math.cos(ewi_latt*math.pi/180))*(earth_omega/(math.pi*2))*(math.cos((ewi_long*math.pi/180)+EarthRotAngle))	
+        gs_vy = ((math.pi*2)*gs_radius*math.cos(ewi_latt*math.pi/180))*(earth_omega/(math.pi*2))*(math.sin((ewi_long*math.pi/180)+EarthRotAngle))	
         gs_vz = 0
         #Store values in list
         xtab.append(gs_x)
@@ -188,19 +188,19 @@ def compare(exprangerate,newtimedeltav):
     plt.legend()
     plt.show()
     
-#    for s in range(len(tlerr)):
-#        errorlist = []
-#        newerrorlist = []
-#        for t in range(len(exprangerate[1])):
-#            time = exprangerate[0][t]
-#            timelow= int(time)
-#            timedif=time-timelow
-#            interpolated = tlerr[s][1][timelow]+timedif*(tlerr[s][1][timelow+1]-tlerr[s][1][timelow])
-#            error = abs(exprangerate[1][t]-interpolated)
-#            newerror = abs(newtimedeltav[1][t]-interpolated)
-#            errorlist.append(error)
-#            newerrorlist.append(newerror)
-#        plt.plot(exprangerate[0],errorlist)
-#    plt.xlabel("Time (s)")
-#    plt.ylabel("Error (km/s)")
-#    plt.show()
+    for s in range(len(tlerr)):
+        errorlist = []
+        newerrorlist = []
+        for t in range(len(exprangerate[1])):
+            time = exprangerate[0][t]
+            timelow= int(time)
+            timedif=time-timelow
+            interpolated = tlerr[s][1][timelow]+timedif*(tlerr[s][1][timelow+1]-tlerr[s][1][timelow])
+            error = abs(exprangerate[1][t]-interpolated)
+            newerror = abs(newtimedeltav[1][t]-interpolated)
+            errorlist.append(error)
+            newerrorlist.append(newerror)
+        plt.plot(exprangerate[0],errorlist)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Error (km/s)")
+    plt.show()
