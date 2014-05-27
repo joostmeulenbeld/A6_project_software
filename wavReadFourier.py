@@ -248,10 +248,10 @@ class wavReaderFourierTransformer:
 
 	def __compressFrequencyAmplitudes(self, intervalSize=10, compressionMethodString="maxMedianDifference"):
 		frequencies, amplitudes = self.__getNarrowSpectra(self.frequencies, self.amplitudes)
-		self.compressedNarrowFrequencies, self.compressedNarrowAmplitudes = self.__getCompressedSpectra(frequencies, amplitudes, intervalSize, compressionMethodString)
+		self.compressedNarrowFrequencies, self.compressedNarrowAmplitudes = __getCompressedSpectra(frequencies, amplitudes, intervalSize, compressionMethodString)
 
 	def __compressNarrowFrequencyAmplitudes(self, intervalSize=10, compressionMethodString="maxMedianDifference"):
-		self.compressedNarrowFrequencies, self.compressedNarrowAmplitudes = self.__getCompressedSpectra(self.narrowFrequencies, self.narrowAmplitudes, intervalSize, compressionMethodString)
+		self.compressedNarrowFrequencies, self.compressedNarrowAmplitudes = __getCompressedSpectra(self.narrowFrequencies, narrowAmplitudes, intervalSize, compressionMethodString)
 
 
 	# Plotting functions
@@ -262,47 +262,32 @@ class wavReaderFourierTransformer:
 		plt.show()
 
 	def saveFourierTransformPlots(self):
-		self.__requireNarrowData()
 		times = self.getTimes()
 		for i in range(len(self.intervals)):
 			plt.plot(self.frequencies, self.intervals[i][1])
 			plt.savefig('img/fourier/fourier_' + str(times[i]) + '_seconds.png', bbox_inches='tight', dpi=400)
 			plt.close()
 
-	def plot2DWaterfallPlotNew(self, cmapInput="spectral"):
-		self.__requireCompressedNarrowData()
-
-		times = np.array(self.getTimes())
-		amplitudes = np.array(self.compressedNarrowAmplitudes)
-		frequencies = np.array(self.compressedNarrowFrequencies)
-
-		freqGrid, timeGrid = np.meshgrid(frequencies, times)
-
-		print(np.shape(freqGrid))
-		print(np.shape(timeGrid))
-		print(np.shape(amplitudes))
-
-		a_min, a_max = -np.abs(amplitudes).max(), np.abs(amplitudes).max()
+	def plot2DWaterfallPlotNew(self, amplitudes, frequencies):
+		times = self.getTimes()
+		amplitudes = np.array(amplitudes)
+		freqGrid, timesGrid = np.meshgrid(frequencies, times, sparse=False)
 
 		fig, ax = plt.subplots()
-		heatmap = ax.pcolormesh(frequencies, times, amplitudes, cmap=cmapInput, vmin=a_min, vmax=a_max)
-
-		plt.title("2D waterfall plot")
-		ax.axis([frequencies.min(), frequencies.max(), times.min(), times.max()])
-		ax.colorbar()
-
-		plt.show()
+		heatmap = plt.pcolor(freqGrid, timesGrid, amplitudes, cmap='gray',
+			vmin=np.min(amplitudes), vmax=np.max(amplitudes))
+		# heatmap = ax.pcolor(data)
 
 
-		
-
-		# times = np.floor(np.array(self.getTimes())/60.0)
+		times = np.floor(np.array(self.getTimes())/60.0)
 		# put the major ticks at the middle of each cell, notice "reverse" use of dimension
 		# ax.set_yticks(times, minor=False)
 		# ax.set_xticks(smallFrequencies, minor=False)
 
+		ax.axis([np.min(frequencies), np.max(frequencies), np.min(times), np.max(times)])
 		# ax.set_xticklabels(frequencies, minor=False)
 		# ax.set_yticklabels(times, minor=False)
+		plt.show()		
 
 	def plot2DWaterfallPlot(self, cmapInput="spectral"):
 		self.__requireCompressedNarrowData()
