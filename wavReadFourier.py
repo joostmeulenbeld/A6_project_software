@@ -295,16 +295,14 @@ class wavReaderFourierTransformer:
         colors = [color1, color1, color2, color2]
         my_cmap = self.make_cmap(colors, position=position)
 
-        a_min, a_max = -np.abs(amplitudes).max(), np.abs(amplitudes).max()
+        a_min, a_max = 0, np.abs(amplitudes).max()
 
         ax = plt.subplot(1,1,1)
         plt.pcolormesh(frequencies, times, amplitudes, cmap=my_cmap, vmin=a_min, vmax=a_max)
 
         plt.axis([frequencies.min(), frequencies.max(), times.min(), times.max()])
-        cbar = plt.colorbar()
 
         plt.title("2D waterfall plot")
-        cbar.set_label("relative intensity (-)")
         ax.set_xlabel('Frequency (Hz)')
         ax.set_ylabel('Time (sec)')
 
@@ -335,16 +333,14 @@ class wavReaderFourierTransformer:
                             colors = [color1, color1, color2, color2]
                             my_cmap = self.make_cmap(colors, position=position)
 
-                            a_min, a_max = -np.abs(amplitudes).max(), np.abs(amplitudes).max()
+                            a_min, a_max = 0, np.abs(amplitudes).max()
 
                             ax = plt.subplot(1,1,1)
                             plt.pcolormesh(frequencies, times, amplitudes, cmap=my_cmap, vmin=a_min, vmax=a_max)
 
                             plt.axis([frequencies.min(), frequencies.max(), times.min(), times.max()])
-                            cbar = plt.colorbar()
 
                             plt.title("2D waterfall plot")
-                            cbar.set_label("relative intensity (-)")
                             ax.set_xlabel('Frequency (Hz)')
                             ax.set_ylabel('Time (sec)')
                             plt.savefig("img/waterfallPlots/waterfallPlot2D_"+color1name+"_"+color2name+"_"+str(start)+"_"+str(end)+".png", bbox_inches='tight', dpi=300)
