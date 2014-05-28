@@ -33,21 +33,27 @@ class rangeRate:
            for maxfreq in maxFrequency:
                freq.append(maxfreq)    
            time = wavReader.getTimes()
+           print time
            timefreq = [time,freq]        
            rangerate = rangerateconvert(timefreq, self.carrierfrequency)
            self.timedeltav = [time,rangerate]	
            
            
            newcarrier = self.Differential(timefreq[0],timefreq[1])[2]
-           print "New Carrier:",newcarrier
+           newtime = self.Differential(timefreq[0],timefreq[1])[1]
            print "Old Carrier:",self.carrierfrequency
+           print "TCA experiment: ",newtime+240.5
+           print "New Carrier:",newcarrier
+           
            newrangerate = rangerateconvert(timefreq, newcarrier)
            self.newtimedeltav = [time,newrangerate]
            
            self.trr=tlerangerate()
            self.tletime=range(len(self.trr[0][1]))
            index,mint,miny=self.Differential(self.tletime,self.trr[0][1])
-           print mint
+           print "TCA TLE: ",mint
+           
+           
            newIndex=0
            i=0
            while time[i]>=mint:
@@ -97,12 +103,13 @@ class rangeRate:
             for i in range(1,len(ylist)):                      
                 dy = (ylist[i]-ylist[i-1])
                 slope.append(dy/dx) 
-            
+            plt.plot(slope)
+            plt.show()
             lwall = int(divmod(600,dx)[0])
             rwall = int(divmod(1000,dx)[0])
             minslope = min(slope[lwall:rwall])
             minslopeindex = slope.index(minslope)
-            minslopetime = minslopeindex*dx
+            minslopetime = (minslopeindex*dx)
             minslopey = ylist[minslopeindex]
 
             return minslopeindex,minslopetime,minslopey
