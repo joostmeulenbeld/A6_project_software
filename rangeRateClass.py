@@ -90,6 +90,7 @@ class rangeRate:
         self.maxFrequencyCalc()
         self.dopplerTrackingCalc()
 
+
     def dopplerTracking(self, maxFrequency, wavReader):
         freq = []
         for maxfreq in maxFrequency:
@@ -124,6 +125,7 @@ class rangeRate:
         self.newtimedeltav2 = [time,newrangerate]
         return timefreq
            
+           
     def interpolation(self,y0,y1,x,x0,x1):
         newValue=y0+(y1-y0)*((x-x0)/(x1-x0))
         return newValue
@@ -133,8 +135,8 @@ class rangeRate:
         self.wavReader.plot2DWaterfallPlot()
 
     def plotComparison(self):
-        compare(self.timedeltav,self.newtimedeltav)
-        compare(self.timedeltav,self.newtimedeltav2)
+        compare(self.timedeltav,self.newtimedeltav,self.newtimedeltav2)
+ 
 
     def wavReaderCalc(self):
         print("Start .wav reading and fourier transforming")
@@ -155,12 +157,13 @@ class rangeRate:
         for i in range(1,len(ylist)):                      
             dy = (ylist[i]-ylist[i-1])
             slope.append(dy/dx) 
-        
+        plt.plot(slope)
+        plt.show()
         lwall = int(divmod(600,dx)[0])
         rwall = int(divmod(1000,dx)[0])
         minslope = min(slope[lwall:rwall])
         minslopeindex = slope.index(minslope)
-        minslopetime = minslopeindex*dx
+        minslopetime = (minslopeindex*dx)
         minslopey = ylist[minslopeindex]
 
         return minslopeindex,minslopetime,minslopey
