@@ -188,7 +188,9 @@ def compare(exprangerate,newtimedeltav,tletimedeltav):
     plt.ylabel("Range-Rate (km/s)")
     plt.legend()
     plt.show()
-    
+    print len(exprangerate[1])
+    print len(newtimedeltav[1])
+    print len(tletimedeltav[1])
     for s in range(len(tlerr)):
         errorlist = []
         newerrorlist = []
