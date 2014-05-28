@@ -184,12 +184,10 @@ def compare(exprangerate,newtimedeltav,tletimedeltav):
     
     fig1 = plt.figure()
     ax1 = fig1.add_subplot(111)
-    for i in range(len(tlerr)):
-        pltlabel = filelist[i]
-        ax1.plot(tlerr[i][1],label=pltlabel)
-    ax1.plot(exprangerate[0],exprangerate[1],label='Experiment theoretic Carrier')
-    ax1.plot(newtimedeltav[0],newtimedeltav[1],label='Experiment TCA Carrier shifted')
-    ax1.plot(tletimedeltav[0],tletimedeltav[1], label='Experiment TLE TCA Carrier shifted')
+    ax1.plot(tlerr[0][1],color='red',label='tle.xyz')    
+    ax1.plot(exprangerate[0],exprangerate[1],color='green',label='Experiment theoretic Carrier')
+    ax1.plot(newtimedeltav[0],newtimedeltav[1],color='cyan',label='Experiment TCA Carrier shifted')
+    ax1.plot(tletimedeltav[0],tletimedeltav[1],color='blue',label='Experiment TLE TCA Carrier shifted')
     plt.xlabel("Time (s)")
     plt.ylabel("Range-Rate (km/s)")
     plt.legend()
@@ -202,9 +200,9 @@ def compare(exprangerate,newtimedeltav,tletimedeltav):
     
     fig2 = plt.figure()
     ax2 = fig2.add_subplot(111)
-    ax2.plot(exprangerate[0],error1,label='Error between tle data and experimental data')
-    ax2.plot(newtimedeltav[0],error2,label='Error between tle data and improved data')
-    ax2.plot(tletimedeltav[0],error3,label='Error between tle data and offset data')
+    ax2.plot(exprangerate[0],error1,color='green',label='Error between tle data and experimental data')
+    ax2.plot(newtimedeltav[0],error2,color='cyan',label='Error between tle data and improved data')
+    ax2.plot(tletimedeltav[0],error3,color='blue',label='Error between tle data and offset data')
     plt.xlabel("Time (s)")
     plt.ylabel("Error (km/s)")
     plt.xlim(550,1100)
