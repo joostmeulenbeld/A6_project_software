@@ -52,8 +52,7 @@ class rangeRate:
            self.tletime=range(len(self.trr[0][1]))
            index,mint,miny=self.Differential(self.tletime,self.trr[0][1])
            print "TCA TLE: ",mint
-           
-           
+            
            newIndex=0
            i=0
            while time[i]>=mint:
@@ -113,12 +112,10 @@ class rangeRate:
         print mint
         newIndex=0
         i=0
-        while time[i]>=mint:
+        while time[i]<=mint:
             newIndex=i
             i=i+1
-               
-        print 'Carrier frequency from the tle data :'
-        print timefreq[0][newIndex]
+
         newValue = self.interpolation(timefreq[1][newIndex],timefreq[1][newIndex+1],mint,timefreq[0][newIndex],timefreq[0][newIndex+1])
 
         newrangerate = rangerateconvert(timefreq,newValue)
@@ -129,7 +126,6 @@ class rangeRate:
     def interpolation(self,y0,y1,x,x0,x1):
         newValue=y0+(y1-y0)*((x-x0)/(x1-x0))
         return newValue
-
 
     def plot2DWaterfallPlot(self):
         self.wavReader.plot2DWaterfallPlot()
@@ -157,8 +153,6 @@ class rangeRate:
         for i in range(1,len(ylist)):                      
             dy = (ylist[i]-ylist[i-1])
             slope.append(dy/dx) 
-        plt.plot(slope)
-        plt.show()
         lwall = int(divmod(600,dx)[0])
         rwall = int(divmod(1000,dx)[0])
         minslope = min(slope[lwall:rwall])
@@ -174,7 +168,7 @@ def init():
     start = 60*4.0          # What time is the first interval in seconds
     end = 60*21.0+33        # What time is the last interval in seconds
     intervalWidth = 1.0     # How many seconds is one interval
-    intervalStartFrequency = 240.0   # Every this many seconds a new interval starts
+    intervalStartFrequency = 15.0   # Every this many seconds a new interval starts
     carrierfrequency = 145870000    # Hz
     listeningfrequency = 145870000
     satelliteVelocity = 8000

@@ -181,9 +181,9 @@ def compare(exprangerate,newtimedeltav,tletimedeltav):
     for i in range(len(tlerr)):
         pltlabel = filelist[i]
         plt.plot(tlerr[i][1],label=pltlabel)
-    plt.plot(exprangerate[0],exprangerate[1],label='Experiment')
-    plt.plot(newtimedeltav[0],newtimedeltav[1],label='Improved Experiment')
-    plt.plot(tletimedeltav[0],tletimedeltav[1], label='TLE Experiment')
+    plt.plot(exprangerate[0],exprangerate[1],label='Experiment theoretic Carrier')
+    plt.plot(newtimedeltav[0],newtimedeltav[1],label='Experiment TCA Carrier shifted')
+    plt.plot(tletimedeltav[0],tletimedeltav[1], label='Experiment TLE TCA Carrier shifted')
     plt.xlabel("Time (s)")
     plt.ylabel("Range-Rate (km/s)")
     plt.legend()
