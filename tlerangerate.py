@@ -174,34 +174,56 @@ def tlerangerate():
         rrlist.append(dummy2)
         
     return rrlist
+    
+def interpolation(y0,y1,x,x0,x1):
+    newValue=y0+(y1-y0)*((x-x0)/(x1-x0))
+    return newValue
 
 def compare(exprangerate,newtimedeltav,tletimedeltav):
     tlerr = tlerangerate()
     
+    fig1 = plt.figure()
+    ax1 = fig1.add_subplot(111)
     for i in range(len(tlerr)):
         pltlabel = filelist[i]
-        plt.plot(tlerr[i][1],label=pltlabel)
-    plt.plot(exprangerate[0],exprangerate[1],label='Experiment theoretic Carrier')
-    plt.plot(newtimedeltav[0],newtimedeltav[1],label='Experiment TCA Carrier shifted')
-    plt.plot(tletimedeltav[0],tletimedeltav[1], label='Experiment TLE TCA Carrier shifted')
+        ax1.plot(tlerr[i][1],label=pltlabel)
+    ax1.plot(exprangerate[0],exprangerate[1],label='Experiment theoretic Carrier')
+    ax1.plot(newtimedeltav[0],newtimedeltav[1],label='Experiment TCA Carrier shifted')
+    ax1.plot(tletimedeltav[0],tletimedeltav[1], label='Experiment TLE TCA Carrier shifted')
     plt.xlabel("Time (s)")
     plt.ylabel("Range-Rate (km/s)")
     plt.legend()
-    plt.show()
+#    plt.show()
     
-    for s in range(len(tlerr)):
-        errorlist = []
-        newerrorlist = []
-        for t in range(len(exprangerate[1])):
-            time = exprangerate[0][t]
-            timelow= int(time)
-            timedif=time-timelow
-            interpolated = tlerr[s][1][timelow]+timedif*(tlerr[s][1][timelow+1]-tlerr[s][1][timelow])
-            error = abs(exprangerate[1][t]-interpolated)
-            newerror = abs(newtimedeltav[1][t]-interpolated)
-            errorlist.append(error)
-            newerrorlist.append(newerror)
-        plt.plot(exprangerate[0],errorlist)
+    error1 = errorCount(exprangerate)
+    error2 = errorCount(newtimedeltav)
+    error3temp = errorCount(tletimedeltav)
+    error3 = [abs(error3temp[n]) for n in range(len(error3temp))]
+    
+    fig2 = plt.figure()
+    ax2 = fig2.add_subplot(111)
+    ax2.plot(exprangerate[0],error1,label='Error between tle data and experimental data')
+    ax2.plot(newtimedeltav[0],error2,label='Error between tle data and improved data')
+    ax2.plot(tletimedeltav[0],error3,label='Error between tle data and offset data')
     plt.xlabel("Time (s)")
     plt.ylabel("Error (km/s)")
+    plt.xlim(550,1100)
+    plt.ylim(0,3)
+    plt.legend()
     plt.show()
+    
+    
+    
+def errorCount(rangerate):
+    tlerr = tlerangerate()
+    errorlist = []
+    for i in range(len(rangerate[0])):
+        rr0 = tlerr[0][1][int(rangerate[0][i])]
+        rr1 = tlerr[0][1][int(rangerate[0][i])+1]
+        t = rangerate[0][i]
+        t0 = int(rangerate[0][i])
+        t1 = int(rangerate[0][i])+1
+        rr = interpolation(rr0,rr1,t,t0,t1)
+        errorlist.append(rangerate[1][i]-rr)
+    return errorlist
+        

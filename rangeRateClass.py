@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from wavReadFourier import wavReaderFourierTransformer
 from maxfrequencyclean import maxFrequencies
 from rangerate import rangerateconvert
-from tlerangerate import compare,tlerangerate
+from tlerangerate import compare,tlerangerate,errorCount
 
 class rangeRate:
 
@@ -67,9 +67,6 @@ class rangeRate:
            self.newtimedeltav2 = [time,newrangerate]
            return timefreq
            
-    def interpolation(self,y0,y1,x,x0,x1):
-        newValue=y0+(y1-y0)*((x-x0)/(x1-x0))
-        return newValue
 
     def __init__(self, wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency,listeningfrequency, satelliteVelocity):
         self.wavFileName = wavFileName
@@ -109,7 +106,6 @@ class rangeRate:
         self.trr=tlerangerate()
         self.tletime=range(len(self.trr[0][1]))
         index,mint,miny=self.Differential(self.tletime,self.trr[0][1])
-        print mint
         newIndex=0
         i=0
         while time[i]<=mint:
@@ -168,7 +164,7 @@ def init():
     start = 60*4.0          # What time is the first interval in seconds
     end = 60*21.0+33        # What time is the last interval in seconds
     intervalWidth = 1.0     # How many seconds is one interval
-    intervalStartFrequency = 15.0   # Every this many seconds a new interval starts
+    intervalStartFrequency = 60.0   # Every this many seconds a new interval starts
     carrierfrequency = 145870000    # Hz
     listeningfrequency = 145870000
     satelliteVelocity = 8000
