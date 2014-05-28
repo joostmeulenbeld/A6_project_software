@@ -175,7 +175,7 @@ def tlerangerate():
         
     return rrlist
 
-def compare(exprangerate,newtimedeltav):
+def compare(exprangerate,newtimedeltav,tletimedeltav):
     tlerr = tlerangerate()
     
     for i in range(len(tlerr)):
@@ -183,6 +183,7 @@ def compare(exprangerate,newtimedeltav):
         plt.plot(tlerr[i][1],label=pltlabel)
     plt.plot(exprangerate[0],exprangerate[1],label='Experiment')
     plt.plot(newtimedeltav[0],newtimedeltav[1],label='Improved Experiment')
+    plt.plot(tletimedeltav[0],tletimedeltav[1], label='TLE Experiment')
     plt.xlabel("Time (s)")
     plt.ylabel("Range-Rate (km/s)")
     plt.legend()

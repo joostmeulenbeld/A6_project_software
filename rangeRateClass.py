@@ -76,14 +76,8 @@ class rangeRate:
 		self.wavReader.waterFallPlot(10, "maxMedianDifference", halfSpectrumWidth)
 
 	def plotComparison(self):
-		compare(self.timedeltav,self.newtimedeltav)
-                compare(self.timedeltav,self.newtimedeltav2)
-         
-
+		compare(self.timedeltav,self.newtimedeltav,self.newtimedeltav2)  
   
-  
-  
-
 	def wavReaderCalc(self):
 		print("Start .wav reading and fourier transforming")
 		self.wavReader.getFrequencyAmplitudes()
@@ -119,7 +113,7 @@ def init():
 	start = 60*4.0			# What time is the first interval in seconds
 	end = 60*21.0+33		# What time is the last interval in seconds
 	intervalWidth = 1.0		# How many seconds is one interval
-	intervalStartFrequency = 60.0	# Every this many seconds a new interval starts
+	intervalStartFrequency = 30.0	# Every this many seconds a new interval starts
 	carrierfrequency = 145870000	# Hz
         listeningfrequency = 145870000
 	satelliteVelocity = 8000
