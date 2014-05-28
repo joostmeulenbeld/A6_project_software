@@ -10,8 +10,7 @@ from tlerangerate import compare,tlerangerate
 class rangeRate:
 
 
-<<<<<<< HEAD
-	def __init__(self, wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency,listeningfrequency, satelliteVelocity):
+    def __init__(self, wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency,listeningfrequency, satelliteVelocity):
 		self.wavFileName = wavFileName
 		self.start = start
 		self.end = end
@@ -24,12 +23,12 @@ class rangeRate:
 		self.wavReader = wavReaderFourierTransformer(self.wavFileName, self.start, self.end, self.intervalWidth, self.intervalStartFrequency, self.cutOff)
 		self.lowfrequency = self.carrierfrequency - self.wavReader.getMaxFourierFrequency()
 
-	def doCalculations(self):
+    def doCalculations(self):
 		self.wavReaderCalc()
 		self.maxFrequencyCalc()
 		self.dopplerTrackingCalc()
 
-	def dopplerTracking(self, maxFrequency, wavReader):
+    def dopplerTracking(self, maxFrequency, wavReader):
            freq = []
            for maxfreq in maxFrequency:
                freq.append(maxfreq)    
@@ -69,10 +68,10 @@ class rangeRate:
            self.newtimedeltav2 = [time,newrangerate]
            return timefreq
            
-        def interpolation(self,y0,y1,x,x0,x1):
-            newValue=y0+(y1-y0)*((x-x0)/(x1-x0))
-            return newValue
-=======
+    def interpolation(self,y0,y1,x,x0,x1):
+        newValue=y0+(y1-y0)*((x-x0)/(x1-x0))
+        return newValue
+
     def __init__(self, wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency,listeningfrequency, satelliteVelocity):
         self.wavFileName = wavFileName
         self.start = start
@@ -128,7 +127,6 @@ class rangeRate:
     def interpolation(self,y0,y1,x,x0,x1):
         newValue=y0+(y1-y0)*((x-x0)/(x1-x0))
         return newValue
->>>>>>> ec730db16973d3f042ac5f9d030599afcfa58c34
 
 
     def plot2DWaterfallPlot(self):
@@ -150,25 +148,6 @@ class rangeRate:
         print("Start Doppler tracking")
         return self.dopplerTracking(self.maxFrequencySum, self.wavReader)
          
-<<<<<<< HEAD
-        def Differential(self,time,ylist): 
-            dy = 0
-            dx = time[1]-time[0]    
-            slope = []            
-            for i in range(1,len(ylist)):                      
-                dy = (ylist[i]-ylist[i-1])
-                slope.append(dy/dx) 
-            plt.plot(slope)
-            plt.show()
-            lwall = int(divmod(600,dx)[0])
-            rwall = int(divmod(1000,dx)[0])
-            minslope = min(slope[lwall:rwall])
-            minslopeindex = slope.index(minslope)
-            minslopetime = (minslopeindex*dx)
-            minslopey = ylist[minslopeindex]
-
-            return minslopeindex,minslopetime,minslopey
-=======
     def Differential(self,time,ylist): 
         dy = 0
         dx = time[1]-time[0]    
@@ -176,7 +155,6 @@ class rangeRate:
         for i in range(1,len(ylist)):                      
             dy = (ylist[i]-ylist[i-1])
             slope.append(dy/dx) 
->>>>>>> ec730db16973d3f042ac5f9d030599afcfa58c34
         
         lwall = int(divmod(600,dx)[0])
         rwall = int(divmod(1000,dx)[0])
@@ -193,7 +171,7 @@ def init():
     start = 60*4.0          # What time is the first interval in seconds
     end = 60*21.0+33        # What time is the last interval in seconds
     intervalWidth = 1.0     # How many seconds is one interval
-    intervalStartFrequency = 60.0   # Every this many seconds a new interval starts
+    intervalStartFrequency = 240.0   # Every this many seconds a new interval starts
     carrierfrequency = 145870000    # Hz
     listeningfrequency = 145870000
     satelliteVelocity = 8000
