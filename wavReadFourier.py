@@ -325,8 +325,8 @@ class wavReaderFourierTransformer:
         for color1name in self.colors:
             for color2name in self.colors:
                 if (color1name is not color2name):
-                    for start in np.arange(0.3, 0.7, 0.05):
-                        for end in np.arange(start, 0.75, 0.05):
+                    for start in np.arange(0.0, 0.95, 0.05):
+                        for end in np.arange(start, 1.0, 0.05):
                             color1 = self.colors.get(color1name, (0,0,0))
                             color2 = self.colors.get(color2name, (1,1,1))
                             position=[0, start, end, 1]
