@@ -44,8 +44,27 @@ class rangeRate:
            newrangerate = rangerateconvert(timefreq, newcarrier)
            self.newtimedeltav = [time,newrangerate]
            
-
+           self.trr=tlerangerate()
+           self.tletime=range(len(self.trr[0][1]))
+           index,mint,miny=self.Differential(self.tletime,self.trr[0][1])
+           print mint
+           newIndex=0
+           i=0
+           while time[i]>=mint:
+               newIndex=i
+               i=i+1
+                   
+           print 'Carrier frequency from the tle data :'
+           print timefreq[0][newIndex]
+           newValue = self.interpolation(timefreq[1][newIndex],timefreq[1][newIndex+1],mint,timefreq[0][newIndex],timefreq[0][newIndex+1])
+           
+           newrangerate = rangerateconvert(timefreq,newValue)
+           self.newtimedeltav2 = [time,newrangerate]
            return timefreq
+           
+        def interpolation(self,y0,y1,x,x0,x1):
+            newValue=y0+(y1-y0)*((x-x0)/(x1-x0))
+            return newValue
 
 	def plotFrequencyHeatMap(self):
 		self.wavReader.plotNarrowCompressedHeatMap(10, "maxMedianDifference", self.cutOff)
@@ -58,6 +77,12 @@ class rangeRate:
 
 	def plotComparison(self):
 		compare(self.timedeltav,self.newtimedeltav)
+                compare(self.timedeltav,self.newtimedeltav2)
+         
+
+  
+  
+  
 
 	def wavReaderCalc(self):
 		print("Start .wav reading and fourier transforming")
@@ -73,17 +98,19 @@ class rangeRate:
          
         def Differential(self,time,ylist): 
             dy = 0
-            dx = time[1]-time[0]            
+            dx = time[1]-time[0]    
             slope = []            
             for i in range(1,len(ylist)):                      
                 dy = (ylist[i]-ylist[i-1])
                 slope.append(dy/dx) 
+            
             lwall = int(divmod(600,dx)[0])
             rwall = int(divmod(1000,dx)[0])
             minslope = min(slope[lwall:rwall])
             minslopeindex = slope.index(minslope)
             minslopetime = minslopeindex*dx
             minslopey = ylist[minslopeindex]
+
             return minslopeindex,minslopetime,minslopey
         
 
@@ -92,7 +119,7 @@ def init():
 	start = 60*4.0			# What time is the first interval in seconds
 	end = 60*21.0+33		# What time is the last interval in seconds
 	intervalWidth = 1.0		# How many seconds is one interval
-	intervalStartFrequency = 20.0	# Every this many seconds a new interval starts
+	intervalStartFrequency = 60.0	# Every this many seconds a new interval starts
 	carrierfrequency = 145870000	# Hz
         listeningfrequency = 145870000
 	satelliteVelocity = 8000
@@ -106,3 +133,4 @@ if __name__ == "__main__":
     rr = init()
     rr.doCalculations()
     rr.plotComparison()
+    
