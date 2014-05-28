@@ -277,11 +277,24 @@ class wavReaderFourierTransformer:
             plt.savefig('img/fourier/fourier_' + str(times[i]) + '_seconds.png', bbox_inches='tight', dpi=400)
             plt.close()
 
-    def plot2DWaterfallPlot(self, start=0.4, end=0.6, mode="disp", color1name="black", color2name="white"):
-        self.__requireCompressedNarrowData()
+    def getStandardCMap(self):
+        color1 = self.colors.get("black")
+        color2 = self.colors.get("darkblue")
+        color3 = self.colors.get("blue")
+        color4 = self.colors.get("white")
+        colors = [color1, color2, color3, color4, color4]
+        position = [0.0, 0.01, 0.05, 0.1, 1.0]
+        return self.make_cmap(colors, position=position)
 
+    def get2StrokeCMap(self, start, end, color1name, color2name):
         color1 = self.colors.get(color1name, (0,0,0))
         color2 = self.colors.get(color2name, (1,1,1))
+        position=[0, start, end, 1]
+        colors = [color1, color1, color2, color2]
+        return self.make_cmap(colors, position=position)
+
+    def plot2DWaterfallPlot(self, start=0.01, end=0.1, mode="disp", color1name="white", color2name="black"):
+        self.__requireCompressedNarrowData()
 
         times = np.array(self.getTimes())
         amplitudes = np.array(self.compressedNarrowAmplitudes)
@@ -290,29 +303,25 @@ class wavReaderFourierTransformer:
         freqGrid, timeGrid = np.meshgrid(frequencies, times)
         amplitudes = amplitudes[:-1, :-1]
 
+        my_cmap = self.get2StrokeCMap(start, end, color1name, color2name)
 
-        position=[0, start, end, 1]
-        colors = [color1, color1, color2, color2]
-        my_cmap = self.make_cmap(colors, position=position)
-
-        a_min, a_max = -np.abs(amplitudes).max(), np.abs(amplitudes).max()
+        a_min, a_max = 0, np.abs(amplitudes).max()
 
         ax = plt.subplot(1,1,1)
         plt.pcolormesh(frequencies, times, amplitudes, cmap=my_cmap, vmin=a_min, vmax=a_max)
 
         plt.axis([frequencies.min(), frequencies.max(), times.min(), times.max()])
-        cbar = plt.colorbar()
 
         plt.title("2D waterfall plot")
-        cbar.set_label("relative intensity (-)")
         ax.set_xlabel('Frequency (Hz)')
         ax.set_ylabel('Time (sec)')
 
         if (mode == "disp"):
             plt.show()
         else:
-            plt.savefig("img/waterfallPlots/waterfallPlot2D_"+color1name+"_"+color2name+"_"+str(start)+"_"+str(end)+".png", bbox_inches='tight', dpi=300)
+            plt.savefig("img/waterfallPlots/waterfallPlot2D_"+color1name+"_"+color2name+"_"+str(start)+"_"+str(end)+".png", bbox_inches='tight', dpi=400)
         plt.close()
+        del ax, my_cmap
 
     def saveAll2DWaterfallPlots(self):
         self.__requireCompressedNarrowData()
@@ -325,17 +334,15 @@ class wavReaderFourierTransformer:
         amplitudes = amplitudes[:-1, :-1]
 
         for color1name in self.colors:
+            print(color1name)
             for color2name in self.colors:
+                print(color2name)
                 if (color1name is not color2name):
-                    for start in np.arange(0.3, 0.7, 0.05):
-                        for end in np.arange(start, 0.75, 0.05):
-                            color1 = self.colors.get(color1name, (0,0,0))
-                            color2 = self.colors.get(color2name, (1,1,1))
-                            position=[0, start, end, 1]
-                            colors = [color1, color1, color2, color2]
-                            my_cmap = self.make_cmap(colors, position=position)
+                    for start in np.arange(0.0, 0.05, 0.1):
+                        for end in np.arange(start+0.04, 0.2, 0.04):
+                            my_cmap = self.get2StrokeCMap(start, end, color1name, color2name)
 
-                            a_min, a_max = -np.abs(amplitudes).max(), np.abs(amplitudes).max()
+                            a_min, a_max = 0, np.abs(amplitudes).max()
 
                             ax = plt.subplot(1,1,1)
                             plt.pcolormesh(frequencies, times, amplitudes, cmap=my_cmap, vmin=a_min, vmax=a_max)
@@ -347,7 +354,7 @@ class wavReaderFourierTransformer:
                             cbar.set_label("relative intensity (-)")
                             ax.set_xlabel('Frequency (Hz)')
                             ax.set_ylabel('Time (sec)')
-                            plt.savefig("img/waterfallPlots/waterfallPlot2D_"+color1name+"_"+color2name+"_"+str(start)+"_"+str(end)+".png", bbox_inches='tight', dpi=300)
+                            plt.savefig("img/waterfallPlots/waterfallPlot2D_"+color1name+"_"+color2name+"_"+str(start)+"_"+str(end)+".png", bbox_inches='tight', dpi=100)
                             plt.close()
     
     def plot3DWaterfallPlot(self):
