@@ -17,7 +17,7 @@ ewi_nap = -0.001                #sealevel at groundstation (km)
 earth_a = 6378.135              #radius of the earth at the equatorial plane (km)
 earth_b = 6356.750              #radius of the earth at the polaire plane (km)
 earth_omega = 7.2921151467064*10**-5 #angular velocity of the earth (rad/s)
-delfi_carrier = 145.87*10**6    #Carrier frequency
+
 #===============================================================================
 #                  User Input of Measurement time and files
 #===============================================================================
