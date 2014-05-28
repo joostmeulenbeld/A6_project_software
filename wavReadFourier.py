@@ -51,7 +51,9 @@ class wavReaderFourierTransformer:
             "red": (232/255.0,4/255.0,4/255.0),
             "green": (82/255.0,237/255.0,13/255.0),
             "blue": (51/255.0,47/255.0,220/255.0),
-            "yellow": (248/255.0, 220/255.0, 13/255.0)
+            "yellow": (248/255.0, 220/255.0, 13/255.0),
+            "darkblue": (0, 27/255, 81/255),
+            "lightblue": (0, 180/255, 1)
         }
 
     # These are the functions to call to ask for data
