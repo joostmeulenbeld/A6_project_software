@@ -377,7 +377,34 @@ class wavReaderFourierTransformer:
         ax.set_ylabel('Time (sec)')
         ax.set_zlabel('Magnitude')
         
-        plt.show() 
+        plt.show()
+
+    def plotAudioFile(self):
+        self.wavFile = Sndfile(self.wavFileName, 'r')
+        startTime = 10*60
+        endTime = 10*60+0.0003
+        intervalStartFrame = int(startTime*self.fs)
+        intervalWidth = int((endTime-startTime)*self.fs)
+        # plt.axis([startTime, endTime, output.min(), output.max()])
+
+        output = amplitude.output_signal(intervalWidth, intervalStartFrame, self.wavFile)
+
+        ax1 = plt.subplot(1,1,1)
+
+        ax1.plot(np.real(output))
+        plt.title("Real part of the signal")
+        ax1.set_xlabel("frames")
+        ax1.set_ylabel("amplitude (s)")
+        plt.savefig("img/audiofile_real.png", bbox_inches='tight', dpi=400)
+        plt.close()
+
+        ax1 = plt.subplot(1,1,1)
+        ax1.plot(np.imag(output))
+        plt.title("Imaginary part of the signal")
+        ax1.set_xlabel("frames")
+        ax1.set_ylabel("amplitude (s)")
+        plt.savefig("img/audiofile_imag.png", bbox_inches='tight', dpi=400)
+        plt.close()
         
     def make_cmap(self, colors, position=None, bit=False):
         '''
