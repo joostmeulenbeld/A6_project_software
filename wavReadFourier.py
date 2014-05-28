@@ -275,7 +275,7 @@ class wavReaderFourierTransformer:
             plt.savefig('img/fourier/fourier_' + str(times[i]) + '_seconds.png', bbox_inches='tight', dpi=400)
             plt.close()
 
-    def plot2DWaterfallPlot(self, start=0.4, end=0.6, mode="disp", color1name="black", color2name="white"):
+    def plot2DWaterfallPlot(self, start=0.0, end=0.5, mode="disp", color1name="black", color2name="white"):
         self.__requireCompressedNarrowData()
 
         color1 = self.colors.get(color1name, (0,0,0))
@@ -293,7 +293,7 @@ class wavReaderFourierTransformer:
         colors = [color1, color1, color2, color2]
         my_cmap = self.make_cmap(colors, position=position)
 
-        a_min, a_max = -np.abs(amplitudes).max(), np.abs(amplitudes).max()
+        a_min, a_max = 0, np.abs(amplitudes).max()
 
         ax = plt.subplot(1,1,1)
         plt.pcolormesh(frequencies, times, amplitudes, cmap=my_cmap, vmin=a_min, vmax=a_max)
@@ -347,6 +347,7 @@ class wavReaderFourierTransformer:
                             ax.set_ylabel('Time (sec)')
                             plt.savefig("img/waterfallPlots/waterfallPlot2D_"+color1name+"_"+color2name+"_"+str(start)+"_"+str(end)+".png", bbox_inches='tight', dpi=300)
                             plt.close()
+                            del ax, cbar, my_cmap
     
     def plot3DWaterfallPlot(self):
         self.__requireCompressedNarrowData()
