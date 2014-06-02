@@ -184,12 +184,35 @@ def compare(exprangerate,newtimedeltav,tletimedeltav):
     
     fig1 = plt.figure()
     ax1 = fig1.add_subplot(111)
-    ax1.plot(tlerr[0][1],color='red',label='tle.xyz')    
-    ax1.plot(exprangerate[0],exprangerate[1],color='green',label='Experiment theoretic Carrier')
-    ax1.plot(newtimedeltav[0],newtimedeltav[1],color='cyan',label='Experiment TCA Carrier shifted')
-    ax1.plot(tletimedeltav[0],tletimedeltav[1],color='blue',label='Experiment TLE TCA Carrier shifted')
+    ax1.plot(tlerr[0][1],color='red',label='tle.xyz') 
+    
+    check=exprangerate[0][0]
+    ax1.plot(exprangerate[0][0],exprangerate[1][0],'gs',label='Experiment theoretic Carrier')
+    for i in range(len(exprangerate[0])):
+        if check<=exprangerate[0][i]:
+            ax1.plot(exprangerate[0][i],exprangerate[1][i],'gs')
+            check=check+100           
+    ax1.plot(exprangerate[0],exprangerate[1],'g')
+    
+    check=newtimedeltav[0][0]
+    ax1.plot(newtimedeltav[0][0],newtimedeltav[1][0],'cx',label='Experiment TCA Carrier shifted')
+    for i in range(len(newtimedeltav[0])):
+        if check<=newtimedeltav[0][i]:
+            ax1.plot(newtimedeltav[0][i],newtimedeltav[1][i],'cx')
+            check=check+100  
+    ax1.plot(newtimedeltav[0],newtimedeltav[1],'c')
+    
+    check=tletimedeltav[0][0]
+    ax1.plot(tletimedeltav[0][0],tletimedeltav[1][0],'bo',label='Experiment TLE TCA Carrier shifted')
+    for i in range(len(tletimedeltav[0])):
+        if check<=tletimedeltav[0][i]:
+            ax1.plot(tletimedeltav[0][i],tletimedeltav[1][i],'bo')
+            check=check+100 
+    ax1.plot(tletimedeltav[0],tletimedeltav[1],'b')
+    
     plt.xlabel("Time (s)")
     plt.ylabel("Range-Rate (km/s)")
+    plt.xlim(500,1200)
     plt.legend()
 #    plt.show()
     
@@ -205,7 +228,7 @@ def compare(exprangerate,newtimedeltav,tletimedeltav):
     ax2.plot(tletimedeltav[0],error3,color='blue',label='Error between tle data and offset data')
     plt.xlabel("Time (s)")
     plt.ylabel("Error (km/s)")
-    plt.xlim(550,1100)
+    plt.xlim(500,1200)
     plt.ylim(0,3)
     plt.legend()
     plt.show()
