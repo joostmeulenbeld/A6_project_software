@@ -187,7 +187,7 @@ def compare(exprangerate,newtimedeltav,tletimedeltav):
     ax1.plot(tlerr[0][1],color='red',label='tle.xyz') 
     
     check=exprangerate[0][0]
-    ax1.plot(exprangerate[0][0],exprangerate[1][0],'gs',label='Experiment theoretic Carrier')
+    ax1.plot(exprangerate[0][0],exprangerate[1][0],'gs',label='Model 1')
     for i in range(len(exprangerate[0])):
         if check<=exprangerate[0][i]:
             ax1.plot(exprangerate[0][i],exprangerate[1][i],'gs')
@@ -195,15 +195,15 @@ def compare(exprangerate,newtimedeltav,tletimedeltav):
     ax1.plot(exprangerate[0],exprangerate[1],'g')
     
     check=newtimedeltav[0][0]
-    ax1.plot(newtimedeltav[0][0],newtimedeltav[1][0],'cx',label='Experiment TCA Carrier shifted')
+    ax1.plot(newtimedeltav[0][0],newtimedeltav[1][0],'c<',label='Model 2')
     for i in range(len(newtimedeltav[0])):
         if check<=newtimedeltav[0][i]:
-            ax1.plot(newtimedeltav[0][i],newtimedeltav[1][i],'cx')
+            ax1.plot(newtimedeltav[0][i],newtimedeltav[1][i],'c<')
             check=check+100  
     ax1.plot(newtimedeltav[0],newtimedeltav[1],'c')
     
     check=tletimedeltav[0][0]
-    ax1.plot(tletimedeltav[0][0],tletimedeltav[1][0],'bo',label='Experiment TLE TCA Carrier shifted')
+    ax1.plot(tletimedeltav[0][0],tletimedeltav[1][0],'bo',label='Model 3')
     for i in range(len(tletimedeltav[0])):
         if check<=tletimedeltav[0][i]:
             ax1.plot(tletimedeltav[0][i],tletimedeltav[1][i],'bo')
@@ -212,9 +212,10 @@ def compare(exprangerate,newtimedeltav,tletimedeltav):
     
     plt.xlabel("Time (s)")
     plt.ylabel("Range-Rate (km/s)")
-    plt.xlim(500,1200)
+    plt.xlim(400,1250)
     plt.legend()
-#    plt.show()
+    plt.savefig("RangeRate-Time.png", bbox_inches='tight', dpi=400)
+    
     
     error1 = errorCount(exprangerate)
     error2 = errorCount(newtimedeltav)
@@ -223,14 +224,37 @@ def compare(exprangerate,newtimedeltav,tletimedeltav):
     
     fig2 = plt.figure()
     ax2 = fig2.add_subplot(111)
-    ax2.plot(exprangerate[0],error1,color='green',label='Error between tle data and experimental data')
-    ax2.plot(newtimedeltav[0],error2,color='cyan',label='Error between tle data and improved data')
-    ax2.plot(tletimedeltav[0],error3,color='blue',label='Error between tle data and offset data')
+    
+    check=exprangerate[0][0]
+    ax2.plot(exprangerate[0][0],error1[0],'gs',label='Error 1')
+    for i in range(len(exprangerate[0])):
+        if check<=exprangerate[0][i]:
+            ax2.plot(exprangerate[0][i],error1[i],'gs')
+            check=check+100           
+    ax2.plot(exprangerate[0],error1,'g')
+    
+    check=newtimedeltav[0][0]
+    ax2.plot(newtimedeltav[0][0],error2[0],'c<',label='Error 2')
+    for i in range(len(newtimedeltav[0])):
+        if check<=newtimedeltav[0][i]:
+            ax2.plot(newtimedeltav[0][i],error2[i],'c<')
+            check=check+100           
+    ax2.plot(newtimedeltav[0],error2,'c')
+    
+    check=tletimedeltav[0][0]
+    ax2.plot(tletimedeltav[0][0],error3[0],'bo',label='Error 3')
+    for i in range(len(tletimedeltav[0])):
+        if check<=tletimedeltav[0][i]:
+            ax2.plot(tletimedeltav[0][i],error3[i],'bo')
+            check=check+100           
+    ax2.plot(tletimedeltav[0],error3,'b')
+    
     plt.xlabel("Time (s)")
     plt.ylabel("Error (km/s)")
-    plt.xlim(500,1200)
+    plt.xlim(400,1250)
     plt.ylim(0,3)
     plt.legend()
+    plt.savefig("ErrorPlot.png", bbox_inches='tight', dpi=400)
     plt.show()
     
     
