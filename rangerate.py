@@ -17,9 +17,12 @@ def calcrangerate(freq,carrierfreq,speedoflight):
     #deltafreq = freq - carrierfreq
     #deltav = (deltafreq * speedoflight)/carrierfreq
     deltafreqsquare = freq**2 - carrierfreq**2
-    squareterm = deltafreqsquare/(speedoflight**2)
+    squareterm = (freq**2 + carrierfreq**2) /(speedoflight**2)
+    if squareterm == 0:
+        deltav=0
+        return deltav
     linearterm = (freq**2)/speedoflight
-    deltav = (-2*linearterm+np.sqrt(4*(linearterm**2)-4*squareterm*deltafreqsquare))/(2*squareterm)
+    deltav = abs(-2*linearterm+np.sqrt(4*(linearterm**2)-4*squareterm*deltafreqsquare))/(2*squareterm)
         
     return deltav
     
