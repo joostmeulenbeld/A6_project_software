@@ -6,6 +6,7 @@ Input: Max Frequency over time matrix
 Output: Range rate over time matrix
 @author: Maarten Schild, Project A6
 """
+import numpy as np
 #Add variable name of maxfrequency file here#
 speedoflight = 299792.458 #km/s
 
@@ -15,10 +16,13 @@ speedoflight = 299792.458 #km/s
 def calcrangerate(freq,carrierfreq,speedoflight):
     deltafreq = freq - carrierfreq
     deltav = (deltafreq * speedoflight)/carrierfreq
-    # deltafreqsquare = freq**2 - carrierfreq**2
-    # squareterm = deltafreqsquare/(speedoflight**2)
-    # linearterm = (freq**2)/speedoflight
-    # deltav = (-2*linearterm+sqrt(4*(linearterm**2)-4*squareterm*deltafreqsquare))/(2*squareterm)
+    #deltafreqsquare = freq**2 - carrierfreq**2
+    #squareterm = (freq**2 + carrierfreq**2) /(speedoflight**2)
+    #if squareterm == 0:
+    #    deltav=0
+    #    return deltav
+    #linearterm = (freq**2)/speedoflight
+    #deltav = (-2*linearterm+np.sqrt(4*(linearterm**2)-4*squareterm*deltafreqsquare))/(2*squareterm)
         
     return deltav
     
