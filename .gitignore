@@ -2,6 +2,7 @@
 ## Eclipse
 #################
 
+data/
 *.out
 *.wav
 Dumpfolder Python output/
