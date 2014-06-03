@@ -15,6 +15,11 @@ speedoflight = 299792.458 #km/s
 def calcrangerate(freq,carrierfreq,speedoflight):
     deltafreq = freq - carrierfreq
     deltav = (deltafreq * speedoflight)/carrierfreq
+    # deltafreqsquare = freq**2 - carrierfreq**2
+    # squareterm = deltafreqsquare/(speedoflight**2)
+    # linearterm = (freq**2)/speedoflight
+    # deltav = (-2*linearterm+sqrt(4*(linearterm**2)-4*squareterm*deltafreqsquare))/(2*squareterm)
+        
     return deltav
     
 #Function to convert the time-maxfrequency matrix to a time-deltavelocity matrix
