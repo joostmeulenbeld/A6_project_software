@@ -78,7 +78,7 @@ class rangeRate:
         self.listeningfrequency = listeningfrequency
         self.cutOff = 3.0*satelliteVelocity/(3e8)*self.carrierfrequency
 
-        self.wavReader = wavReaderFourierTransformer(self.wavFileName, self.start, self.end, self.intervalWidth, self.intervalStartFrequency, self.cutOff, fromDisk)
+        self.wavReader = wavReaderFourierTransformer(self.wavFileName, self.start, self.end, self.intervalWidth, self.intervalStartFrequency, self.cutOff, fromDisk=fromDisk)
         self.lowfrequency = self.carrierfrequency - self.wavReader.getMaxFourierFrequency()
 
     def doCalculations(self):
