@@ -293,7 +293,7 @@ class wavReaderFourierTransformer:
         colors = [color1, color1, color2, color2]
         return self.make_cmap(colors, position=position)
 
-    def plot2DWaterfallPlot(self, start=0.01, end=0.1, mode="disp", color1name="white", color2name="black"):
+    def plot2DWaterfallPlot(self, start=0.0, end=0.04, mode="save", color1name="white", color2name="black"):
         self.__requireCompressedNarrowData()
 
         times = np.array(self.getTimes())
@@ -312,7 +312,6 @@ class wavReaderFourierTransformer:
 
         plt.axis([frequencies.min(), frequencies.max(), times.min(), times.max()])
 
-        plt.title("2D waterfall plot")
         ax.set_xlabel('Frequency (Hz)')
         ax.set_ylabel('Time (sec)')
 
@@ -321,7 +320,7 @@ class wavReaderFourierTransformer:
         else:
             plt.savefig("img/waterfallPlots/waterfallPlot2D_"+color1name+"_"+color2name+"_"+str(start)+"_"+str(end)+".png", bbox_inches='tight', dpi=400)
         plt.close()
-        del ax, my_cmap
+        # del ax, my_cmap
 
     def saveAll2DWaterfallPlots(self):
         self.__requireCompressedNarrowData()
@@ -350,7 +349,6 @@ class wavReaderFourierTransformer:
                             plt.axis([frequencies.min(), frequencies.max(), times.min(), times.max()])
                             cbar = plt.colorbar()
 
-                            plt.title("2D waterfall plot")
                             cbar.set_label("relative intensity (-)")
                             ax.set_xlabel('Frequency (Hz)')
                             ax.set_ylabel('Time (sec)')
