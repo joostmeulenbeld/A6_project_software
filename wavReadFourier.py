@@ -16,7 +16,7 @@ class wavReaderFourierTransformer:
 
 
     # Constructor
-    def __init__(self, wavFileName, startSeconds, endSeconds, intervalWidthSeconds, intervalStartSeconds, spectrumWidth):
+    def __init__(self, wavFileName, startSeconds, endSeconds, intervalWidthSeconds, intervalStartSeconds, spectrumWidth, fromDisk=True):
         self.wavFileName = wavFileName
 
         self.wavFile = Sndfile(self.wavFileName, 'r')
@@ -33,6 +33,7 @@ class wavReaderFourierTransformer:
         self.end = int(self.fs*endSeconds)
         self.intervalWidth = int(self.fs*intervalWidthSeconds)
         self.intervalStartFrequency = int(self.fs*intervalStartSeconds)
+        self.fromDisk = fromDisk
 
         self.dataExists = False
         self.amplitudes = []
@@ -115,7 +116,7 @@ class wavReaderFourierTransformer:
 
     def __requireNarrowData(self):
         if (not self.narrowDataExists):
-            if not self.loadNarrowFrequencyAmplitudes():
+            if not (self.fromDisk and self.loadNarrowFrequencyAmplitudes()):
                 if (self.dataExists):
                     self.__narrowFrequencyAmplitudes()
                 else:
@@ -302,7 +303,10 @@ class wavReaderFourierTransformer:
         self.__requireNarrowData()
         times = self.getTimes()
         for i in range(len(self.narrowAmplitudes)):
+            ax = plt.subplot(1,1,1)
             plt.plot(self.narrowFrequencies, self.narrowAmplitudes[i])
+            ax.set_xlabel("Relative Frequency (Hz)")
+            ax.set_ylabel("Intensity")
             plt.savefig('img/fourier/fourier_' + str(times[i]) + '_seconds.png', bbox_inches='tight', dpi=400)
             plt.close()
 
