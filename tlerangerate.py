@@ -214,11 +214,13 @@ def compare(exprangerate,newtimedeltav,tletimedeltav):
     plt.ylabel("Range-Rate (km/s)")
     plt.xlim(400,1250)
     plt.legend()
-    plt.savefig("RangeRate-Time.png", bbox_inches='tight', dpi=400)
+#    plt.savefig("RangeRate-Time.png", bbox_inches='tight', dpi=400)
     
     
-    error1 = errorCount(exprangerate)
-    error2 = errorCount(newtimedeltav)
+    error1temp = errorCount(exprangerate)
+    error1 = [abs(error1temp[n]) for n in range(len(error1temp))]
+    error2temp = errorCount(newtimedeltav)
+    error2 = [abs(error2temp[n]) for n in range(len(error2temp))]
     error3temp = errorCount(tletimedeltav)
     error3 = [abs(error3temp[n]) for n in range(len(error3temp))]
     
@@ -252,9 +254,9 @@ def compare(exprangerate,newtimedeltav,tletimedeltav):
     plt.xlabel("Time (s)")
     plt.ylabel("Error (km/s)")
     plt.xlim(400,1250)
-    plt.ylim(0,3)
+    plt.ylim(0,5)
     plt.legend()
-    plt.savefig("ErrorPlot.png", bbox_inches='tight', dpi=400)
+#    plt.savefig("ErrorPlot.png", bbox_inches='tight', dpi=400)
     plt.show()
     
     

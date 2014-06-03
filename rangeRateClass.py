@@ -164,7 +164,7 @@ def init():
     start = 60*4.0          # What time is the first interval in seconds
     end = 60*21.0+33        # What time is the last interval in seconds
     intervalWidth = 1.0     # How many seconds is one interval
-    intervalStartFrequency = 15.0   # Every this many seconds a new interval starts
+    intervalStartFrequency = 1.0   # Every this many seconds a new interval starts
     carrierfrequency = 145870000    # Hz
     listeningfrequency = 145870000
     satelliteVelocity = 8000
