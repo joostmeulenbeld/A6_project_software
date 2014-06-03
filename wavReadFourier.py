@@ -5,6 +5,8 @@ from scikits.audiolab import wavread
 import numpy as np
 import matplotlib.pyplot as plt
 import fourier
+import multiprocessing
+import os
 
 from matplotlib import cm  
 from numpy import meshgrid  
@@ -25,7 +27,8 @@ class wavReaderFourierTransformer:
         del self.wavFile
 
         self.sampling_interval = 1.0/self.fs
-
+        self.intervalWidthSeconds = intervalWidthSeconds
+        self.intervalStartFrequencySeconds = intervalStartSeconds
         self.start = int(self.fs*startSeconds)
         self.end = int(self.fs*endSeconds)
         self.intervalWidth = int(self.fs*intervalWidthSeconds)
@@ -81,9 +84,29 @@ class wavReaderFourierTransformer:
     def getDeltaFourierFrequency(self):
         return self.fs/self.intervalWidth
 
+    def saveNarrowFrequencyAmplitudes(self):
+        self.__requireNarrowData()
+        folderName = "data/interval_"+str(self.intervalWidthSeconds) + "_startFrequency_"+str(self.intervalStartFrequencySeconds)
+        if not os.path.exists(folderName):
+            print("Data doesn't exit yet, creating files now")
+            os.makedirs(folderName)
+            np.savetxt(folderName+"/narrowAmplitudes.out", self.narrowAmplitudes)
+            np.savetxt(folderName+"/narrowFrequencies.out", self.narrowFrequencies)
+            np.savetxt(folderName+"/times.out", self.times)
+        else:
+            print("folder '" + folderName + "' already exists")
 
-
-
+    def loadNarrowFrequencyAmplitudes(self):
+        folderName = "data/interval_"+str(self.intervalWidthSeconds) + "_startFrequency_"+str(self.intervalStartFrequencySeconds)
+        if os.path.exists(folderName):
+            print("The data was found on disk. Now loading...")
+            self.narrowAmplitudes = np.genfromtxt(folderName+"/narrowAmplitudes.out")
+            self.narrowFrequencies = np.genfromtxt(folderName+"/narrowFrequencies.out")
+            self.times = np.genfromtxt(folderName+"/times.out")
+            print("Done!")
+            self.narrowDataExists = True
+            return True
+        return False
 
     #These functions should not be used from outside
     def __requireData(self):
@@ -92,10 +115,11 @@ class wavReaderFourierTransformer:
 
     def __requireNarrowData(self):
         if (not self.narrowDataExists):
-            if (self.dataExists):
-                self.__narrowFrequencyAmplitudes()
-            else:
-                self.__calcFreqAmps(narrow=True, compress=False)
+            if not self.loadNarrowFrequencyAmplitudes():
+                if (self.dataExists):
+                    self.__narrowFrequencyAmplitudes()
+                else:
+                    self.__calcFreqAmps(narrow=True, compress=False)
 
     def __requireCompressedNarrowData(self):
         if (not self.compressedNarrowDataExists):
@@ -107,6 +131,10 @@ class wavReaderFourierTransformer:
             else:
                 self.__compressNarrowFrequencyAmplitudes()
     
+
+    # def __calcFreqAmpsMultiProcessor(self, narrow=False, compress=False, intervalSize=10, compressionMethodString="maxMedianDifference"):
+
+
     # Multipurpose function for Fourier transform of the wav file
     def __calcFreqAmps(self, narrow=False, compress=False, intervalSize=10, compressionMethodString="maxMedianDifference"): 
         # Clear calculated data if already exists
@@ -168,6 +196,7 @@ class wavReaderFourierTransformer:
             self.compressedNarrowDataExists = True
         elif (narrow):
             self.narrowDataExists = True
+            self.saveNarrowFrequencyAmplitudes()
         else:
             self.dataExists = True
 
@@ -272,8 +301,8 @@ class wavReaderFourierTransformer:
     def saveFourierTransformPlots(self):
         self.__requireNarrowData()
         times = self.getTimes()
-        for i in range(len(self.intervals)):
-            plt.plot(self.frequencies, self.intervals[i][1])
+        for i in range(len(self.narrowAmplitudes)):
+            plt.plot(self.narrowFrequencies, self.narrowAmplitudes[i])
             plt.savefig('img/fourier/fourier_' + str(times[i]) + '_seconds.png', bbox_inches='tight', dpi=400)
             plt.close()
 
@@ -293,7 +322,7 @@ class wavReaderFourierTransformer:
         colors = [color1, color1, color2, color2]
         return self.make_cmap(colors, position=position)
 
-    def plot2DWaterfallPlot(self, start=0.0, end=0.04, mode="save", color1name="white", color2name="black"):
+    def plot2DWaterfallPlot(self, start=0.0, end=0.04, mode="disp", color1name="white", color2name="black"):
         self.__requireCompressedNarrowData()
 
         times = np.array(self.getTimes())

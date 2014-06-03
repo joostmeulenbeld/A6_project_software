@@ -1,7 +1,7 @@
 #################
 ## Eclipse
 #################
-
+*.out
 *.wav
 Dumpfolder Python output/
 *.pydevproject
