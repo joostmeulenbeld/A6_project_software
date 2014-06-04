@@ -1,4 +1,7 @@
 import numpy as np
+from math import factorial as fact
+
+width=1000
 
 def getSum(interval):
     return np.sum(np.abs(interval))
@@ -10,11 +13,11 @@ def getInitialGuess(amplitudesArray, frequencies):
     lst = []
     for amplitudes in amplitudesArray:
         lst2 = []
-        tempSum = np.sum(amplitudes[0:1000])
-        oldTenSum = np.sum(amplitudes[0:10])
+        tempSum = np.sum(np.abs(amplitudes[0:width]))
+        oldTenSum = np.sum(np.abs(amplitudes[0:10]))
         lst2.append(tempSum)
-        for index in range(10, np.size(amplitudes)-1000, 10):
-            newTenSum = np.sum(np.abs(amplitudes[index+990:index+1000]))
+        for index in range(10, np.size(amplitudes)-width, 10):
+            newTenSum = np.sum(np.abs(amplitudes[index+990:index+width]))
             oldTenSum = np.sum(np.abs(amplitudes[index-10:index]))
             tempSum += newTenSum - oldTenSum
             lst2.append(tempSum)
@@ -23,31 +26,65 @@ def getInitialGuess(amplitudesArray, frequencies):
 
     return lst
 
+def derivative(x, y, t, mode="forward"):
+
+    # if sum(np.diff(x, n=2)) != 0:
+    #     return None #check if the x spacing is constant
+    #let's assume this is correct for computational quickness
+    bino = lambda n, k: fact(n)/(fact(k)*fact(n-k))
+
+    h = float(x[1]-x[0])
+    derivatives = [0]*(len(y))
+
+    if mode=="forward":
+        f = lambda n, i, y: (-1)**i*bino(n,i)*y[n-i]
+        x0=x[0]
+        derivatives[0]=y[0]
+    else:
+        f = lambda n, i, y: (-1)**i*bino(n,i)*y[-i-1]
+        x0=x[-1]
+        derivatives[0]=y[-1]
+
+    for n in range(1,len(y)):
+        for i in range(0, n+1):
+            # print(n, i, f(n, i, y, bino))
+            derivatives[n] += f(n, i, y)
+        derivatives[n] /= h**n
+    return sum([derivatives[n]/fact(n)*(t-x0)**n for n in range(len(y))])
+
+
 def getInitialGuessByMethod(A, frequencies, method):
     lst = []
     for interval in range(len(A)): 
         lst2=[]
-        absLst = [h if h > 0 else -h for h in A[interval][0:1000]] 
+        absLst = [h if h > 0 else -h for h in A[interval][0:width]] 
         lst2.append(method(absLst))        
         for i in range((len(A[interval])-3010)/10):
-            lst3 = [h if h > 0 else -h for h in A[interval][1000+(i*10):(i*10)+1010]]
-            absLst = absLst[10:1000]
+            lst3 = [h if h > 0 else -h for h in A[interval][width+(i*10):(i*10)+1010]]
+            absLst = absLst[10:width]
             absLst.extend(lst3)
             lst2.append(method(absLst))
         lst.append(lst2)
         print "Searching first estimate in interval: ",interval+1,"/",len(A)
     return lst
 
-def maxFrequencies(wavReader, carrierfrequency, intervalMethodString):
-    #############################################################################################
-            #Read in Matrix A 
-    #############################################################################################
-    #find/make matrix A
+def getMaxFrequency(frequencies, amplitudes):
+    lst2 = []
+    tempSum = np.sum(np.abs(amplitudes[0:width]))
+    oldTenSum = np.sum(np.abs(amplitudes[0:10]))
+    lst2.append(tempSum)
+    for index in range(10, np.size(amplitudes)-width, 10):
+        newTenSum = np.sum(np.abs(amplitudes[index+990:index+width]))
+        oldTenSum = np.sum(np.abs(amplitudes[index-10:index]))
+        tempSum += newTenSum - oldTenSum
+        lst2.append(tempSum)
 
-    frequencies, A = wavReader.getFrequencyAmplitudes()
+    maxIntervalIndex = np.argmax(lst2)
+    maxfreqindex = amplitudes[((maxIntervalIndex*10)):(maxIntervalIndex*10)+width].argmax()
+    maxfreqindex += (maxIntervalIndex*10)
+    return frequencies[maxfreqindex]
 
-    A = np.array(A)
-
+def getMaxFrequenciesWithWindow(frequencies, A, times, intervalMethodString):
     if (intervalMethodString == "sum"):
         lst = getInitialGuess(A, frequencies)
     else:
@@ -57,35 +94,60 @@ def maxFrequencies(wavReader, carrierfrequency, intervalMethodString):
         print(intervalMethod)
         lst = getInitialGuessByMethod(A, frequencies, intervalMethod)
 
-    
-    
-    
-    #############################################################################################
-            #First run of least square finding and rewrite matrix B with least square coordinates
-    #############################################################################################
-        
     maxfreqlist = []
     print "Found first estimate intervals"
     print "Searching for max frequencies in intervals"
     for g in range(len(lst)):
-        maxintervalindex = lst[g].index(max(lst[g]))
-        maxfreqindex = A[g][((maxintervalindex*10)):(maxintervalindex*10)+1000].argmax()
-        maxfreqindex += (maxintervalindex*10)
+        maxIntervalIndex = lst[g].index(max(lst[g]))
+     
+        maxfreqindex = A[g][((maxIntervalIndex*10)):(maxIntervalIndex*10)+width].argmax()
+        maxfreqindex += (maxIntervalIndex*10)
         maxfreqlist.append(frequencies[maxfreqindex])
         print "Interval: ",g+1,"/",len(lst)," Found Max Freq: ",maxfreqindex
-    
-    print "Found all maximum frequencies"
-            
-            
-            
-            
-    #############################################################################################
-            #Give coordinates of the maxes found on the matrix close to its least squares in B
-    #############################################################################################
-    
-    for n in range(len(maxfreqlist)):
-        maxfreqlist[n]+=carrierfrequency
-    print "Added base frequencies"
     return maxfreqlist
+
+def getMaxFrequenciesWithDerivative(frequencies, A, times):
+    getIndex = lambda lst, value: int((value-lst[0])/(lst[1]-lst[0]))
+
+    maxfreqlist = [0]*(len(times))
+    initialIndex = getIndex(times, 770)
+    for i in range(initialIndex, initialIndex+5):
+        maxfreqlist[i] = getMaxFrequency(frequencies, A[i])
+
+
+    # From initial time until the end
+    for i in range(initialIndex+5, len(times)):
+        print(times[i])
+        expectedMaxFrequency = derivative(times[i-4:i], maxfreqlist[i-4:i], times[i], mode="backward")
+        expectedMaxFrequencyIndex = getIndex(frequencies, expectedMaxFrequency)
+        # print(expectedMaxFrequency)
+        # print(expectedMaxFrequencyIndex)
+        if expectedMaxFrequency > frequencies[-1]:
+            break
+        expectedMaxFrequency = frequencies[expectedMaxFrequencyIndex] #find the actual frequency
+        difference = abs(expectedMaxFrequency - maxfreqlist[i-1])
+        print("exp, cur, diff: ", expectedMaxFrequency, maxfreqlist[i-1], difference)
+        minIntervalIndex = getIndex(frequencies, expectedMaxFrequency-0.5*difference)
+        maxIntervalIndex = getIndex(frequencies, expectedMaxFrequency+0.5*difference)
+        print("min, max: ", minIntervalIndex, maxIntervalIndex)
+        # print(minIntervalIndex, maxIntervalIndex)
+        print("______________")
+        maxfreqlist[i] = frequencies[minIntervalIndex+np.argmax(A[i][minIntervalIndex:maxIntervalIndex])]
+    return maxfreqlist
+
+
+def maxFrequencies(wavReader, carrierfrequency, intervalMethodString):
+    #find/make matrix A
+    print("Finding the signal")
+    frequencies, A = wavReader.getFrequencyAmplitudes()
+    times = wavReader.getTimes()
+    A = np.array(A)
+
+
+    maxfreqlist = getMaxFrequenciesWithWindow(frequencies, A, times, intervalMethodString)
+    # maxfreqlist = getMaxFrequenciesWithDerivative(frequencies, A, times)
+
+    print("Done finding the maximum frequencies")
+    return map(lambda x: x+carrierfrequency, maxfreqlist)
     
 
