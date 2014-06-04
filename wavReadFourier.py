@@ -326,6 +326,40 @@ class wavReaderFourierTransformer:
         colors = [color1, color1, color2, color2]
         return self.make_cmap(colors, position=position)
 
+    def plot2DWaterfallPlotMaxFrequencies(self, start=0.0, end=0.04, mode="disp", color1name="white", color2name="black", maxFrequencies=None):
+        if (maxFrequencies == None):
+            print("Give the maxFrequencies")
+        else:
+            self.__requireCompressedNarrowData()
+
+            times = np.array(self.getTimes())
+            amplitudes = np.array(self.compressedNarrowAmplitudes)
+            frequencies = np.array(self.compressedNarrowFrequencies)
+
+            freqGrid, timeGrid = np.meshgrid(frequencies, times)
+            amplitudes = amplitudes[:-1, :-1]
+
+            my_cmap = self.get2StrokeCMap(start, end, color1name, color2name)
+
+            a_min, a_max = 0, np.abs(amplitudes).max()
+
+            ax = plt.subplot(1,1,1)
+            plt.pcolormesh(frequencies, times, amplitudes, cmap=my_cmap, vmin=a_min, vmax=a_max)
+
+            plt.axis([frequencies.min(), frequencies.max(), times.min(), times.max()])
+
+            plt.plot(maxFrequencies, self.times)
+
+
+            ax.set_xlabel('Frequency (Hz)')
+            ax.set_ylabel('Time (sec)')
+
+            if (mode == "disp"):
+                plt.show()
+            else:
+                plt.savefig("img/waterfallPlotsMaxFrequency/waterfallPlot2D_"+color1name+"_"+color2name+"_"+str(start)+"_"+str(end)+".png", bbox_inches='tight', dpi=400)
+            plt.close()
+
     def plot2DWaterfallPlot(self, start=0.0, end=0.04, mode="disp", color1name="white", color2name="black"):
         self.__requireCompressedNarrowData()
 
