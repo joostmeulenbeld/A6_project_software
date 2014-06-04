@@ -68,7 +68,7 @@ class rangeRate:
            return timefreq
            
 
-    def __init__(self, wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency,listeningfrequency, satelliteVelocity, fromDisk=True):
+    def __init__(self, wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency,listeningfrequency, satelliteVelocity):
         self.wavFileName = wavFileName
         self.start = start
         self.end = end
@@ -78,7 +78,7 @@ class rangeRate:
         self.listeningfrequency = listeningfrequency
         self.cutOff = 3.0*satelliteVelocity/(3e8)*self.carrierfrequency
 
-        self.wavReader = wavReaderFourierTransformer(self.wavFileName, self.start, self.end, self.intervalWidth, self.intervalStartFrequency, self.cutOff, fromDisk=fromDisk)
+        self.wavReader = wavReaderFourierTransformer(self.wavFileName, self.start, self.end, self.intervalWidth, self.intervalStartFrequency, self.cutOff)
         self.lowfrequency = self.carrierfrequency - self.wavReader.getMaxFourierFrequency()
 
     def doCalculations(self):
@@ -164,12 +164,12 @@ def init():
     start = 60*4.0          # What time is the first interval in seconds
     end = 60*21.0+33        # What time is the last interval in seconds
     intervalWidth = 1.0     # How many seconds is one interval
-    intervalStartFrequency = 1.0   # Every this many seconds a new interval starts
+    intervalStartFrequency = 2.0   # Every this many seconds a new interval starts
     carrierfrequency = 145870000    # Hz
     listeningfrequency = 145870000
     satelliteVelocity = 8000
 
-    rr = rangeRate(wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency,listeningfrequency, satelliteVelocity, fromDisk=True)
+    rr = rangeRate(wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency,listeningfrequency, satelliteVelocity)
     return rr
     # rr.plotFrequencyHeatMap()
 
