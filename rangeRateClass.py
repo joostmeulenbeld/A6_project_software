@@ -124,7 +124,7 @@ class rangeRate:
         return newValue
 
     def plot2DWaterfallPlot(self):
-        self.wavReader.plot2DWaterfallPlot()
+        self.wavReader.plot2DWaterfallPlot(mode="disp")
 
     def plotComparison(self):
         compare(self.timedeltav,self.newtimedeltav,self.newtimedeltav2)
@@ -136,7 +136,7 @@ class rangeRate:
 
     def maxFrequencyCalc(self):
         print("Start noise reduction and maximum interval frequency detection")
-        self.maxFrequencySum = maxFrequencies(self.wavReader, self.listeningfrequency, "sum")
+        self.maxFrequencySum, self.expectedmaxfreqlist = maxFrequencies(self.wavReader, self.listeningfrequency, "sum")
 
     def dopplerTrackingCalc(self):
         print("Start Doppler tracking")
@@ -176,5 +176,6 @@ def init():
 
 if __name__ == "__main__":
     rr = init()
-    rr.doCalculations()
-    rr.plotComparison()
+    rr.wavReaderCalc()
+    rr.maxFrequencyCalc()
+    rr.wavReader.plot2DWaterfallPlotMaxFrequencies(maxFrequencies=rr.maxFrequencySum, listeningfrequency=rr.listeningfrequency, expectedmaxfreqlist=rr.expectedmaxfreqlist)

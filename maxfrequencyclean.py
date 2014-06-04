@@ -110,6 +110,8 @@ def getMaxFrequenciesWithDerivative(frequencies, A, times):
     getIndex = lambda lst, value: int((value-lst[0])/(lst[1]-lst[0]))
 
     maxfreqlist = [0]*(len(times))
+    expectedmaxfreqlist = [0]*(len(times))
+
     initialIndex = getIndex(times, 770)
     for i in range(initialIndex, initialIndex+5):
         maxfreqlist[i] = getMaxFrequency(frequencies, A[i])
@@ -120,20 +122,50 @@ def getMaxFrequenciesWithDerivative(frequencies, A, times):
         print(times[i])
         expectedMaxFrequency = derivative(times[i-4:i], maxfreqlist[i-4:i], times[i], mode="backward")
         expectedMaxFrequencyIndex = getIndex(frequencies, expectedMaxFrequency)
-        # print(expectedMaxFrequency)
-        # print(expectedMaxFrequencyIndex)
-        if expectedMaxFrequency > frequencies[-1]:
+
+
+        if expectedMaxFrequency > frequencies[-1] or expectedMaxFrequency < frequencies[0]:
+            print("Differencing towards the end: Expected frequency was outside the spectrum")
             break
+        expectedmaxfreqlist[i] = frequencies[expectedMaxFrequencyIndex]
+
         expectedMaxFrequency = frequencies[expectedMaxFrequencyIndex] #find the actual frequency
         difference = abs(expectedMaxFrequency - maxfreqlist[i-1])
         print("exp, cur, diff: ", expectedMaxFrequency, maxfreqlist[i-1], difference)
         minIntervalIndex = getIndex(frequencies, expectedMaxFrequency-0.5*difference)
         maxIntervalIndex = getIndex(frequencies, expectedMaxFrequency+0.5*difference)
         print("min, max: ", minIntervalIndex, maxIntervalIndex)
-        # print(minIntervalIndex, maxIntervalIndex)
         print("______________")
+        if minIntervalIndex < 0:
+            minIntervalIndex = 0
+        if maxIntervalIndex > len(frequencies):
+            maxIntervalIndex = len(frequencies)
         maxfreqlist[i] = frequencies[minIntervalIndex+np.argmax(A[i][minIntervalIndex:maxIntervalIndex])]
-    return maxfreqlist
+
+    for i in range(initialIndex, 0, -1):
+        print(times[i])
+        expectedMaxFrequency = derivative(times[i+1:i+5], maxfreqlist[i+1:i+5], times[i], mode="forward")
+        expectedMaxFrequencyIndex = getIndex(frequencies, expectedMaxFrequency)
+
+
+        if expectedMaxFrequency > frequencies[-1] or expectedMaxFrequency < frequencies[0]:
+            print("Differencing towards the beginning: Expected frequency was outside the spectrum")
+            break
+        expectedmaxfreqlist[i] = frequencies[expectedMaxFrequencyIndex]
+
+        expectedMaxFrequency = frequencies[expectedMaxFrequencyIndex] #find the actual frequency
+        difference = abs(expectedMaxFrequency - maxfreqlist[i-1])
+        print("exp, cur, diff: ", expectedMaxFrequency, maxfreqlist[i-1], difference)
+        minIntervalIndex = getIndex(frequencies, expectedMaxFrequency-0.5*difference)
+        maxIntervalIndex = getIndex(frequencies, expectedMaxFrequency+0.5*difference)
+        print("min, max: ", minIntervalIndex, maxIntervalIndex)
+        print("______________")
+        if minIntervalIndex < 0:
+            minIntervalIndex = 0
+        if maxIntervalIndex > len(frequencies):
+            maxIntervalIndex = len(frequencies)
+        maxfreqlist[i] = frequencies[minIntervalIndex+np.argmax(A[i][minIntervalIndex:maxIntervalIndex])]
+    return maxfreqlist, expectedmaxfreqlist
 
 
 def maxFrequencies(wavReader, carrierfrequency, intervalMethodString):
@@ -144,10 +176,9 @@ def maxFrequencies(wavReader, carrierfrequency, intervalMethodString):
     A = np.array(A)
 
 
-    maxfreqlist = getMaxFrequenciesWithWindow(frequencies, A, times, intervalMethodString)
-    # maxfreqlist = getMaxFrequenciesWithDerivative(frequencies, A, times)
-
+    # maxfreqlist = getMaxFrequenciesWithWindow(frequencies, A, times, intervalMethodString)
+    maxfreqlist, expectedmaxfreqlist = getMaxFrequenciesWithDerivative(frequencies, A, times)
     print("Done finding the maximum frequencies")
-    return map(lambda x: x+carrierfrequency, maxfreqlist)
+    return map(lambda x: x+carrierfrequency, maxfreqlist), expectedmaxfreqlist
     
 

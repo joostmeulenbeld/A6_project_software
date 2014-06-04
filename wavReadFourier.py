@@ -233,6 +233,7 @@ class wavReaderFourierTransformer:
         return frequencies, amplitudes
 
     def __getNarrowSpectra(self, inputfrequencies, inputamplitudes):
+        print("Calculating the narrow spectrum...")
         amplitudes = []
         frequencies = []
         if (self.cutOffIndex == 0):
@@ -241,6 +242,7 @@ class wavReaderFourierTransformer:
         for amp in inputamplitudes:
             frequencies, amplitudes = self.__narrowSpectrum(inputfrequencies, amp, cutOffIndex)
             amplitudes.append(amplitude)
+        print("Done!")
         return frequencies, amplitudes
 
     def __compressSpectrum(self, frequencies, amplitudes, intervalSize, compressionMethodString):
@@ -262,11 +264,13 @@ class wavReaderFourierTransformer:
         return resultFrequencies, resultAmplitudes
 
     def __getCompressedSpectra(self, inputfrequencies, inputamplitudes, intervalSize=10, compressionMethodString="maxMedianDifference"):
+        print("Compressing intervals...")
         amplitudes = []
         frequencies = []
         for amp in inputamplitudes:
             frequencies, amplitude = self.__compressSpectrum(inputfrequencies, amp, intervalSize, compressionMethodString)
             amplitudes.append(amplitude)
+        print("Done!")
         return frequencies, amplitudes
 
     def __median(self, amplitudes):
@@ -326,12 +330,13 @@ class wavReaderFourierTransformer:
         colors = [color1, color1, color2, color2]
         return self.make_cmap(colors, position=position)
 
-    def plot2DWaterfallPlotMaxFrequencies(self, start=0.0, end=0.04, mode="disp", color1name="white", color2name="black", maxFrequencies=None):
+    def plot2DWaterfallPlotMaxFrequencies(self, start=0.0, end=0.04, mode="disp", color1name="white", color2name="black", 
+            expectedmaxfreqlist=None, maxFrequencies=None, listeningfrequency=0):
         if (maxFrequencies == None):
             print("Give the maxFrequencies")
         else:
             self.__requireCompressedNarrowData()
-
+            print("Plotting a 2D Waterfall Plot...")
             times = np.array(self.getTimes())
             amplitudes = np.array(self.compressedNarrowAmplitudes)
             frequencies = np.array(self.compressedNarrowFrequencies)
@@ -348,20 +353,24 @@ class wavReaderFourierTransformer:
 
             plt.axis([frequencies.min(), frequencies.max(), times.min(), times.max()])
 
-            plt.plot(maxFrequencies, self.times)
+            maxFrequencies = map(lambda x:x-listeningfrequency, maxFrequencies)
+            plt.plot(maxFrequencies, self.times, marker='o')
+            plt.plot(expectedmaxfreqlist, self.times, marker='o')
 
 
             ax.set_xlabel('Frequency (Hz)')
             ax.set_ylabel('Time (sec)')
-
+            print("Done, rendering...")
             if (mode == "disp"):
                 plt.show()
             else:
                 plt.savefig("img/waterfallPlotsMaxFrequency/waterfallPlot2D_"+color1name+"_"+color2name+"_"+str(start)+"_"+str(end)+".png", bbox_inches='tight', dpi=400)
             plt.close()
+            print("Done!")
 
     def plot2DWaterfallPlot(self, start=0.0, end=0.04, mode="disp", color1name="white", color2name="black"):
         self.__requireCompressedNarrowData()
+        print("Plotting a 2D Waterfall Plot...")
 
         times = np.array(self.getTimes())
         amplitudes = np.array(self.compressedNarrowAmplitudes)
@@ -381,13 +390,14 @@ class wavReaderFourierTransformer:
 
         ax.set_xlabel('Frequency (Hz)')
         ax.set_ylabel('Time (sec)')
+        print("Done, rendering...")
 
         if (mode == "disp"):
             plt.show()
         else:
             plt.savefig("img/waterfallPlots/waterfallPlot2D_"+color1name+"_"+color2name+"_"+str(start)+"_"+str(end)+".png", bbox_inches='tight', dpi=400)
         plt.close()
-        # del ax, my_cmap
+        print("Done!")
 
     def saveAll2DWaterfallPlots(self):
         self.__requireCompressedNarrowData()
