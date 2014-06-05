@@ -128,15 +128,15 @@ class rangeRate:
 
     def plotComparison(self):
         compare(self.timedeltav,self.newtimedeltav,self.newtimedeltav2)
- 
+
 
     def wavReaderCalc(self):
         print("Start .wav reading and fourier transforming")
         self.wavReader.getFrequencyAmplitudes()
 
-    def maxFrequencyCalc(self):
+    def maxFrequencyCalc(self, intervalsize=5, errorrange=1.0):
         print("Start noise reduction and maximum interval frequency detection")
-        self.maxFrequencySum, self.expectedmaxfreqlist = maxFrequencies(self.wavReader, self.listeningfrequency, "sum")
+        self.maxFrequencySum, self.expectedmaxfreqlist = maxFrequencies(self.wavReader, self.listeningfrequency, "sum", intervalsize=intervalsize, errorrange=errorrange)
 
     def dopplerTrackingCalc(self):
         print("Start Doppler tracking")
@@ -157,7 +157,10 @@ class rangeRate:
         minslopey = ylist[minslopeindex]
 
         return minslopeindex,minslopetime,minslopey
-    
+
+    def plot2DWaterfallplotWithMaxFrequencies(self, mode="disp", intervalwidth=1, errorrange=1.0):
+        self.wavReader.plot2DWaterfallPlotMaxFrequencies(maxFrequencies=self.maxFrequencySum, listeningfrequency=self.listeningfrequency, expectedmaxfreqlist=self.expectedmaxfreqlist, mode=mode,
+                                                         intervalwidth=intervalwidth, errorrange=errorrange)
 
 def init():
     wavFileName = "Delfi-n3xt.wav"  # The location of the wav file
@@ -175,7 +178,6 @@ def init():
 
 
 if __name__ == "__main__":
+
     rr = init()
     rr.wavReaderCalc()
-    rr.maxFrequencyCalc()
-    rr.wavReader.plot2DWaterfallPlotMaxFrequencies(maxFrequencies=rr.maxFrequencySum, listeningfrequency=rr.listeningfrequency, expectedmaxfreqlist=rr.expectedmaxfreqlist)

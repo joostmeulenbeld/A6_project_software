@@ -7,10 +7,12 @@ import matplotlib.pyplot as plt
 import fourier
 import multiprocessing
 import os
-
+import sys
+from multitest import compressSpectrum
 from matplotlib import cm  
 from numpy import meshgrid  
 from mpl_toolkits.mplot3d import Axes3D
+
 
 class wavReaderFourierTransformer:
 
@@ -152,12 +154,12 @@ class wavReaderFourierTransformer:
         self.times = []
 
         # Compression is set to only work with narrowed data: compression of the entire spectrum is never interesting
-        if (compress):
+        if compress:
             print("Compressing works only with narrowed data")
             narrow = True
 
         # Find the place where the cutOff should occur if the spectrum should be narrowed down
-        if (narrow):
+        if narrow:
             self.__calcCutOffIndex()
         
         # Read the wav file
@@ -250,11 +252,11 @@ class wavReaderFourierTransformer:
         resultAmplitudes = []
 
         method = {
-            "mean": self.__mean,
-            "median": self.__median,
+            "mean": np.mean,
+            "median": np.median,
             "maxMeanDifference": self.__maxMeanDifference,
             "maxMedianDifference": self.__maxMedianDifference
-        }.get(compressionMethodString, self.__mean)
+        }.get(compressionMethodString, np.mean)
 
         for i in range(0, np.size(amplitudes), intervalSize):
             currentInterval = amplitudes[i:i+intervalSize]
@@ -267,17 +269,20 @@ class wavReaderFourierTransformer:
         print("Compressing intervals...")
         amplitudes = []
         frequencies = []
+
+        jobs = []
+        pool = multiprocessing.Pool(16)
+
         for amp in inputamplitudes:
-            frequencies, amplitude = self.__compressSpectrum(inputfrequencies, amp, intervalSize, compressionMethodString)
-            amplitudes.append(amplitude)
+            async_result = pool.apply_async(compressSpectrum, (inputfrequencies, amp, intervalSize, compressionMethodString))
+            jobs.append(async_result)
+
+        for job in jobs:
+            result = job.get()
+            frequencies = result[0]
+            amplitudes.append(result[1])
         print("Done!")
         return frequencies, amplitudes
-
-    def __median(self, amplitudes):
-        return np.median(amplitudes)
-
-    def __mean(self, amplitudes):
-        return np.mean(amplitudes)
 
     def __maxMeanDifference(self, amplitudes):
         return np.amax(amplitudes)-np.mean(amplitudes)
@@ -286,7 +291,8 @@ class wavReaderFourierTransformer:
         return np.amax(amplitudes)-np.median(amplitudes)
 
     def __narrowFrequencyAmplitudes(self):
-        self.narrowFrequencies, self.narrowAmplitudes = self.__getNarrowSpectra(self.amplitudes, self.frequencies, intervalSize, compressionMethodString)
+        self.narrowFrequencies, self.narrowAmplitudes = self.__getNarrowSpectra(self.amplitudes, self.frequencies)
+        self.narrowDataExists = True
 
     def __compressFrequencyAmplitudes(self, intervalSize=10, compressionMethodString="maxMedianDifference"):
         frequencies, amplitudes = self.__getNarrowSpectra(self.frequencies, self.amplitudes)
@@ -294,6 +300,7 @@ class wavReaderFourierTransformer:
 
     def __compressNarrowFrequencyAmplitudes(self, intervalSize=10, compressionMethodString="maxMedianDifference"):
         self.compressedNarrowFrequencies, self.compressedNarrowAmplitudes = self.__getCompressedSpectra(self.narrowFrequencies, self.narrowAmplitudes, intervalSize, compressionMethodString)
+        self.compressedNarrowDataExists = True
 
 
     # Plotting functions
@@ -331,7 +338,7 @@ class wavReaderFourierTransformer:
         return self.make_cmap(colors, position=position)
 
     def plot2DWaterfallPlotMaxFrequencies(self, start=0.0, end=0.04, mode="disp", color1name="white", color2name="black", 
-            expectedmaxfreqlist=None, maxFrequencies=None, listeningfrequency=0):
+            expectedmaxfreqlist=None, maxFrequencies=None, listeningfrequency=0, intervalwidth=1, errorrange=1.0):
         if (maxFrequencies == None):
             print("Give the maxFrequencies")
         else:
@@ -364,7 +371,7 @@ class wavReaderFourierTransformer:
             if (mode == "disp"):
                 plt.show()
             else:
-                plt.savefig("img/waterfallPlotsMaxFrequency/waterfallPlot2D_"+color1name+"_"+color2name+"_"+str(start)+"_"+str(end)+".png", bbox_inches='tight', dpi=400)
+                plt.savefig("img/waterfallPlotsMaxFrequency/waterfallPlot2D_intervalwidth_"+str(intervalwidth)+"_errorrange_"+str(errorrange)+".png", bbox_inches='tight', dpi=400)
             plt.close()
             print("Done!")
 

@@ -26,24 +26,25 @@ def getInitialGuess(amplitudesArray, frequencies):
 
     return lst
 
-def derivative(x, y, t, mode="forward"):
+def extrapolate(x, y, t, mode="forward"):
 
     # if sum(np.diff(x, n=2)) != 0:
     #     return None #check if the x spacing is constant
     #let's assume this is correct for computational quickness
     bino = lambda n, k: fact(n)/(fact(k)*fact(n-k))
-
+    if len(x) == 1:
+        return x[0]
     h = float(x[1]-x[0])
     derivatives = [0]*(len(y))
 
-    if mode=="forward":
+    if mode == "forward":
         f = lambda n, i, y: (-1)**i*bino(n,i)*y[n-i]
-        x0=x[0]
+        x0 = x[0]
         derivatives[0]=y[0]
     else:
         f = lambda n, i, y: (-1)**i*bino(n,i)*y[-i-1]
-        x0=x[-1]
-        derivatives[0]=y[-1]
+        x0 = x[-1]
+        derivatives[0] = y[-1]
 
     for n in range(1,len(y)):
         for i in range(0, n+1):
@@ -106,69 +107,85 @@ def getMaxFrequenciesWithWindow(frequencies, A, times, intervalMethodString):
         print "Interval: ",g+1,"/",len(lst)," Found Max Freq: ",maxfreqindex
     return maxfreqlist
 
-def getMaxFrequenciesWithDerivative(frequencies, A, times):
+def getMaxFrequenciesWithDerivative(frequencies, A, times, intervalsize=5, errorrange=1.0):
     getIndex = lambda lst, value: int((value-lst[0])/(lst[1]-lst[0]))
 
     maxfreqlist = [0]*(len(times))
     expectedmaxfreqlist = [0]*(len(times))
 
     initialIndex = getIndex(times, 770)
-    for i in range(initialIndex, initialIndex+5):
+    for i in range(initialIndex, initialIndex+intervalsize):
         maxfreqlist[i] = getMaxFrequency(frequencies, A[i])
 
 
     # From initial time until the end
-    for i in range(initialIndex+5, len(times)):
-        print(times[i])
-        expectedMaxFrequency = derivative(times[i-4:i], maxfreqlist[i-4:i], times[i], mode="backward")
-        expectedMaxFrequencyIndex = getIndex(frequencies, expectedMaxFrequency)
-
+    for i in range(initialIndex+intervalsize, len(times)-1):
+        expectedMaxFrequency = extrapolate(times[i-intervalsize:i], maxfreqlist[i-intervalsize:i], times[i], mode="backward")
 
         if expectedMaxFrequency > frequencies[-1] or expectedMaxFrequency < frequencies[0]:
             print("Differencing towards the end: Expected frequency was outside the spectrum")
             break
-        expectedmaxfreqlist[i] = frequencies[expectedMaxFrequencyIndex]
 
+        expectedMaxFrequencyIndex = getIndex(frequencies, expectedMaxFrequency)
         expectedMaxFrequency = frequencies[expectedMaxFrequencyIndex] #find the actual frequency
-        difference = abs(expectedMaxFrequency - maxfreqlist[i-1])
-        print("exp, cur, diff: ", expectedMaxFrequency, maxfreqlist[i-1], difference)
-        minIntervalIndex = getIndex(frequencies, expectedMaxFrequency-0.5*difference)
-        maxIntervalIndex = getIndex(frequencies, expectedMaxFrequency+0.5*difference)
-        print("min, max: ", minIntervalIndex, maxIntervalIndex)
-        print("______________")
+        expectedmaxfreqlist[i] = expectedMaxFrequency
+
+        difference = abs(expectedMaxFrequency - maxfreqlist[i-1]) #The difference between the expected and current frequency
+
+        minIntervalIndex = getIndex(frequencies, expectedMaxFrequency-errorrange*difference)
+        maxIntervalIndex = getIndex(frequencies, expectedMaxFrequency+errorrange*difference)
+
+        if minIntervalIndex == maxIntervalIndex: #in case there is no change
+            maxIntervalIndex += 1
+
+        # print(times[i])
+        # print("exp, cur, diff: ", expectedMaxFrequency, maxfreqlist[i-1], difference)
+        # print("min, max: ", minIntervalIndex, maxIntervalIndex)
+        # print("______________")
+
         if minIntervalIndex < 0:
             minIntervalIndex = 0
         if maxIntervalIndex > len(frequencies):
             maxIntervalIndex = len(frequencies)
+
         maxfreqlist[i] = frequencies[minIntervalIndex+np.argmax(A[i][minIntervalIndex:maxIntervalIndex])]
 
-    for i in range(initialIndex, 0, -1):
-        print(times[i])
-        expectedMaxFrequency = derivative(times[i+1:i+5], maxfreqlist[i+1:i+5], times[i], mode="forward")
-        expectedMaxFrequencyIndex = getIndex(frequencies, expectedMaxFrequency)
-
+    # From initial time until the beginning
+    for i in range(initialIndex-1, 0, -1):
+        expectedMaxFrequency = extrapolate(times[i+1:i+intervalsize], maxfreqlist[i+1:i+intervalsize], times[i], mode="forward")
 
         if expectedMaxFrequency > frequencies[-1] or expectedMaxFrequency < frequencies[0]:
             print("Differencing towards the beginning: Expected frequency was outside the spectrum")
             break
-        expectedmaxfreqlist[i] = frequencies[expectedMaxFrequencyIndex]
 
+        expectedMaxFrequencyIndex = getIndex(frequencies, expectedMaxFrequency)
         expectedMaxFrequency = frequencies[expectedMaxFrequencyIndex] #find the actual frequency
-        difference = abs(expectedMaxFrequency - maxfreqlist[i-1])
-        print("exp, cur, diff: ", expectedMaxFrequency, maxfreqlist[i-1], difference)
-        minIntervalIndex = getIndex(frequencies, expectedMaxFrequency-0.5*difference)
-        maxIntervalIndex = getIndex(frequencies, expectedMaxFrequency+0.5*difference)
-        print("min, max: ", minIntervalIndex, maxIntervalIndex)
-        print("______________")
+        expectedmaxfreqlist[i] = expectedMaxFrequency
+
+        difference = abs(expectedMaxFrequency - maxfreqlist[i-1]) #The difference between the expected and current frequency
+
+        minIntervalIndex = getIndex(frequencies, expectedMaxFrequency-errorrange*difference)
+        maxIntervalIndex = getIndex(frequencies, expectedMaxFrequency+errorrange*difference)
+
+        if minIntervalIndex == maxIntervalIndex: #in case there is no change
+            maxIntervalIndex += 1
+
+        # print(times[i])
+        # print("exp, cur, diff: ", expectedMaxFrequency, maxfreqlist[i+1], difference)
+        # print("min, max: ", minIntervalIndex, maxIntervalIndex)
+        # print("______________")
+
         if minIntervalIndex < 0:
             minIntervalIndex = 0
         if maxIntervalIndex > len(frequencies):
             maxIntervalIndex = len(frequencies)
+
         maxfreqlist[i] = frequencies[minIntervalIndex+np.argmax(A[i][minIntervalIndex:maxIntervalIndex])]
+
     return maxfreqlist, expectedmaxfreqlist
 
 
-def maxFrequencies(wavReader, carrierfrequency, intervalMethodString):
+def maxFrequencies(wavReader, carrierfrequency, intervalMethodString="sum", intervalsize=5, errorrange=1.0):
     #find/make matrix A
     print("Finding the signal")
     frequencies, A = wavReader.getFrequencyAmplitudes()
@@ -177,7 +194,8 @@ def maxFrequencies(wavReader, carrierfrequency, intervalMethodString):
 
 
     # maxfreqlist = getMaxFrequenciesWithWindow(frequencies, A, times, intervalMethodString)
-    maxfreqlist, expectedmaxfreqlist = getMaxFrequenciesWithDerivative(frequencies, A, times)
+    maxfreqlist, expectedmaxfreqlist = getMaxFrequenciesWithDerivative(frequencies, A, times, intervalsize, errorrange)
+
     print("Done finding the maximum frequencies")
     return map(lambda x: x+carrierfrequency, maxfreqlist), expectedmaxfreqlist
     
