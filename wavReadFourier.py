@@ -242,7 +242,7 @@ class wavReaderFourierTransformer:
             self.__calcCutOffIndex()
 
         for amp in inputamplitudes:
-            frequencies, amplitudes = self.__narrowSpectrum(inputfrequencies, amp, cutOffIndex)
+            frequencies, amplitudes = self.__narrowSpectrum(inputfrequencies, amp)
             amplitudes.append(amplitude)
         print("Done!")
         return frequencies, amplitudes
@@ -362,7 +362,7 @@ class wavReaderFourierTransformer:
 
             maxFrequencies = map(lambda x:x-listeningfrequency, maxFrequencies)
             plt.plot(maxFrequencies, self.times, marker='o')
-            plt.plot(expectedmaxfreqlist, self.times, marker='o')
+            # plt.plot(expectedmaxfreqlist, self.times, marker='o')
 
 
             ax.set_xlabel('Frequency (Hz)')

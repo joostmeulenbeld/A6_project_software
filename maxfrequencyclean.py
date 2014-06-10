@@ -193,8 +193,9 @@ def maxFrequencies(wavReader, carrierfrequency, intervalMethodString="sum", inte
     A = np.array(A)
 
 
-    # maxfreqlist = getMaxFrequenciesWithWindow(frequencies, A, times, intervalMethodString)
-    maxfreqlist, expectedmaxfreqlist = getMaxFrequenciesWithDerivative(frequencies, A, times, intervalsize, errorrange)
+    maxfreqlist = getMaxFrequenciesWithWindow(frequencies, A, times, intervalMethodString)
+    expectedmaxfreqlist = None
+    # maxfreqlist, expectedmaxfreqlist = getMaxFrequenciesWithDerivative(frequencies, A, times, intervalsize, errorrange)
 
     print("Done finding the maximum frequencies")
     return map(lambda x: x+carrierfrequency, maxfreqlist), expectedmaxfreqlist
