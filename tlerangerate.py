@@ -211,12 +211,12 @@ def compare(exprangerate,newtimedeltav,tletimedeltav, mode="disp"):
     
     plt.xlabel("Time (s)")
     plt.ylabel("Range-Rate (km/s)")
-    plt.xlim(400,1250)
+    plt.xlim(400,1200)
+    plt.ylim(-11, 15)
     plt.legend()
     if mode == "save":
         plt.savefig("img/RangeRate-Time.png", bbox_inches='tight', dpi=400)
 
-    plt.close()
 
     error1temp = errorCount(exprangerate)
     error1 = [abs(error1temp[n]) for n in range(len(error1temp))]
@@ -229,7 +229,7 @@ def compare(exprangerate,newtimedeltav,tletimedeltav, mode="disp"):
     ax2 = fig2.add_subplot(111)
     
     check=exprangerate[0][0]
-    ax2.plot(exprangerate[0][0],error1[0],'gs',label='Error 1')
+    ax2.plot(exprangerate[0][0],error1[0],'gs',label='Model 1')
     for i in range(len(exprangerate[0])):
         if check<=exprangerate[0][i]:
             ax2.plot(exprangerate[0][i],error1[i],'gs')
@@ -237,7 +237,7 @@ def compare(exprangerate,newtimedeltav,tletimedeltav, mode="disp"):
     ax2.plot(exprangerate[0],error1,'g')
     
     check=newtimedeltav[0][0]
-    ax2.plot(newtimedeltav[0][0],error2[0],'c<',label='Error 2')
+    ax2.plot(newtimedeltav[0][0],error2[0],'c<',label='Model 2')
     for i in range(len(newtimedeltav[0])):
         if check<=newtimedeltav[0][i]:
             ax2.plot(newtimedeltav[0][i],error2[i],'c<')
@@ -245,7 +245,7 @@ def compare(exprangerate,newtimedeltav,tletimedeltav, mode="disp"):
     ax2.plot(newtimedeltav[0],error2,'c')
     
     check=tletimedeltav[0][0]
-    ax2.plot(tletimedeltav[0][0],error3[0],'bo',label='Error 3')
+    ax2.plot(tletimedeltav[0][0],error3[0],'bo',label='Model 3')
     for i in range(len(tletimedeltav[0])):
         if check<=tletimedeltav[0][i]:
             ax2.plot(tletimedeltav[0][i],error3[i],'bo')
@@ -254,8 +254,8 @@ def compare(exprangerate,newtimedeltav,tletimedeltav, mode="disp"):
     
     plt.xlabel("Time (s)")
     plt.ylabel("Error (km/s)")
-    plt.xlim(400,1250)
-    plt.ylim(0,5)
+    plt.xlim(550,1020)
+    plt.ylim(0,5.5)
     plt.legend()
 
     if mode == "disp":

@@ -9,24 +9,10 @@ from tlerangerate import compare,tlerangerate,errorCount
 
 class rangeRate:
 
-
-    def __init__(self, wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency,listeningfrequency, satelliteVelocity):
-		self.wavFileName = wavFileName
-		self.start = start
-		self.end = end
-		self.intervalWidth = intervalWidth
-		self.intervalStartFrequency = intervalStartFrequency
-		self.carrierfrequency = carrierfrequency
-                self.listeningfrequency = listeningfrequency
-		self.cutOff = 3.0*satelliteVelocity/(3e8)*self.carrierfrequency
-
-		self.wavReader = wavReaderFourierTransformer(self.wavFileName, self.start, self.end, self.intervalWidth, self.intervalStartFrequency, self.cutOff)
-		self.lowfrequency = self.carrierfrequency - self.wavReader.getMaxFourierFrequency()
-
     def doCalculations(self):
-		self.wavReaderCalc()
-		self.maxFrequencyCalc()
-		self.dopplerTrackingCalc()
+        self.wavReaderCalc()
+        self.maxFrequencyCalc()
+        self.dopplerTrackingCalc()
 
     def dopplerTracking(self, maxFrequency, wavReader):
            freq = []
@@ -66,7 +52,6 @@ class rangeRate:
            newrangerate = rangerateconvert(timefreq,newValue)
            self.newtimedeltav2 = [time,newrangerate]
            return timefreq
-           
 
     def __init__(self, wavFileName, start, end, intervalWidth, intervalStartFrequency, carrierfrequency,listeningfrequency, satelliteVelocity):
         self.wavFileName = wavFileName
@@ -81,13 +66,8 @@ class rangeRate:
         self.wavReader = wavReaderFourierTransformer(self.wavFileName, self.start, self.end, self.intervalWidth, self.intervalStartFrequency, self.cutOff)
         self.lowfrequency = self.carrierfrequency - self.wavReader.getMaxFourierFrequency()
 
-    def doCalculations(self):
-        self.wavReaderCalc()
-        self.maxFrequencyCalc()
-        self.dopplerTrackingCalc()
-
-
     def dopplerTracking(self, maxFrequency, wavReader):
+        print("Deze pakt hij")
         freq = []
         for maxfreq in maxFrequency:
             freq.append(maxfreq)    
@@ -149,8 +129,12 @@ class rangeRate:
         for i in range(1,len(ylist)):                      
             dy = (ylist[i]-ylist[i-1])
             slope.append(dy/dx) 
-        lwall = int(divmod(600,dx)[0])
-        rwall = int(divmod(1000,dx)[0])
+        lwall = int(divmod(700,dx)[0])
+        rwall = int(divmod(850,dx)[0])
+        print(np.size(time[1:]))
+        print(np.size(slope))
+        plt.plot(time[1:], slope)
+        plt.show()
         minslope = min(slope[lwall:rwall])
         minslopeindex = slope.index(minslope)
         minslopetime = (minslopeindex*dx)
@@ -182,4 +166,5 @@ if __name__ == "__main__":
     rr = init()
     rr.doCalculations()
     # rr.plot2DWaterfallplotWithMaxFrequencies(mode="save")
-    rr.plotComparison(mode="save")
+    # rr.plotComparison(mode="save")
+    # rr.plotComparison(mode="disp")
