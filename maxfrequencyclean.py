@@ -1,7 +1,7 @@
 import numpy as np
 from math import factorial as fact
 
-width=1000
+width = 2700
 
 def getSum(interval):
     return np.sum(np.abs(interval))
@@ -17,7 +17,7 @@ def getInitialGuess(amplitudesArray, frequencies):
         oldTenSum = np.sum(np.abs(amplitudes[0:10]))
         lst2.append(tempSum)
         for index in range(10, np.size(amplitudes)-width, 10):
-            newTenSum = np.sum(np.abs(amplitudes[index+990:index+width]))
+            newTenSum = np.sum(np.abs(amplitudes[index+width-10:index+width]))
             oldTenSum = np.sum(np.abs(amplitudes[index-10:index]))
             tempSum += newTenSum - oldTenSum
             lst2.append(tempSum)
@@ -60,8 +60,8 @@ def getInitialGuessByMethod(A, frequencies, method):
         lst2=[]
         absLst = [h if h > 0 else -h for h in A[interval][0:width]] 
         lst2.append(method(absLst))        
-        for i in range((len(A[interval])-3010)/10):
-            lst3 = [h if h > 0 else -h for h in A[interval][width+(i*10):(i*10)+1010]]
+        for i in range((len(A[interval])-width-10)/10):
+            lst3 = [h if h > 0 else -h for h in A[interval][width+(i*10):(i*10)+width+10]]
             absLst = absLst[10:width]
             absLst.extend(lst3)
             lst2.append(method(absLst))
@@ -75,7 +75,7 @@ def getMaxFrequency(frequencies, amplitudes):
     oldTenSum = np.sum(np.abs(amplitudes[0:10]))
     lst2.append(tempSum)
     for index in range(10, np.size(amplitudes)-width, 10):
-        newTenSum = np.sum(np.abs(amplitudes[index+990:index+width]))
+        newTenSum = np.sum(np.abs(amplitudes[index+width-10:index+width]))
         oldTenSum = np.sum(np.abs(amplitudes[index-10:index]))
         tempSum += newTenSum - oldTenSum
         lst2.append(tempSum)

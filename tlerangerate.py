@@ -178,13 +178,12 @@ def tlerangerate():
 def interpolation(y0,y1,x,x0,x1):
     newValue=y0+(y1-y0)*((x-x0)/(x1-x0))
     return newValue
-
-def compare(exprangerate,newtimedeltav,tletimedeltav):
+def compare(exprangerate,newtimedeltav,tletimedeltav, mode="disp"):
     tlerr = tlerangerate()
     
     fig1 = plt.figure()
     ax1 = fig1.add_subplot(111)
-    ax1.plot(tlerr[0][1],color='red',label='tle.xyz') 
+    ax1.plot(tlerr[0][1],color='red',label='TLE')
     
     check=exprangerate[0][0]
     ax1.plot(exprangerate[0][0],exprangerate[1][0],'gs',label='Model 1')
@@ -214,9 +213,11 @@ def compare(exprangerate,newtimedeltav,tletimedeltav):
     plt.ylabel("Range-Rate (km/s)")
     plt.xlim(400,1250)
     plt.legend()
-    plt.savefig("RangeRate-Time.png", bbox_inches='tight', dpi=400)
-    
-    
+    if mode == "save":
+        plt.savefig("img/RangeRate-Time.png", bbox_inches='tight', dpi=400)
+
+    plt.close()
+
     error1temp = errorCount(exprangerate)
     error1 = [abs(error1temp[n]) for n in range(len(error1temp))]
     error2temp = errorCount(newtimedeltav)
@@ -256,9 +257,13 @@ def compare(exprangerate,newtimedeltav,tletimedeltav):
     plt.xlim(400,1250)
     plt.ylim(0,5)
     plt.legend()
-    plt.savefig("ErrorPlot.png", bbox_inches='tight', dpi=400)
-    plt.show()
-    
+
+    if mode == "disp":
+        plt.show()
+    else:
+        plt.savefig("img/ErrorPlot.png", bbox_inches='tight', dpi=400)
+
+
     
     
 def errorCount(rangerate):

@@ -361,7 +361,7 @@ class wavReaderFourierTransformer:
             plt.axis([frequencies.min(), frequencies.max(), times.min(), times.max()])
 
             maxFrequencies = map(lambda x:x-listeningfrequency, maxFrequencies)
-            plt.plot(maxFrequencies, self.times, marker='o')
+            plt.plot(maxFrequencies, self.times)#, marker='o')
             # plt.plot(expectedmaxfreqlist, self.times, marker='o')
 
 

@@ -126,8 +126,8 @@ class rangeRate:
     def plot2DWaterfallPlot(self):
         self.wavReader.plot2DWaterfallPlot(mode="disp")
 
-    def plotComparison(self):
-        compare(self.timedeltav,self.newtimedeltav,self.newtimedeltav2)
+    def plotComparison(self, mode="disp"):
+        compare(self.timedeltav,self.newtimedeltav,self.newtimedeltav2, mode=mode)
 
 
     def wavReaderCalc(self):
@@ -180,6 +180,6 @@ def init():
 if __name__ == "__main__":
 
     rr = init()
-    rr.wavReaderCalc()
-    rr.maxFrequencyCalc()
-    rr.plot2DWaterfallplotWithMaxFrequencies(mode="save")
+    rr.doCalculations()
+    # rr.plot2DWaterfallplotWithMaxFrequencies(mode="save")
+    rr.plotComparison(mode="save")
